@@ -1,0 +1,59 @@
+﻿<Window x:Class="CrytonCore.Views.InputCryptingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:CrytonCore.Views"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowDrop="True"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        MouseDown="Window_MouseDown"
+        Drop="NewDrop"
+        Title="InputCryptingWindow" Height="300" Width="800">
+    <!--WindowStyle="None"-->
+    <Window.Background>
+        <!--<SolidColorBrush Opacity="0.88" Color="#202048"/>-->
+        <!--<SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundColor}"/>-->
+        <SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundBottomColor}"/>
+    </Window.Background>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+
+        <Label Content="Enter RSA private key" FontFamily="Microsoft YaHei UI Light" HorizontalAlignment="Left" Margin="48,54,0,0" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <Label Content="Enter Common key" FontFamily="Microsoft YaHei UI Light" HorizontalAlignment="Left" Margin="48,84,0,0" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <Label  Content="Enter RSA public key" FontFamily="Microsoft YaHei UI Light" HorizontalAlignment="Left" Margin="48,114,0,0" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <Label Content="Enter Common key" FontFamily="Microsoft YaHei UI Light" HorizontalAlignment="Left" Margin="48,144,0,0" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <Label Name="DragDropButton" Content="You can drag &amp; drop keys file or click here" FontFamily="Microsoft YaHei UI Light" HorizontalAlignment="Left" Margin="10,255,0,0" VerticalAlignment="Top" 
+               Foreground="{DynamicResource font}" PreviewMouseLeftButtonDown="DragDropButton_PreviewMouseLeftButtonDown"/>
+        
+        <TextBox Name="privateKey" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei UI Light" Margin="197,50,10,0"  Text="" VerticalAlignment="Top" Foreground="{DynamicResource font}" />
+        <TextBox Name="pqKey" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei UI Light" Margin="197,80,10,0"  Text="" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <TextBox Name="publicKey" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei UI Light" Margin="197,110,10,0" Text="" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <TextBox Name="phiKey" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei UI Light"  Margin="197,140,10,0" Text="" VerticalAlignment="Top" Foreground="{DynamicResource font}"/>
+        <Label Content="RSA" Foreground="{DynamicResource font}" FontSize="22" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="219"/>
+        <Button x:Name="applyButton" 
+                    Style="{StaticResource TransparentButtonRightAlignment}"  
+                    HorizontalContentAlignment="Right" 
+                    Content="Apply" 
+                    HorizontalAlignment="Right" Margin="0,0,10,10" 
+                    VerticalAlignment="Bottom" Width="83" Height="35" 
+                    FontFamily="Lato Light" FontSize="20" 
+                    Background="#00000000" 
+                    Click="ApplyButton_Click" BorderBrush="Transparent" 
+                    MouseEnter="ApplyButton_MouseEnter" 
+                    MouseLeave="ApplyButton_MouseLeave" Foreground="{DynamicResource encryptionButton}">
+        </Button>
+    </Grid>
+</Window>

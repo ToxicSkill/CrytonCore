@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="clrPrimary" Color="Azure" />
+    <SolidColorBrush x:Key="clrSecondary" Color="LightGray" />
+    <SolidColorBrush x:Key="clrBar" Color="#FFB9CC3F" />
+    <Color x:Key="backgroundBottomColor">#FF101040</Color>
+    <Color x:Key="backgroundTopColor">#FF000421</Color>
+    <Color x:Key="titleBarTopColor">#FF4CAAF5</Color>
+    <Color x:Key="titleBarBottomColor">#FF4CAAF5</Color>
+    <SolidColorBrush x:Key="encryptionButton">#FFA899D1</SolidColorBrush>
+    <SolidColorBrush x:Key="font" Color="White" />
+    <SolidColorBrush x:Key="subFont" Color="#FFFFC2C2" />
+    <SolidColorBrush x:Key="title" Color="#FFEEE5FF" />
+    <SolidColorBrush x:Key="text" Color="#FFC7C7C7" />
+    <SolidColorBrush x:Key="text2" Color="#FFEEE5FF" />
+    <SolidColorBrush x:Key="continueText" Color="#F5FF00" />
+    <SolidColorBrush x:Key="backText" Color="#FFF5760D" />
+    <Color x:Key="line">#FF299ADA</Color>
+    <Color x:Key="gradientListViewItemLeft">Transparent</Color>
+    <Color x:Key="gradientListViewItemRight">#FF4CAF50</Color>
+
+    <SolidColorBrush x:Key="buttonAction">#FFa899d1</SolidColorBrush>
+    <SolidColorBrush x:Key="clearButton">#FFb66767</SolidColorBrush>
+
+    <!--<SolidColorBrush  x:Key="titleBarTopColor"  Color="#FF4CAAF5"></SolidColorBrush>-->
+</ResourceDictionary>

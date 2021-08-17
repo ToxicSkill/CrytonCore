@@ -1,0 +1,58 @@
+﻿<Window x:Class="CrytonCore.Views.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CrytonCore.Views"
+        mc:Ignorable="d"
+        Title="DialogWindow" 
+        Height="350" Width="1000"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Background>
+        <!--<SolidColorBrush Opacity="0.88" Color="#202048"/>-->
+        <!--<SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundColor}"/>-->
+        <SolidColorBrush Opacity="0.4" Color="Black"/>
+    </Window.Background>
+
+    <Grid>
+        <Button Content="OK" Command="{Binding OkCommand}" 
+                HorizontalAlignment="Stretch" Margin="10,0,10,10" VerticalAlignment="Bottom" Height="25"/>
+
+        <Label HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+               Height="50" 
+               Content="{Binding Title, FallbackValue=Title}"
+               FontSize="34"
+               Margin="0,10,0,0"
+               FontFamily="Yu Gothic Light"
+               Foreground="FloralWhite"
+               HorizontalContentAlignment="Center"/>
+        
+        <ScrollViewer HorizontalAlignment="Stretch"   
+                      Margin="10,80,10,50" 
+                      VerticalAlignment="Stretch">
+            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="FloralWhite" 
+                     HorizontalScrollBarVisibility="Auto"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch"
+                     FontSize="18"
+                     TextWrapping="Wrap"
+                     Text="{Binding Message, FallbackValue=DIALOG_MESSAGE, Mode=OneTime}" 
+                     FontFamily="Segoe UI Light"/>
+        </ScrollViewer>
+
+    </Grid>
+</Window>

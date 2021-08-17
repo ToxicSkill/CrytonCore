@@ -1,0 +1,111 @@
+﻿<ResourceDictionary 
+      xmlns ="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!--COMMON-->
+    <system:String x:Key="dragAndDropLabel1">Drag &amp; Drop file here</system:String>
+    <system:String x:Key="dragAndDropLabel2">or click here to load file manually</system:String>
+
+    <!--Welcome Page-->
+    <system:String x:Key="welcome_welcomePage">Welcome in</system:String>
+    <system:String xml:space="preserve" x:Key="subWelcome_welcomePage">t h i s   i s   p r o g r a m,   w h e r e   y o u   c a n:</system:String>
+    <system:String x:Key="programDescribe1_welcomePage">- Encrypting &amp; decrypting file(s),</system:String>
+    <system:String x:Key="programDescribe2_welcomePage">- Editing PDF files &amp; make them safe</system:String>
+    
+    <!--Main Window-->
+    <system:String x:Key="crypt_mainWindow">Crypt</system:String>
+    <system:String x:Key="settings_mainWindow">Settings</system:String>
+    <system:String x:Key="informations_mainWindow">Informations</system:String>
+    <system:String x:Key="statistics_mainWindow">Statistics</system:String>
+    
+    <system:String x:Key="tipCrypt_mainWindow">Crypt</system:String>
+    <system:String x:Key="tipPdf_mainWindow">Pdf manager</system:String>
+    <system:String x:Key="tipSettings_mainWindow">Settings</system:String>
+    <system:String x:Key="tipInformations_mainWindow">Informations</system:String>
+    <system:String x:Key="tipStatistics_mainWindow">Statistics</system:String>
+
+
+    <!--CRYPTING PAGE-->
+    <system:String x:Key="cryptingTitle_cryptingPage">CRYPTING</system:String>
+    <system:String x:Key="chosenFileName_cryptingPage">Chosen file name</system:String>
+    <system:String x:Key="yourFileName_cryptingPage">Your file name</system:String>
+    <system:String x:Key="fileContent_cryptingPage">File content</system:String>
+    <system:String x:Key="processing_cryptingPage">Processing...</system:String>
+    <system:String x:Key="withChosenCryptingMethod_cryptingPage">With chosen crypting method:</system:String>
+    <system:String x:Key="encrypt_cryptingPage">ENCRYPT</system:String>
+    <system:String x:Key="decrypt_cryptingPage">DECRYPT</system:String>
+    <system:String x:Key="toolTipEncrypt_cryptingPage">encrypt file</system:String>
+    <system:String x:Key="toolTipDecrypt_cryptingPage">decrypt file</system:String>
+    <system:String x:Key="keyLengthInBits_cryptingPage">Key length in bits:</system:String>
+    
+    <system:String x:Key="clear_cryptingPage">Clear</system:String>
+    <system:String x:Key="loadFile_cryptingPage">Load file</system:String>
+    <system:String x:Key="saveFile_cryptingPage">Save file</system:String>
+    <system:String x:Key="cancelOperation_cryptingPage">Cancel</system:String>
+    <system:String x:Key="details_cryptingPage">Details</system:String>
+    <system:String x:Key="toolTipHelp_cryptingPage">Help</system:String>
+    
+    <system:String x:Key="status_cryptingPage">Status: </system:String>
+    <system:String x:Key="size_cryptingPage">Size: </system:String>
+    <system:String x:Key="extension_cryptingPage">Extension: </system:String>
+    <system:String x:Key="usedCryptingMethod_cryptingPage">Used crypting method:</system:String>
+
+
+    <system:String x:Key="copyGeneratedKeys_cryptingPage">Copy generated keys to clipboard</system:String>
+    <system:String x:Key="cesarShiftLabel_cryptingPage">Shift value</system:String>
+
+
+
+    <!--SETTINGSPAGE-->
+    <system:String x:Key="settingsTitle_settingsPage">SETTINGS</system:String>
+    <system:String x:Key="theme_settingWindow">Theme</system:String>
+    <system:String x:Key="language_settingWindow">Language</system:String>
+
+
+
+    <!--PDF MANGER-->
+    <system:String x:Key="pdfManagerTitle_pdfManager">PDF MANAGER</system:String>
+    <system:String x:Key="merge_settingsPage">Merge</system:String>
+    <system:String x:Key="mergeSub_settingsPage">Merge files into one. Give each one a separate order. Then the program will generate one merged pdf file</system:String>
+    <system:String x:Key="secure_settingsPage">Secure</system:String>
+    <system:String x:Key="secureSub_settingsPage">Load pdf file and set password(s). Change permissions for Adobe Reader program.</system:String>
+    <system:String x:Key="convertToImage_settingsPage">Convert to image</system:String>
+    <system:String x:Key="convertToImageSub_settingsPage">Convert pdf into picture.</system:String>
+    <system:String x:Key="convertImageToPdf_settingsPage">Convert image to pdf</system:String>
+    <system:String x:Key="convertImageToPdfSub_settingsPage">Convert picture into pdf.</system:String>
+
+
+    <system:String x:Key="helpText_cryptingPage"> Load the file by dragging and dropping into the encryption window or load the file manually.
+        Then select the encryption method (top right corner) and adjust the algorithm settings. 
+        Above the cipher selection box, you can click on the button that will start the encryption process. 
+        You can cancel operations at any time. You can save the / decrypted files to the indicated location.
+        If the encryption process was successful, when the encrypted file is loaded into the program,
+        he will recognize it and automatically adjust the program settings,
+        so that they are ready to be decrypted. Remember that RSA encryption generates private and public keys.
+        
+        
+        Keep your private keys to yourself and keep them in a safe place.
+    </system:String>
+
+    <system:String x:Key="helpTitle_cryptingPage">CRYPTING - HELP</system:String>
+    
+    
+    <!--PDF MERGE-->
+    <system:String x:Key="setAsFirst_pdfMerge">Set as first</system:String>
+    <system:String x:Key="setAsLast_pdfMerge">Set as last</system:String>
+    <system:String x:Key="moveUp_pdfMerge">Move up</system:String>
+    <system:String x:Key="moveDown_pdfMerge">Move down</system:String>
+
+    <system:String x:Key="delete_pdfMerge">Delete</system:String>
+    <system:String x:Key="clear_pdfMerge">Clear</system:String>
+    <system:String x:Key="continueText_pdfMerge">N E X T</system:String>
+    <system:String x:Key="backText_pdfMerge">B A C K</system:String>
+
+
+    <!--PDF SUMMARY-->
+    <system:String x:Key="saveFiles_cryptingPage">Save</system:String>
+    <system:String x:Key="cancel_cryptingPage">Cancel</system:String>
+
+    <!-- All StringResources Goes Here -->
+</ResourceDictionary> 

@@ -1,0 +1,94 @@
+﻿<ResourceDictionary 
+      xmlns ="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!--COMMON-->
+    <system:String x:Key="dragAndDropLabel1">Faites glisser et déposez le fichier ici</system:String>
+    <system:String x:Key="dragAndDropLabel2">ou cliquez ici pour charger le fichier manuellement</system:String>
+
+    <!--Welcome Page-->
+    <system:String x:Key="welcome_welcomePage">Bienvenue dans le</system:String>
+    <system:String xml:space="preserve" x:Key="subWelcome_welcomePage">c'  e s t   u n   p r o g r a m m e   o ù   v o u s   p o u v e z:</system:String>
+    <system:String x:Key="programDescribe1_welcomePage">- Crypter &amp; décrypter des fichiers,</system:String>
+    <system:String x:Key="programDescribe2_welcomePage">- Modifier les fichiers PDF &amp; les sécuriser</system:String>
+    
+    <!--Main Window-->
+    <system:String x:Key="crypt_mainWindow">Crypte</system:String>
+    <system:String x:Key="settings_mainWindow">Paramètres</system:String>
+    <system:String x:Key="informations_mainWindow">Informations</system:String>
+    <system:String x:Key="statistics_mainWindow">Statistiques</system:String>
+    
+    <system:String x:Key="tipCrypt_mainWindow">Crypte</system:String>
+    <system:String x:Key="tipPdf_mainWindow">Pdf gestionnaire</system:String>
+    <system:String x:Key="tipSettings_mainWindow">Statistiques</system:String>
+    <system:String x:Key="tipInformations_mainWindow">Informations</system:String>
+    <system:String x:Key="tipStatistics_mainWindow">Statistiques</system:String>
+
+
+    <!--CRYPTING PAGE-->
+    <system:String x:Key="cryptingTitle_cryptingPage">CRYPTER</system:String>
+    <system:String x:Key="chosenFileName_cryptingPage">Nom de fichier choisi</system:String>
+    <system:String x:Key="yourFileName_cryptingPage">Votre nom de fichier</system:String>
+    <system:String x:Key="fileContent_cryptingPage">Contenu du fichier</system:String>
+    <system:String x:Key="processing_cryptingPage">Traitement...</system:String>
+    <system:String x:Key="withChosenCryptingMethod_cryptingPage">Avec la méthode de cryptage choisie:</system:String>
+    <system:String x:Key="encrypt_cryptingPage">CRYPTER</system:String>
+    <system:String x:Key="decrypt_cryptingPage">DÉCRYPTER</system:String>
+    <system:String x:Key="toolTipEncrypt_cryptingPage">crypter le fichier</system:String>
+    <system:String x:Key="toolTipDecrypt_cryptingPage">décrypter le fichier</system:String>
+    <system:String x:Key="keyLengthInBits_cryptingPage">Longueur de clé en bits:</system:String>
+    
+    <system:String x:Key="clear_cryptingPage">Dégager</system:String>
+    <system:String x:Key="loadFile_cryptingPage">Fichier de chargement</system:String>
+    <system:String x:Key="saveFile_cryptingPage">Enregistrer le fichier</system:String>
+    <system:String x:Key="cancelOperation_cryptingPage">Annuler</system:String>
+    <system:String x:Key="details_cryptingPage">Détails</system:String>
+    <system:String x:Key="toolTipHelp_cryptingPage">Aider</system:String>
+    
+    <system:String x:Key="status_cryptingPage">Statut: </system:String>
+    <system:String x:Key="size_cryptingPage">Taille: </system:String>
+    <system:String x:Key="extension_cryptingPage">Extension: </system:String>
+    <system:String x:Key="usedCryptingMethod_cryptingPage">Méthode de cryptage utilisée:</system:String>
+
+    <system:String x:Key="copyGeneratedKeys_cryptingPage">Copier les clés générées dans le presse-papiers</system:String>
+    <system:String x:Key="cesarShiftLabel_cryptingPage">Valeur de décalage</system:String>
+
+
+
+    <!--SETTINGSPAGE-->
+    <system:String x:Key="settingsTitle_settingsPage">LES PARAMÉTRES</system:String>
+    <system:String x:Key="theme_settingWindow">Thème</system:String>
+    <system:String x:Key="language_settingWindow">Langue</system:String>
+
+
+
+    <system:String x:Key="helpText_cryptingPage"> Chargez le fichier par glisser-déposer dans la fenêtre de chiffrement ou chargez le fichier manuellement.
+        Sélectionnez ensuite la méthode de cryptage (coin supérieur droit) et ajustez les paramètres de l'algorithme.
+        Au-dessus de la zone de sélection du chiffrement, vous pouvez cliquer sur le bouton qui lancera le processus de cryptage.
+        Vous pouvez annuler des opérations à tout moment. Vous pouvez enregistrer les fichiers / décryptés à l'emplacement indiqué.
+        Si le processus de cryptage a réussi, lorsque le fichier crypté est chargé dans le programme,
+        il le reconnaîtra et ajustera automatiquement les paramètres du programme,
+        afin qu'ils soient prêts à être décryptés. N'oubliez pas que le chiffrement RSA génère des clés privées et publiques.
+        
+        
+        Gardez vos clés privées pour vous et conservez-les en lieu sûr.</system:String>
+
+    <system:String x:Key="helpTitle_cryptingPage">CRYPTAGE - AIDE</system:String>
+    
+    
+    <!--PDF MERGE-->
+    <system:String x:Key="setAsFirst_pdfMerge">Set as first</system:String>
+    <system:String x:Key="setAsLast_pdfMerge">Set as last</system:String>
+    <system:String x:Key="moveUp_pdfMerge">Move up</system:String>
+    <system:String x:Key="moveDown_pdfMerge">Move down</system:String>
+    <system:String x:Key="continueText_pdfMerge">N E X T</system:String>
+    <system:String x:Key="backText_pdfMerge">B A C K</system:String>
+
+
+    <!--PDF SUMMARY-->
+    <system:String x:Key="saveFiles_cryptingPage">Zapisz</system:String>
+    <system:String x:Key="cancel_cryptingPage">Anuluj</system:String>
+
+    <!-- All StringResources Goes Here -->
+</ResourceDictionary> 

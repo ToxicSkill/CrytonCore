@@ -1,0 +1,311 @@
+﻿<UserControl x:Class="CrytonCore.Views.PdfMergeUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="665" d:DesignWidth="1334"
+             AllowDrop="True"
+             xmlns:helpers="clr-namespace:CrytonCore.Helpers"
+             helpers:FileDragDropHelper.IsFileDragDropEnabled="True" 
+             helpers:FileDragDropHelper.FileDragDropTarget="{Binding}">
+
+    <UserControl.DataContext>
+        <ViewModel:PdfMergeViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Green.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <UserControl.Background>
+        <LinearGradientBrush EndPoint="0.5,1" 
+                             MappingMode="RelativeToBoundingBox" 
+                             StartPoint="0.5,0" Opacity="1">
+            <GradientStop Color="{DynamicResource backgroundTopColor}"/>
+            <GradientStop Offset="1"/>
+        </LinearGradientBrush>
+    </UserControl.Background>
+
+
+    <Grid>
+        
+        <Grid x:Name="controlsGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Visibility="{Binding VisibilityDefaultAsHidden}">
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="695,68,0,10" Width="270">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource setAsFirst_pdfMerge}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                                <i:InvokeCommandAction Command="{Binding SetAsFirst}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+
+                <Image Grid.Row="0" Source="/CrytonCore;component/Assets/UpTop.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"  />
+
+                    <Label Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource moveUp_pdfMerge}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                                <i:InvokeCommandAction Command="{Binding MoveUp}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+
+                    <Image Grid.Row="1" Source="/CrytonCore;component/Assets/Up.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"  />
+
+                    <Label Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource moveDown_pdfMerge}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                                <i:InvokeCommandAction Command="{Binding MoveDown}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+
+                    <Image Grid.Row="2" Source="/CrytonCore;component/Assets/Down.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"  />
+
+                    <Label Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource setAsLast_pdfMerge}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                                <i:InvokeCommandAction Command="{Binding SetAsLast}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+
+                    <Image Grid.Row="3" Source="/CrytonCore;component/Assets/DownBottom.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"  />
+
+                </Grid>
+
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="695,0,0,15" Width="270">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource delete_pdfMerge}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                                <i:InvokeCommandAction Command="{Binding Delete}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+
+                    <Image Grid.Row="0" Source="/CrytonCore;component/Assets/exit_mo.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"  />
+
+
+                    <Label Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource clear_pdfMerge}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                                <i:InvokeCommandAction Command="{Binding Clear}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+
+                    <Image Grid.Row="1" Source="/CrytonCore;component/Assets/Rubbish.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"  />
+
+                <Label Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}"
+                           FontSize="23" Foreground="{DynamicResource backText}" Margin="45,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource backText_pdfMerge}" PreviewMouseLeftButtonUp="MoveBack">
+
+                    <Label.Triggers>
+                        <EventTrigger RoutedEvent="Label.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard >
+                                    <DoubleAnimation Storyboard.TargetName="RotateImageBack" 
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
+                                                         From="0" To="90" AutoReverse="False"
+                                                         BeginTime="0:0:0" Duration="0:0:0.5" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Label.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="RotateImageBack" 
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
+                                                         From="90" To="0" AutoReverse="False"
+                                                         BeginTime="0:0:0" Duration="0:0:0.5"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Image x:Name="RotateImageBack" Grid.Row="2" Source="/CrytonCore;component/Assets/Back.png" 
+                           HorizontalAlignment="Left" Width="30"
+                           RenderOptions.EdgeMode="Aliased"
+                           RenderOptions.BitmapScalingMode="HighQuality"  >
+                    <Image.RenderTransform>
+                        <RotateTransform CenterX="15" CenterY="15"/>
+                    </Image.RenderTransform>
+                </Image>
+                </Grid>
+
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Width="270">
+                    <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}"
+                           FontSize="23" Foreground="{DynamicResource continueText}" Margin="45,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource continueText_pdfMerge}" PreviewMouseLeftButtonUp="MoveNext">
+
+                    <Label.Triggers>
+                        <EventTrigger RoutedEvent="Label.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard >
+                                    <DoubleAnimation Storyboard.TargetName="RotateImageNext" 
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
+                                                         From="0" To="-90" AutoReverse="False"
+                                                         BeginTime="0:0:0" Duration="0:0:0.5" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Label.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="RotateImageNext" 
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
+                                                         From="-90" To="0" AutoReverse="False"
+                                                         BeginTime="0:0:0" Duration="0:0:0.5"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <Image x:Name="RotateImageNext" Grid.Row="0" Source="/CrytonCore;component/Assets/Continue.png" 
+                           HorizontalAlignment="Left" Width="30"
+                           RenderOptions.EdgeMode="Aliased"
+                           RenderOptions.BitmapScalingMode="HighQuality"  >
+                    <Image.RenderTransform>
+                        <RotateTransform CenterX="15" CenterY="15"/>
+                    </Image.RenderTransform>
+                </Image>
+
+            </Grid>
+
+            <Grid x:Name="pdfViewGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                      Margin="970,68,30,96" SizeChanged="PdfViewGrid_SizeChanged" >
+                    <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                            Value="{Binding SliderValue}" Maximum="{Binding SliderMaximum}" Visibility="{Binding SliderVisibility}">
+                    </Slider>
+
+                    <Image x:Name="pdfImage" Margin="0,25,0,0" HorizontalAlignment="Stretch" Source="{Binding BitmapSource}" VerticalAlignment="Stretch"/>
+
+                </Grid>
+
+            </Grid>
+
+            <Label Content="PDF MERGE" HorizontalContentAlignment="Left" HorizontalAlignment="Left"  VerticalContentAlignment="Bottom"
+                           Margin="45,0,0,0" VerticalAlignment="Top" Height="77" Width="419" 
+                           FontSize="52" Background="#00000000" Foreground="{DynamicResource title}" FontFamily="Lato Light"/>
+
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                  Margin="10,82,0,40" Width="651" Background="Transparent"  >
+
+                <ListView x:Name="filesListView" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
+                          Visibility="{Binding VisibilityDefaultAsHidden}"
+                          IsSynchronizedWithCurrentItem="True"  Foreground="White"
+                          Background="Transparent" BorderBrush="Transparent"
+                          FontSize="20" ItemsSource="{Binding FilesView, Mode=OneWay}">
+
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid  Width="635">
+                                <Grid.Background>
+                                    <LinearGradientBrush EndPoint="1,1"
+                                                         StartPoint="0,0">
+                                    <GradientStop Offset="1" Color="{DynamicResource gradientListViewItemRight}"/>
+                                    <GradientStop Color="{DynamicResource gradientListViewItemLeft}" Offset="0.1"/>
+                                    </LinearGradientBrush>
+                                </Grid.Background>
+                                <TextBlock Text="{Binding Order, Mode=OneWay}" Width="50" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding FileName, Mode=OneWay}" Width="400" Margin="50,0,0,0" HorizontalAlignment="Left" />
+
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+            </Grid>
+
+            <Grid x:Name="dragDropGrid" Margin="45,269,20,229" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  Visibility="{Binding VisibilityDefaultAsShowed}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="479*"/>
+                    <ColumnDefinition Width="791*"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="LabelDropInfo1"  HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           Width="1269" Height="54" FontSize="36" 
+                           FontFamily="Lato Light" FontWeight="Bold" 
+                           Background="#00000000" Foreground="{DynamicResource font}"
+                           Content = "{DynamicResource dragAndDropLabel1}"
+                           Opacity="0.7" Margin="0,38,0,75" Grid.ColumnSpan="2" />
+
+                <Label x:Name="LabelDropInfo2" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Top" Width="1269" Height="48" FontSize="22" 
+                           FontFamily="Lato Light" Background="#00000000" Foreground="{DynamicResource font}"
+                           Style="{StaticResource TransparentLabelOpacity}" Margin="0,78,0,41" 
+                           PreviewMouseDown="LoadFileButton_Click"
+                           Content="{DynamicResource dragAndDropLabel2}" Grid.ColumnSpan="2">
+
+                </Label>
+            </Grid>
+        </Grid>
+</UserControl>
+

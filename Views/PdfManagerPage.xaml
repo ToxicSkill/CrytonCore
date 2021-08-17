@@ -1,0 +1,137 @@
+﻿<Page x:Class="CrytonCore.Views.PdfManagerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CrytonCore.Views" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Title="PdfManagerPage" 
+      xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="665" d:DesignWidth="1334"
+      LayoutUpdated="Page_LayoutUpdated">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Page.DataContext>
+        <ViewModel:PdfManagerPageViewModel/>
+    </Page.DataContext>
+    
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+
+        <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
+            <materialDesign:Transitioner.Background>
+                <LinearGradientBrush EndPoint="0.5,1" 
+                             MappingMode="RelativeToBoundingBox" 
+                             StartPoint="0.5,0" Opacity="1">
+                    <GradientStop Color="{DynamicResource backgroundTopColor}"/>
+                    <GradientStop Offset="1"/>
+                </LinearGradientBrush>
+            </materialDesign:Transitioner.Background>
+        </materialDesign:Transitioner>
+
+        <!--<Grid>
+            <materialDesign:ColorZone x:Name="topLabel" Grid.Row="0" Mode="Light" Background="#FF661717" VerticalAlignment="Top" 
+                                  HorizontalAlignment="Stretch" Height="77" VerticalContentAlignment="Stretch" >-->
+        <Label Content="{DynamicResource pdfManagerTitle_pdfManager}" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" HorizontalAlignment="Left" Margin="45,0,0,0" 
+                       VerticalAlignment="Top" Height="77" Width="898" FontSize="52" Background="#00000000" Foreground="{DynamicResource title}" FontFamily="Lato Light"/>
+            <!--</materialDesign:ColorZone>
+        </Grid>-->
+        
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,225,0,10">
+            <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ListViewItem  HorizontalAlignment="Stretch">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding MergeItemNavigate}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <Button Style="{StaticResource TransparentButtonLeftAlignment}"  HorizontalContentAlignment="Center" 
+                                Content="{DynamicResource merge_settingsPage}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="613"
+                                FontFamily="Lato Light" FontSize="36" Margin="50,0,0,0"
+                                Foreground="{DynamicResource clrPrimary}" Background="#00000000"  BorderBrush="Transparent" />
+
+                        <Rectangle x:Name="mergeColorBar" Fill="{DynamicResource clrBar}" HorizontalAlignment="Stretch" Height="1" 
+                                   VerticalAlignment="Top" Margin="20,0,0,0" Width="{Binding BarsSize}"/>
+                        <Label Content="{DynamicResource mergeSub_settingsPage}" Foreground="{DynamicResource clrSecondary}" Margin="50,0,0,0"/>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem HorizontalAlignment="Stretch">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding SecureItemNavigate}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <Button x:Name="secureButton" Style="{StaticResource TransparentButtonLeftAlignment}"  
+                                Content="{DynamicResource secure_settingsPage}" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                                FontFamily="Lato Light" FontSize="36"  Margin="50,0,0,0"
+                                Foreground="{DynamicResource clrPrimary}" Background="#00000000"  BorderBrush="Transparent" Width="611"/>
+
+                        <Rectangle x:Name="secureColorBar" Fill="{DynamicResource clrBar}" HorizontalAlignment="Stretch" Height="1" 
+                                   VerticalAlignment="Top" Margin="20,0,0,0" Width="{Binding BarsSize}"/>
+                        <Label Content="{DynamicResource secureSub_settingsPage}" Foreground="{DynamicResource clrSecondary}" Margin="50,0,0,0"/>
+
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem HorizontalAlignment="Stretch">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding PdfToImageNavigate}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <StackPanel HorizontalAlignment="Stretch" >
+                        <Button Style="{StaticResource TransparentButtonLeftAlignment}"  HorizontalContentAlignment="Center" 
+                                Content="{DynamicResource convertToImage_settingsPage}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="611"  
+                                FontFamily="Lato Light" FontSize="36"  Margin="50,0,0,0"
+                                Foreground="{DynamicResource clrPrimary}" Background="#00000000"  BorderBrush="Transparent"/>
+
+                        <Rectangle x:Name="convertPdftoImgColorBar" Fill="{DynamicResource clrBar}" HorizontalAlignment="Stretch" Height="1" 
+                                   VerticalAlignment="Top"  Margin="20,0,0,0" Width="{Binding BarsSize}"/>
+                        <Label Content="{DynamicResource convertToImageSub_settingsPage}" Foreground="{DynamicResource clrSecondary}" Margin="50,0,0,0"/>
+
+
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem HorizontalAlignment="Stretch">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding ImageToPdfItemNavigate}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
+                    <StackPanel HorizontalAlignment="Stretch" >
+                        <Button Style="{StaticResource TransparentButtonLeftAlignment}"  HorizontalContentAlignment="Center" 
+                                Content="{DynamicResource convertImageToPdf_settingsPage}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="611"  
+                                FontFamily="Lato Light" FontSize="36"  Margin="50,0,0,0"
+                                Foreground="{DynamicResource clrPrimary}" Background="#00000000"  BorderBrush="Transparent"/>
+
+                        <Rectangle x:Name="convertImgtoPdfColorBar" Fill="{DynamicResource clrBar}" HorizontalAlignment="Stretch" Height="1" 
+                                   VerticalAlignment="Top"  Margin="20,0,0,0" Width="{Binding BarsSize}"/>
+                        <Label Content="{DynamicResource convertImageToPdfSub_settingsPage}" Foreground="{DynamicResource clrSecondary}" Margin="50,0,0,0"/>
+
+
+                    </StackPanel>
+                    
+                </ListViewItem>
+            </ListView>
+        </Grid>
+
+    </Grid>
+</Page>

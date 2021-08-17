@@ -1,0 +1,112 @@
+﻿<ResourceDictionary 
+      xmlns ="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xml:space="preserve" >
+
+    <!--COMMON-->
+    <system:String x:Key="dragAndDropLabel1">Przeciągnij i upuść plik tutaj</system:String>
+    <system:String x:Key="dragAndDropLabel2">lub kliknij tutaj, aby dodać plik manualnie</system:String>
+    
+    
+    <!--Welcome Page-->
+    <system:String x:Key="welcome_welcomePage">Witaj w aplikacji</system:String>
+    <system:String x:Key="subWelcome_welcomePage">t e n   p r o g r a m   p o z w a l a   n a:</system:String>
+    <system:String x:Key="programDescribe1_welcomePage">- Szyfrowanie &amp; deszyfrowanie plików,</system:String>
+    <system:String x:Key="programDescribe2_welcomePage">- Edytowanie plików PDF &amp; zabezpieczanie ich</system:String>
+    
+    
+    <!--Main Window-->
+    <system:String x:Key="crypt_mainWindow">Szyfr</system:String>
+    <system:String x:Key="settings_mainWindow">Ustawienia</system:String>
+    <system:String x:Key="informations_mainWindow">Informacje</system:String>
+    <system:String x:Key="statistics_mainWindow">Statystyka</system:String>
+    
+    <system:String x:Key="tipCrypt_mainWindow">Szyfr</system:String>
+    <system:String x:Key="tipPdf_mainWindow">Menedżer Pdf</system:String>
+    <system:String x:Key="tipSettings_mainWindow">Ustawienia</system:String>
+    <system:String x:Key="tipInformations_mainWindow">Informacje</system:String>
+    <system:String x:Key="tipStatistics_mainWindow">Statystyka</system:String>
+    
+    
+    <!--CRYPTING PAGE-->
+    <system:String x:Key="cryptingTitle_cryptingPage">SZYFROWANIE</system:String>
+    <system:String x:Key="chosenFileName_cryptingPage">Nazwa wybranego pliku</system:String>
+    <system:String x:Key="yourFileName_cryptingPage">Nazwa Twojego pliku</system:String>
+    <system:String x:Key="fileContent_cryptingPage">Zawartość pliku</system:String>
+    <system:String x:Key="processing_cryptingPage">Przetwarzanie...</system:String>
+    <system:String x:Key="withChosenCryptingMethod_cryptingPage">Wybraną metodą szyfrowania:</system:String>
+    <system:String x:Key="encrypt_cryptingPage">ZASZYFRUJ</system:String>
+    <system:String x:Key="decrypt_cryptingPage">ROZSZYFRUJ</system:String>
+    <system:String x:Key="toolTipEncrypt_cryptingPage">zaszyfruj plik</system:String>
+    <system:String x:Key="toolTipDecrypt_cryptingPage">rozszyfruj plik</system:String>
+    <system:String x:Key="keyLengthInBits_cryptingPage">Długość klucza w bitach:</system:String>
+    
+    <system:String x:Key="clear_cryptingPage">Wyczyść</system:String>
+    <system:String x:Key="loadFile_cryptingPage">Załaduj plik</system:String>
+    <system:String x:Key="saveFile_cryptingPage">Zapisz plik</system:String>
+    <system:String x:Key="cancelOperation_cryptingPage">Anuluj</system:String>
+    <system:String x:Key="details_cryptingPage">Szczegóły</system:String>
+    <system:String x:Key="toolTipHelp_cryptingPage">Pomoc</system:String>
+    
+    <system:String x:Key="status_cryptingPage">Status: </system:String>
+    <system:String x:Key="size_cryptingPage">Rozmiar: </system:String>
+    <system:String x:Key="extension_cryptingPage">Rozszerzenie: </system:String>
+    <system:String x:Key="usedCryptingMethod_cryptingPage">Użyta metoda szyfrowania:</system:String>
+    
+    <system:String x:Key="copyGeneratedKeys_cryptingPage">Skopiuj wygenerowane klucze do schowka</system:String>    
+    <system:String x:Key="cesarShiftLabel_cryptingPage">Wartość przesunięcia</system:String>
+    
+    <!--SETTINGSPAGE-->
+    <system:String x:Key="settingsTitle_settingsPage">USTAWIENIA</system:String>
+    <system:String x:Key="theme_settingWindow">Motyw</system:String>
+    <system:String x:Key="language_settingWindow">Język</system:String>
+    
+    
+    <!--PDF MANGER-->
+    <system:String x:Key="pdfManagerTitle_pdfManager">MENEDŻER PDF</system:String>
+    <system:String x:Key="merge_settingsPage">Połącz</system:String>
+    <system:String x:Key="mergeSub_settingsPage">Połącz pliki w jeden. Załaduj je i nadaj im odpowiednią kolejność. Program wygeneruje pojedynczy połączony plik PDF.</system:String>
+    <system:String x:Key="secure_settingsPage">Zabezpiecz</system:String>
+    <system:String x:Key="secureSub_settingsPage">Załaduj plik pdf i zabezpiecz go hasłem. Zmień uprawnienia dla programu Adobe Reader.</system:String>
+    <system:String x:Key="convertToImage_settingsPage">Konwertuj pdf na obraz</system:String>
+    <system:String x:Key="convertToImageSub_settingsPage">Konwertuj plik pdf na obraz. Dopasuj jego wielkość i jakość.</system:String>
+    <system:String x:Key="convertImageToPdf_settingsPage">Konwertuj obraz na pdf</system:String>
+    <system:String x:Key="convertImageToPdfSub_settingsPage">Konwertuj obraz na pdf. Dopasuj jakość i nadaj uprawnienia.</system:String>
+
+    
+    <system:String x:Key="helpText_cryptingPage">
+        Załaduj plik poprzez przeciągnięcie i upuszczenie w oknie szyfrowania lub załaduj plik manualnie. 
+        Następnie wybierz metodę szyfrowania (prawy górny róg) i dostosuj ustawienia algorytmu. 
+        Nad polem wyboru szyfru, możesz kliknąć w przycisk, który rozpocznie procesz szyfrowania. 
+        Możesz w każdej chwili anulować operacje. Za/rozszyfrowane pliki możesz zapisać pod wskazaną lokalizacją. 
+        Jeżeli proces szyfrowania przebiegł pomyślnie, przy załadowaniu zaszyfrowanego pliku do programu, 
+        on rozpozna go i automatycznie dostosuje ustawienia programu, 
+        aby były gotowe do deszyfrowania. Pamiętaj, że szyfrowanie RSA generuje klucze prywatne i publiczne. 
+        
+        
+        Zachowaj klucze prywatne jedynie dla siebie i trzymaj je w bezpiecznym miejscu.
+    </system:String>
+    
+    <system:String x:Key="helpTitle_cryptingPage">SZYFROWANIE - POMOC</system:String>
+    
+    
+    
+    <!--PDF MERGE-->
+    <system:String x:Key="setAsFirst_pdfMerge">Ustaw jako pierwszy</system:String>
+    <system:String x:Key="setAsLast_pdfMerge">Ustaw jako ostatni</system:String>
+    <system:String x:Key="moveUp_pdfMerge">Przesuń wyżej</system:String>
+    <system:String x:Key="moveDown_pdfMerge">Przesuń niżej</system:String>
+    
+    <system:String x:Key="delete_pdfMerge">Usuń wybrany</system:String>
+    <system:String x:Key="clear_pdfMerge">Wyczyść wszystko</system:String>
+    <system:String x:Key="continueText_pdfMerge">D A L E J</system:String>
+    <system:String x:Key="backText_pdfMerge">P O W R Ó T</system:String>
+    
+    
+    <!--PDF SUMMARY-->
+    <system:String x:Key="saveFiles_cryptingPage">Zapisz</system:String>
+    <system:String x:Key="cancel_cryptingPage">Anuluj</system:String>
+    
+    <!-- All StringResources Goes Here -->
+</ResourceDictionary> 

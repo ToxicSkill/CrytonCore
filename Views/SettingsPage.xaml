@@ -1,0 +1,117 @@
+﻿<Page x:Class="CrytonCore.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:CrytonCore.Views" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Title="SettingsPage" 
+      xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+      Effect="{Binding Effect}" >
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Orange.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Page.DataContext>
+        <ViewModel:SettingsViewModel/>
+    </Page.DataContext>
+    
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+
+        <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
+            <materialDesign:Transitioner.Background>
+                <LinearGradientBrush EndPoint="0.5,1" 
+                             MappingMode="RelativeToBoundingBox" 
+                             StartPoint="0.5,0" Opacity="1">
+                    <GradientStop Color="{DynamicResource backgroundTopColor}"/>
+                    <GradientStop Offset="1"/>
+                </LinearGradientBrush>
+            </materialDesign:Transitioner.Background>
+            <!--<Button Content="Button" Command="{Binding Change}" HorizontalAlignment="Left" Margin="380,86,0,0" VerticalAlignment="Top" Width="75"/>-->
+        </materialDesign:Transitioner>
+
+        <!--<Grid>
+            <materialDesign:ColorZone x:Name="topLabel" Grid.Row="0" Mode="Light" Background="#FF661717" VerticalAlignment="Top" 
+                                  HorizontalAlignment="Stretch" Height="77" VerticalContentAlignment="Stretch" >-->
+        <Label Content="{DynamicResource settingsTitle_settingsPage}" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" HorizontalAlignment="Left" Margin="45,0,0,0" 
+                       VerticalAlignment="Top" Height="77" Width="959" FontSize="52" Background="#00000000" Foreground="{DynamicResource title}" FontFamily="Lato Light"/>
+        <!--</materialDesign:ColorZone>
+        </Grid>-->
+        <Grid Margin="36,131,10,193">
+        </Grid>
+
+        <ListView  HorizontalAlignment="Stretch" Margin="0,193,0,0">
+            
+            
+            <!--<ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            
+            <ListView.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Orange.xaml" />
+
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </ListView.Resources>-->
+
+
+            <ListViewItem>
+                <Grid Width="1314">
+                    <StackPanel Margin="50,0,0,0">
+                        <Label Content="{DynamicResource language_settingWindow}" FontSize="26" Foreground="{DynamicResource font}" FontFamily="Lato Light"/>
+                    </StackPanel>
+                    
+                    <ComboBox HorizontalAlignment="Right" Foreground="{DynamicResource font}" Background="Transparent"
+                              FontSize="20" FontFamily="Lato Light"
+                              Height="34" Width="215" ItemsSource="{Binding LanguagesCollection}" SelectedItem="{Binding SelectedLanguage}" Margin="0,4,10,5"  Effect="{Binding EffectCombo}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                                <i:InvokeCommandAction Command="{Binding EffectComboClick}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="DropDownClosed" >
+                                <i:InvokeCommandAction Command="{Binding EffectComboFocusLost}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        
+                    </ComboBox>
+                </Grid>
+            </ListViewItem>
+            <ListViewItem>
+                <Grid Width="1314">
+                    <StackPanel Margin="50,0,0,0">
+
+                        <Label Content="{DynamicResource theme_settingWindow}" FontSize="26" Foreground="{DynamicResource font}" FontFamily="Lato Light"/>
+
+                    </StackPanel>
+                    <ComboBox HorizontalAlignment="Right" Foreground="{DynamicResource font}" Background="Transparent"
+                              FontSize="20" FontFamily="Lato Light" ItemsSource="{Binding ThemesCollection}" SelectedItem="{Binding SelectedTheme}"
+                              Height="34" Width="215" Margin="0,4,10,5" Effect="{Binding EffectCombo}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                                <i:InvokeCommandAction Command="{Binding EffectComboClick}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="DropDownClosed" >
+                                <i:InvokeCommandAction Command="{Binding EffectComboFocusLost}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+
+                </Grid>
+            </ListViewItem>
+        </ListView>
+    </Grid>
+</Page>

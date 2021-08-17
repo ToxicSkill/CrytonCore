@@ -1,0 +1,56 @@
+﻿<Page x:Class="CrytonCore.Views.WelcomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel"  
+      mc:Ignorable="d" 
+      d:DesignHeight="665" d:DesignWidth="1334"
+      Title="WelcomePage">
+
+    <Page.DataContext>
+        <ViewModel:WelcomePageViewModel/>
+    </Page.DataContext>
+    
+    <Grid x:Name="mainGrid">
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Grid.Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation From="6" To="0" Duration="00:00:02" 
+               Storyboard.TargetName="blurEffect" 
+               Storyboard.TargetProperty="Radius"></DoubleAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>
+        <Grid.Effect>
+            <BlurEffect x:Name="blurEffect" Radius="6" />
+        </Grid.Effect>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.3,1"  
+                                 MappingMode="RelativeToBoundingBox" 
+                                 StartPoint="0.4,0" Opacity="0.8">
+                <GradientStop Color="#FFE25E5E"/>
+                <GradientStop Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,110,114,375" Height="180" >
+                <Label Content="{DynamicResource welcome_welcomePage}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="85" Foreground="{DynamicResource font}" FontFamily="Corbel Light" FontWeight="Thin" FontStretch="UltraExpanded" Margin="0,18,450,18" Height="144" Width="760" />
+                <Label Content="C R Y T O N" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="100" Foreground="{DynamicResource font}" FontFamily="Corbel" TextOptions.TextHintingMode="Animated" FontWeight="Thin" Margin="0,2,0,47" Height="131"/>
+
+            </Grid>
+            <Label x:Name="subtitleLabel" LayoutTransform="{Binding SubtitleTransform}" Content="{DynamicResource subWelcome_welcomePage}" HorizontalContentAlignment="Right" HorizontalAlignment="Center"   VerticalAlignment="Center"  FontSize="36" Foreground="{DynamicResource font}" FontFamily="Segoe UI Light" FontWeight="ExtraLight" TextOptions.TextFormattingMode="Display" Margin="10,235,207,366" Height="64" Width="1117"/>
+            <Label Content="{DynamicResource programDescribe1_welcomePage}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="58" Width="503" FontSize="22" Background="#00000000" Foreground="{DynamicResource subFont}" FontFamily="Microsoft YaHei UI Light" Margin="475,304,356,303"/>
+            <Label Content="{DynamicResource programDescribe2_welcomePage}" HorizontalAlignment="Center"  VerticalAlignment="Center" Height="58" Width="503" FontSize="22" Background="#00000000" Foreground="{DynamicResource subFont}" FontFamily="Microsoft YaHei UI Light" Margin="475,362,356,245"/>
+            <Label Name="LiveTimeLabel" Content="{Binding CurrentTime}" HorizontalContentAlignment="Left" HorizontalAlignment="Right" Margin="0,0,10,18" VerticalAlignment="Bottom" Height="44" Width="101" FontSize="36" FontWeight="Bold" Foreground="#FFAA9F9F" RenderTransformOrigin="0.583,0.764" FontFamily="Bahnschrift Light" />
+            <Label Name="LiveTimeDayLabel" Content="{Binding CurrentDay}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0,0,111,10" VerticalAlignment="Bottom" Height="44" Width="148" Foreground="{DynamicResource font}" FontSize="24" FontFamily="Microsoft YaHei UI Light"/>
+            <Image HorizontalAlignment="Stretch" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Hidden" Height="136" Margin="765,0,111,529" VerticalAlignment="Stretch" Width="458" Source="/CrytonCore;component/Assets/CL1.png"/>
+                <Rectangle x:Name="internetConnectionDiode" Fill="{Binding FillDiode}" ToolTip="{Binding ToolTip}" HorizontalAlignment="Right" Height="27" Margin="0,0,10,25" VerticalAlignment="Bottom" Width="4"/>
+            
+
+        </Grid>
+    </Grid>
+</Page>

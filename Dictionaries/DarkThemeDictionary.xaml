@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="clrPrimary" Color="Azure" />
+    <SolidColorBrush x:Key="clrSecondary" Color="LightGray" />
+    <SolidColorBrush x:Key="clrBar" Color="Orange" />
+    <Color x:Key="backgroundBottomColor">Black</Color>
+    <Color x:Key="backgroundTopColor">Black</Color>
+    <Color x:Key="titleBarTopColor">Orange</Color>
+    <Color x:Key="titleBarBottomColor">Orange</Color>
+    <SolidColorBrush x:Key="encryptionButton">#ef8624</SolidColorBrush>
+    <SolidColorBrush x:Key="font" Color="White" />
+    <SolidColorBrush x:Key="subFont" Color="#FFFFC2C2" />
+    <SolidColorBrush x:Key="title" Color="#FFEEE5FF" />
+    <SolidColorBrush x:Key="text" Color="#FFC7C7C7" />
+    <SolidColorBrush x:Key="text2" Color="#FFC7C7C7" />
+    <SolidColorBrush x:Key="continueText" Color="#F5FF00" />
+    <Color x:Key="line">Orange</Color>
+    <Color x:Key="gradientListViewItemTop">Orange</Color>
+    <Color x:Key="gradientListViewItemBottom">DarkOrange</Color>
+
+    <SolidColorBrush x:Key="buttonAction">Orange</SolidColorBrush>
+    <SolidColorBrush x:Key="clearButton">OrangeRed</SolidColorBrush>
+    <!--<Color x:Key="backgroundTopColor">#0f0f0f</Color>-->
+</ResourceDictionary>
