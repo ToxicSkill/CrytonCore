@@ -22,7 +22,15 @@ namespace CrytonCore.Model
 
         public Image ImagePDF = new Image();
         private Image_Tool ImageTools = new Image_Tool();
+        private byte[] _pdfBytes;
 
+        public Task LoadPdf()
+        {
+            _pdfBytes = System.IO.File.ReadAllBytes(ImagePDF.Url);
+            return Task.CompletedTask;
+        }
+
+        public async Task<BitmapImage> GetPdfPageImage() => await GetPdfImage();
         public BitmapImage GetBitmapImage() => ImagePDF.Extension == "pdf" ? RenderPage() : ImageToBitmap();
 
         //public Task<BitmapImage> LoadBitmapImage() => Task.FromResult(RenderPage());
@@ -47,9 +55,8 @@ namespace CrytonCore.Model
             return bitmapImage;
         }
 
-        private BitmapImage PDFFF()
+        private async Task<BitmapImage> GetPdfImage()
         {
-            byte[] pdfBytes = System.IO.File.ReadAllBytes(ImagePDF.Url);
             MemoryStream memoryStream = new MemoryStream();
             MagickImage imgBackdrop;
             MagickColor backdropColor = MagickColors.White; // replace transparent pixels with this color 
@@ -57,7 +64,7 @@ namespace CrytonCore.Model
 
             using (IDocLib pdfLibrary = DocLib.Instance)
             {
-                using (var docReader = pdfLibrary.GetDocReader(pdfBytes, new PageDimensions(1.0d)))
+                using (var docReader = pdfLibrary.GetDocReader(_pdfBytes, new PageDimensions(1.0d)))
                 {
                     using (var pageReader = docReader.GetPageReader(pdfPageNum))
                     {
@@ -68,7 +75,7 @@ namespace CrytonCore.Model
 
                         // specify that we are reading a byte array of colors in R-G-B-A order.
                         PixelReadSettings pixelReadSettings = new PixelReadSettings(width, height, StorageType.Char, PixelMapping.RGBA);
-                        using (MagickImage imgPdfOverlay = new MagickImage(rawBytes, pixelReadSettings))
+                        using (MagickImage imgPdfOverlay = new(rawBytes, pixelReadSettings))
                         {
                             // turn transparent pixels into backdrop color using composite: http://www.imagemagick.org/Usage/compose/#compose
                             imgBackdrop = new MagickImage(backdropColor, width, height);
@@ -128,8 +135,8 @@ namespace CrytonCore.Model
         }
         private BitmapImage RenderPage()
         {
-            return PDFFF();
-            //return Convert(ExtractAllImages());
+            //return PDFFF();
+            return Convert(ExtractAllImages());
         }
 
         public System.Drawing.Image ExtractAllImages()

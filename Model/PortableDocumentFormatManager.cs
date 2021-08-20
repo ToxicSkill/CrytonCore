@@ -49,7 +49,7 @@ namespace CrytonCore.Model
 
         public async Task<bool> LoadFile(IEnumerable<string> fileNames)
         {
-            var tasks = fileNames.Select(url => Task.Run(() => AddFileToList(url))).ToList();
+            var tasks = fileNames.Select(async url => await AddFileToList(url)).ToList();
             var res = await Task.WhenAll(tasks);
             foreach (var (i, task) in tasks.Select((value, index) => (index, value)))
             {
@@ -63,7 +63,7 @@ namespace CrytonCore.Model
             await Task.Run(() => VisibilityChangeDelegate(true));
             return true;
         }
-        private bool AddFileToList(string url, bool pdfFormat = true)
+        private async Task<bool> AddFileToList(string url, bool pdfFormat = true)
         {
             var extension = url.Split('.').Last().ToLower();
 
@@ -86,14 +86,14 @@ namespace CrytonCore.Model
                 {
                     var reader = new iTextSharp.text.pdf.PdfReader(img.Url);
                     img.MaxNumberOfPages = reader.NumberOfPages;
-                    
+
                 }
                 else
                 {
                     img.MaxNumberOfPages = 1;
                 }
                 _pdf.ImagePDF = img;
-                img.Bitmap = _pdf.GetBitmapImage();
+                await _pdf.LoadPdf();
                 Images.Add(img);
             }
             catch (Exception)
@@ -101,6 +101,7 @@ namespace CrytonCore.Model
                 return false;
             }
             return true;
+            
         }
 
         private async Task UpdateListViewImages()
@@ -150,7 +151,8 @@ namespace CrytonCore.Model
                 var currentIndex = OrderVector[SelectedItemIndex];
                 _pdf.ImagePDF = Images[currentIndex];
                 _pdf.ImagePDF.CurrentNumberOfPage = Slider.CurrentIndex;
-                _pdf.ImagePDF.Bitmap = await Application.Current.Dispatcher.InvokeAsync(_pdf.GetBitmapImage);
+                //_pdf.ImagePDF.Bitmap = await Application.Current.Dispatcher.InvokeAsync(_pdf.GetBitmapImage);
+                _pdf.ImagePDF.Bitmap = await _pdf.GetPdfPageImage();
                 BitmapSource = _pdf.ImagePDF.Bitmap;
             }
             else
@@ -173,7 +175,8 @@ namespace CrytonCore.Model
                         currentPage - max - 1 :
                         currentPage;
 
-                        _pdf.ImagePDF.Bitmap = await Application.Current.Dispatcher.InvokeAsync(_pdf.GetBitmapImage);
+                        //_pdf.ImagePDF.Bitmap = await Application.Current.Dispatcher.InvokeAsync(_pdf.GetPdfPageImage());
+                        _pdf.ImagePDF.Bitmap = await _pdf.GetPdfPageImage();
                         BitmapSource = _pdf.ImagePDF.Bitmap;
 
                     }
