@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CrytonCore.Infra;
 using CrytonCore.Model;
-using Image = CrytonCore.Tools.Image;
+using Image = CrytonCore.Model.Image;
 
 namespace CrytonCore.ViewModel
 {

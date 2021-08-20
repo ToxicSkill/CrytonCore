@@ -1,4 +1,7 @@
-﻿using iTextSharp.text;
+﻿using Docnet.Core;
+using Docnet.Core.Models;
+using ImageMagick;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Patagames.Pdf.Enums;
 using Patagames.Pdf.Net;
@@ -10,7 +13,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCore.Tools
+namespace CrytonCore.Model
 {
     public class PortableDocumentFormat
     {
@@ -31,7 +34,7 @@ namespace CrytonCore.Tools
         private BitmapImage Convert(System.Drawing.Image img)
         {
             var memory = new MemoryStream();
-            img.Save(memory, ImageFormat.Png);
+            img.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
             memory.Position = 0;
 
             var bitmapImage = new BitmapImage();
@@ -44,7 +47,90 @@ namespace CrytonCore.Tools
             return bitmapImage;
         }
 
-        private BitmapImage RenderPage() => Convert(ExtractAllImages());
+        private BitmapImage PDFFF()
+        {
+            byte[] pdfBytes = System.IO.File.ReadAllBytes(ImagePDF.Url);
+            MemoryStream memoryStream = new MemoryStream();
+            MagickImage imgBackdrop;
+            MagickColor backdropColor = MagickColors.White; // replace transparent pixels with this color 
+            int pdfPageNum = ImagePDF.CurrentNumberOfPage; // first page is 0
+
+            using (IDocLib pdfLibrary = DocLib.Instance)
+            {
+                using (var docReader = pdfLibrary.GetDocReader(pdfBytes, new PageDimensions(1.0d)))
+                {
+                    using (var pageReader = docReader.GetPageReader(pdfPageNum))
+                    {
+                        var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
+                        rawBytes = RearrangeBytesToRGBA(rawBytes);
+                        var width = pageReader.GetPageWidth();
+                        var height = pageReader.GetPageHeight();
+
+                        // specify that we are reading a byte array of colors in R-G-B-A order.
+                        PixelReadSettings pixelReadSettings = new PixelReadSettings(width, height, StorageType.Char, PixelMapping.RGBA);
+                        using (MagickImage imgPdfOverlay = new MagickImage(rawBytes, pixelReadSettings))
+                        {
+                            // turn transparent pixels into backdrop color using composite: http://www.imagemagick.org/Usage/compose/#compose
+                            imgBackdrop = new MagickImage(backdropColor, width, height);
+                            imgBackdrop.Composite(imgPdfOverlay, CompositeOperator.Over);
+                        }
+                    }
+                }
+            }
+
+            imgBackdrop.Write(memoryStream, MagickFormat.Png);
+            imgBackdrop.Dispose();
+            memoryStream.Position = 0;
+
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.StreamSource = memoryStream;
+            bitmap.CacheOption = BitmapCacheOption.Default;
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            //using (FileStream file = new FileStream("C:\\Users\\Adam\\Desktop\\PDFTEST\\pdff.png", FileMode.Create, System.IO.FileAccess.Write))
+            //{
+            //    byte[] bytes = new byte[memoryStream.Length];
+            //    memoryStream.Read(bytes, 0, (int)memoryStream.Length);
+            //    file.Write(bytes, 0, bytes.Length);
+            //    memoryStream.Close();
+            //}
+
+            return bitmap;
+        }
+        private byte[] RearrangeBytesToRGBA(byte[] BGRABytes)
+        {
+            var max = BGRABytes.Length;
+            var RGBABytes = new byte[max];
+            var idx = 0;
+            byte r;
+            byte g;
+            byte b;
+            byte a;
+            while (idx < max)
+            {
+                // get colors in original order: B G R A
+                b = BGRABytes[idx];
+                g = BGRABytes[idx + 1];
+                r = BGRABytes[idx + 2];
+                a = BGRABytes[idx + 3];
+
+                // re-arrange to be in new order: R G B A
+                RGBABytes[idx] = r;
+                RGBABytes[idx + 1] = g;
+                RGBABytes[idx + 2] = b;
+                RGBABytes[idx + 3] = a;
+
+                idx += 4;
+            }
+            return RGBABytes;
+        }
+        private BitmapImage RenderPage()
+        {
+            return PDFFF();
+            //return Convert(ExtractAllImages());
+        }
 
         public System.Drawing.Image ExtractAllImages()
         {
@@ -56,7 +142,7 @@ namespace CrytonCore.Tools
                 var bitmap = new PdfBitmap(width, height, true);
                 
                 bitmap.FillRect(0, 0, width, height, Patagames.Pdf.FS_COLOR.White);
-                page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, RenderFlags.FPDF_RENDER_LIMITEDIMAGECACHE);
+                page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, Patagames.Pdf.Enums.RenderFlags.FPDF_RENDER_LIMITEDIMAGECACHE);
                 return bitmap.Image;
             }
         }
@@ -73,7 +159,7 @@ namespace CrytonCore.Tools
                 return new Bitmap(bitmap);
             }
         }
-        public void PdfToImage(Bitmap img, string outFileName) => img.Save(outFileName, ImageFormat.Png);
+        public void PdfToImage(Bitmap img, string outFileName) => img.Save(outFileName, System.Drawing.Imaging.ImageFormat.Png);
 
 
         public BitmapImage ImageToBitmap()
@@ -157,7 +243,7 @@ namespace CrytonCore.Tools
                 doc.Close();
             }
         }
-        public void MergePdf(List<Tools.Image> InFiles, String OutFile)
+        public void MergePdf(List<Model.Image> InFiles, String OutFile)
         {
             //Define a new output document and its size, type
             Document document = new Document(PageSize.A4, 0, 0, 0, 0);

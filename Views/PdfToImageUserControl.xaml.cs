@@ -1,4 +1,5 @@
-﻿using CrytonCore.Tools;
+﻿using CrytonCore.Model;
+using CrytonCore.Tools;
 using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using System;
@@ -26,8 +27,8 @@ namespace CrytonCore.Views
 
         private PortableDocumentFormat _pdf = new PortableDocumentFormat();
 
-        private readonly List<Tools.Image> _images = new List<Tools.Image>();
-        private readonly Image_Tool _image = new Tools.Image_Tool();
+        private readonly List<Model.Image> _images = new List<Model.Image>();
+        private readonly Model.Image_Tool _image = new Model.Image_Tool();
 
         private System.Windows.Navigation.NavigationService _navigation;
 
@@ -195,7 +196,7 @@ namespace CrytonCore.Views
 
         private void AddFileToList(string url)
         {
-            Tools.Image img = new Tools.Image
+            Model.Image img = new Model.Image
             {
                 Url = url,
                 Ratio = 0,

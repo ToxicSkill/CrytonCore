@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCore.Tools
+namespace CrytonCore.Model
 {
     public class Image : IDisposable
     {

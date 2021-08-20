@@ -24,9 +24,10 @@ namespace CrytonCore.Views
         private async Task LoadFile()
         {
             var openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
             {
-                _ = await (DataContext as PdfMergeViewModel)?.LoadFile(new[] { openFileDialog.FileName });
+                _ = await (DataContext as PdfMergeViewModel)?.LoadFile(openFileDialog.FileNames);
             }
         }
         private async void LoadFileButton_Click(object sender, EventArgs e) => await LoadFile();

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Image = CrytonCore.Tools.Image;
+using Image = CrytonCore.Model.Image;
 
 namespace CrytonCore.Model
 {
@@ -60,8 +60,7 @@ namespace CrytonCore.Model
             if (!res.Any(x => x)) return false;
             await UpdateListViewImages();
             UpdateSlider(); 
-            Task delegateTask = Task.Run(() => VisibilityChangeDelegate(true));
-            delegateTask.Wait();
+            await Task.Run(() => VisibilityChangeDelegate(true));
             return true;
         }
         private bool AddFileToList(string url, bool pdfFormat = true)
