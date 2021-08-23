@@ -5,6 +5,7 @@ using System.Linq;
 using static CrytonCore.Enums.Enumerates;
 using System.Threading.Tasks;
 using System.Threading;
+using CrytonCore.Model;
 
 namespace CrytonCore.Ciphers
 {

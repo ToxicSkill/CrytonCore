@@ -1,5 +1,4 @@
 ﻿using CrytonCore.Model;
-using CrytonCore.Tools;
 using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using System;
@@ -28,7 +27,7 @@ namespace CrytonCore.Views
         private PortableDocumentFormat _pdf = new PortableDocumentFormat();
 
         private readonly List<Model.Image> _images = new List<Model.Image>();
-        private readonly Model.Image_Tool _image = new Model.Image_Tool();
+        private readonly Model.ImageTool _image = new Model.ImageTool();
 
         private System.Windows.Navigation.NavigationService _navigation;
 

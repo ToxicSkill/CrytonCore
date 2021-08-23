@@ -1,5 +1,4 @@
 ﻿using CrytonCore.Infra;
-using CrytonCore.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,16 +28,16 @@ namespace CrytonCore.Model
 
         protected ObservableCollection<int> OrderVector { get; set; } = new ObservableCollection<int>();
 
-        private readonly PortableDocumentFormat _pdf = new PortableDocumentFormat();
+        private PDF _PDF = new();
         private ImageSlider Slider { get; }
         private bool FirstRun { get; set; }
-        protected ObservableCollection<Image> Images { get; }
+        protected ObservableCollection<PDF> PDFCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
 
         protected PortableDocumentFormatManager()
         {
             FilesView = new ObservableCollection<FileListView>();
-            Images = new ObservableCollection<Image>();
+            PDFCollection = new ObservableCollection<PDF>();
             Slider = new ImageSlider() { CurrentIndex = 0 };
         }
 
@@ -52,71 +51,42 @@ namespace CrytonCore.Model
             var tasks = fileNames.Select(async url => await AddFileToList(url)).ToList();
             var res = await Task.WhenAll(tasks);
             foreach (var (i, task) in tasks.Select((value, index) => (index, value)))
-            {
                 if (task.Result)
                     OrderVector.Add(i);
-            }
-
             if (!res.Any(x => x)) return false;
             await UpdateListViewImages();
             UpdateSlider(); 
             await Task.Run(() => VisibilityChangeDelegate(true));
             return true;
         }
-        private async Task<bool> AddFileToList(string url, bool pdfFormat = true)
+
+        private async Task<bool> AddFileToList(string url)
         {
-            var extension = url.Split('.').Last().ToLower();
-
-            if (extension == "pdf")
-                pdfFormat = true;
-
-            if (Enums.Enumerates.ImagesExtensions.gif.ToString("g").Equals(extension) ||
-                Enums.Enumerates.ImagesExtensions.jpg.ToString("g").Equals(extension) ||
-                Enums.Enumerates.ImagesExtensions.jpeg.ToString("g").Equals(extension))
-                pdfFormat = false;
-
-            var img = new Image
-            {
-                Url = url,
-                Extension = url.Split('.').Last().ToLower()
-            };
+            PDF newPDF = new();
             try
             {
-                if (pdfFormat)
-                {
-                    var reader = new iTextSharp.text.pdf.PdfReader(img.Url);
-                    img.MaxNumberOfPages = reader.NumberOfPages;
-
-                }
-                else
-                {
-                    img.MaxNumberOfPages = 1;
-                }
-                _pdf.ImagePDF = img;
-                await _pdf.LoadPdf();
-                Images.Add(img);
+                await newPDF.LoadPdf(url);
+                PDFCollection.Add(newPDF);
             }
             catch (Exception)
             {
                 return false;
             }
-            return true;
-            
+            return newPDF.Bytes.Length > 0;
         }
-
         private async Task UpdateListViewImages()
         {
             if (FilesView.Count == 0)
                 FirstRun = true;
             FilesView.Clear();
             var orderIndex = 0;
-            foreach (var image in Images)
+            foreach (var pdf in PDFCollection)
             {
                 orderIndex++;
                 var file = new FileListView()
                 {
                     Order = orderIndex,
-                    FileName = image.Url.Split('\\').Last()
+                    FileName = pdf.Name
                 };
 
                 FilesView.Add(file);
@@ -148,12 +118,9 @@ namespace CrytonCore.Model
         {
             if (!CurrentMode.SingleSlide)
             {
-                var currentIndex = OrderVector[SelectedItemIndex];
-                _pdf.ImagePDF = Images[currentIndex];
-                _pdf.ImagePDF.CurrentNumberOfPage = Slider.CurrentIndex;
-                //_pdf.ImagePDF.Bitmap = await Application.Current.Dispatcher.InvokeAsync(_pdf.GetBitmapImage);
-                _pdf.ImagePDF.Bitmap = await _pdf.GetPdfPageImage();
-                BitmapSource = _pdf.ImagePDF.Bitmap;
+                _PDF = PDFCollection[OrderVector[SelectedItemIndex]];
+                _PDF.CurrentPage = Slider.CurrentIndex;
+                BitmapSource = await _PDF.GetImageFromPdf();
             }
             else
             {
@@ -162,7 +129,7 @@ namespace CrytonCore.Model
                     try
                     {
                         var currentIndex = SingleSliderDictionary[Slider.CurrentIndex];
-                        _pdf.ImagePDF = Images[currentIndex];
+                        _PDF = PDFCollection[currentIndex];
                         var max = 0;
                         if (currentIndex > 0)
                         {
@@ -170,23 +137,17 @@ namespace CrytonCore.Model
                             max = keys.Max();
                         }
                         var currentPage = Slider.CurrentIndex;
-                        _pdf.ImagePDF.CurrentNumberOfPage =
+                        _PDF.TotalPages =
                         currentIndex > 0 ?
                         currentPage - max - 1 :
                         currentPage;
-
-                        //_pdf.ImagePDF.Bitmap = await Application.Current.Dispatcher.InvokeAsync(_pdf.GetPdfPageImage());
-                        _pdf.ImagePDF.Bitmap = await _pdf.GetPdfPageImage();
-                        BitmapSource = _pdf.ImagePDF.Bitmap;
+                        BitmapSource = await _PDF.GetImageFromPdf();
 
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
-
-                    //Images[currentIndex].Bitmap = await Application.Current.Dispatcher.InvokeAsync(PDF.GetBitmapImage);
-                    //BitmapSource = Images[currentIndex].Bitmap;
                 }
             }
         }
@@ -198,7 +159,7 @@ namespace CrytonCore.Model
             private set
             {
                 _imageBitmap = value;
-                OnPropertyChanged("BitmapSource");
+                OnPropertyChanged(nameof(BitmapSource));
             }
         }
 
@@ -214,13 +175,13 @@ namespace CrytonCore.Model
         {
             if (!CurrentMode.SingleSlide)
             {
-                SliderMaximum = _pdf.ImagePDF.MaxNumberOfPages - 1;
+                SliderMaximum =  _PDF.TotalPages - 1;
                 SliderVisibility = SliderMaximum == 0 ? Visibility.Hidden : Visibility.Visible;
             }
             if (CurrentMode.SingleSlide)
             {
                 var keys = SingleSliderDictionary.Where(x => x.Value == SelectedItemIndex).Select(x => x.Key);
-                if (keys.Count() > 0)
+                if (keys.Any())
                     SliderValue = keys.Min();
             }
         }
@@ -235,7 +196,7 @@ namespace CrytonCore.Model
                 Slider.LastIndex = Slider.CurrentIndex;
                 Slider.CurrentIndex = value;
                 _ = UpdateImageSourceAsync();
-                OnPropertyChanged("SliderValue");
+                OnPropertyChanged(nameof(SliderValue));
             }
         }
 
@@ -245,7 +206,7 @@ namespace CrytonCore.Model
             protected set
             {
                 Slider.MaxIndex = value;
-                OnPropertyChanged("SliderMaximum");
+                OnPropertyChanged(nameof(SliderMaximum));
             }
         }
 
@@ -257,7 +218,7 @@ namespace CrytonCore.Model
             set
             {
                 _sliderVisibility = value;
-                OnPropertyChanged("SliderVisibility");
+                OnPropertyChanged(nameof(SliderVisibility));
             }
         }
 
@@ -271,7 +232,7 @@ namespace CrytonCore.Model
                 _selectedItemIndex = value;
                 _ = UpdateImageSourceAsync();
                 UpdateSlider();
-                OnPropertyChanged("SelectedItemIndex");
+                OnPropertyChanged(nameof(SelectedItemIndex));
             }
         }
 
@@ -284,7 +245,7 @@ namespace CrytonCore.Model
             set
             {
                 _visibilityShowed = value;
-                OnPropertyChanged("VisibilityDefaultAsShowed");
+                OnPropertyChanged(nameof(VisibilityDefaultAsShowed));
             }
         }
         public Visibility VisibilityDefaultAsHidden
@@ -293,7 +254,7 @@ namespace CrytonCore.Model
             set
             {
                 _visibilityHidden = value;
-                OnPropertyChanged("VisibilityDefaultAsHidden");
+                OnPropertyChanged(nameof(VisibilityDefaultAsHidden));
             }
         }
     }

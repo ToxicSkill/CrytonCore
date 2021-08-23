@@ -36,7 +36,7 @@ namespace CrytonCore.ViewModel
         private void RemoveIndexes(int selectedIndex)
         {
             FilesView.RemoveAt(selectedIndex);
-            Images.RemoveAt(OrderVector[selectedIndex]);
+            PDFCollection.RemoveAt(OrderVector[selectedIndex]);
             var orderValue = OrderVector[selectedIndex];
             OrderVector.RemoveAt(selectedIndex);
             for (var i = 0; i < OrderVector.Count; i++)
@@ -49,10 +49,10 @@ namespace CrytonCore.ViewModel
         {
             FilesView.Clear();
             OrderVector.Clear();
-            Images.Clear();
+            PDFCollection.Clear();
         }
 
-        public RelayCommand SetAsFirst => new RelayCommand(SetAsFirstCommand, true);
+        public RelayCommand SetAsFirst => new(SetAsFirstCommand, true);
 
         private void SetAsFirstCommand()
         {
@@ -63,7 +63,7 @@ namespace CrytonCore.ViewModel
             SelectedItemIndex = 0;
         }
 
-        public RelayCommand SetAsLast => new RelayCommand(SetAsLastCommand, true);
+        public RelayCommand SetAsLast => new(SetAsLastCommand, true);
 
         private void SetAsLastCommand()
         {
@@ -75,7 +75,7 @@ namespace CrytonCore.ViewModel
             SelectedItemIndex = lastIndex;
         }
 
-        public RelayCommand MoveDown => new RelayCommand(MoveDownCommand, true);
+        public RelayCommand MoveDown => new(MoveDownCommand, true);
 
         private void MoveDownCommand()
         {
@@ -86,7 +86,7 @@ namespace CrytonCore.ViewModel
             UpdateListView();
             SelectedItemIndex = newIndex;
         }
-        public RelayCommand MoveUp => new RelayCommand(MoveUpCommand, true);
+        public RelayCommand MoveUp => new(MoveUpCommand, true);
 
         private void MoveUpCommand()
         {
@@ -97,7 +97,7 @@ namespace CrytonCore.ViewModel
             UpdateListView();
             SelectedItemIndex = newIndex;
         }
-        public RelayCommand Delete => new RelayCommand(DeleteCommand, true);
+        public RelayCommand Delete => new(DeleteCommand, true);
 
         private void DeleteCommand()
         {
@@ -108,7 +108,7 @@ namespace CrytonCore.ViewModel
             if (FilesView.Count == 0)
                 ChangeVisibility(false);
         }
-        public RelayCommand Clear => new RelayCommand(ClearCommand, true);
+        public RelayCommand Clear => new(ClearCommand, true);
 
         private void ClearCommand()
         {
@@ -121,7 +121,7 @@ namespace CrytonCore.ViewModel
         public async Task<SummaryPdfMergeUserControl> GetSummaryPage()
         {
             if (_summaryUserControl == null) _summaryUserControl = new SummaryPdfMergeUserControl();
-            var result = ((PdfMergeSummaryViewModel) _summaryUserControl.DataContext).Update(FilesView, Images,
+            var result = ((PdfMergeSummaryViewModel) _summaryUserControl.DataContext).Update(FilesView, PDFCollection,
                 OrderVector);
             return result ? _summaryUserControl : null;
         }

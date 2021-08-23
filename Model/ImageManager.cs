@@ -1,11 +1,7 @@
-﻿using CrytonCore.Mapper;
-using Microsoft.Win32.SafeHandles;
+﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Model
@@ -63,10 +59,14 @@ namespace CrytonCore.Model
         }
     }
 
-    public class Image_Tool
+    public class ImageTool
     {
+        public int Ratio { get; set; } = 0;
+
+        public int Rotation { get; set; } = 0;
+        public bool SwitchPixels { get; set; } = false;
         public List<double> Ratios { get; } = new List<double>();
-        public Image_Tool()
+        public ImageTool()
         {
             Ratios.Add((double)1.414213562373095);
             Ratios.Add((double)4 / (double)3);

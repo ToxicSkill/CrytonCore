@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using CrytonCore.Tools;
+using CrytonCore.Model;
 using CrytonCore.Mapper;
 using System.Threading.Tasks;
 using System.IO;
@@ -40,7 +40,7 @@ namespace CrytonCore
 
         public PdfFile PdfFile { get; set; } = new PdfFile();
 
-        public List<Image> ImagesApp { get; set; }
+        public List<System.Drawing.Image> ImagesApp { get; set; }
 
         public int AppCounter { get; set; } = 0;
 

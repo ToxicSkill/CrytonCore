@@ -1,5 +1,4 @@
 ﻿using CrytonCore.Model;
-using CrytonCore.Tools;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace CrytonCore.Views
         private PortableDocumentFormat _pdf = new PortableDocumentFormat();
 
         private readonly List<Model.Image> _images = new();
-        private readonly Image_Tool _image = new Model.Image_Tool();
+        private readonly ImageTool _image = new Model.ImageTool();
 
         private System.Windows.Navigation.NavigationService _navigation;
 

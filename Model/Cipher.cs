@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CrytonCore.Ciphers
+namespace CrytonCore.Model
 {
     public abstract class Cipher : IDisposable
     {

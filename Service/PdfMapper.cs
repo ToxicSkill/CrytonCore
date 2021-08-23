@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CrytonCore.Tools;
+using CrytonCore.Model;
 
 namespace CrytonCore.Mapper
 {

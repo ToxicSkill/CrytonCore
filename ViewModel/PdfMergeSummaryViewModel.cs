@@ -17,17 +17,17 @@ namespace CrytonCore.ViewModel
 
         public bool Update(
             ObservableCollection<FileListView> filesView,
-            ObservableCollection<Image> images,
+            ObservableCollection<PDF> images,
             ObservableCollection<int> orderVector)
         {
             FilesView.Clear();
-            Images.Clear();
+            PDFCollection.Clear();
             OrderVector = orderVector;
 
             for (var i = 0; i < OrderVector.Count; i++)
             {
                 FilesView.Add(filesView[i]);
-                Images.Add(images[orderVector[i]]);
+                PDFCollection.Add(images[orderVector[i]]);
             }
 
             SingleSliderDictionary = new Dictionary<int, int>();
@@ -35,11 +35,11 @@ namespace CrytonCore.ViewModel
             var pastPages = 0;
             for (var j = 0; j < OrderVector.Count; j++)
             {
-                for (var i = pastPages; i < Images[j].MaxNumberOfPages + pastPages; i++)
+                for (var i = pastPages; i < PDFCollection[j].TotalPages + pastPages; i++)
                 {
                     SingleSliderDictionary.Add(i, j);
                 }
-                pastPages += Images[j].MaxNumberOfPages;
+                pastPages += PDFCollection[j].TotalPages;
             }
             SliderMaximum = SingleSliderDictionary.Count - 1;
             return SliderMaximum > 0;

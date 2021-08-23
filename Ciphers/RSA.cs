@@ -8,8 +8,9 @@ using System.Linq;
 using System.Diagnostics;
 using static CrytonCore.Enums.Enumerates;
 using System.IO;
-using CrytonCore.Tools;
+using CrytonCore.Model;
 using System.Threading;
+using CrytonCore.Model;
 
 namespace CrytonCore.Ciphers
 {
