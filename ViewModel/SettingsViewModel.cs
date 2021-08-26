@@ -8,8 +8,8 @@ namespace CrytonCore.ViewModel
     public class SettingsViewModel : NotificationClass
     {
         private readonly App app = System.Windows.Application.Current as App;
-        private readonly Theme theme = new Theme();
-        private readonly Language language = new Language();
+        private readonly Theme theme = new();
+        private readonly Language language = new();
         private readonly ObservableCollection<string> _themesCollection;
         private readonly ObservableCollection<string> _languagesCollection;
         private string _selectedTheme;
@@ -42,7 +42,7 @@ namespace CrytonCore.ViewModel
                 _selectedTheme = value;
                 theme.SetTheme(_selectedTheme);
                 SetGlobalLanguageAndTheme();
-                OnPropertyChanged("SelectedTheme");
+                OnPropertyChanged(nameof(SelectedTheme));
             }
         }
         public string SelectedLanguage
@@ -54,7 +54,7 @@ namespace CrytonCore.ViewModel
                 language.SetLanguage(_selectedLanguage);
                 SetGlobalLanguageAndTheme();
                 SetGlobalLanguageShortName();
-                OnPropertyChanged("SelectedLanguage");
+                OnPropertyChanged(nameof(SelectedLanguage));
             }
         }
 
@@ -72,7 +72,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 effect = value;
-                OnPropertyChanged("Effect");
+                OnPropertyChanged(nameof(Effect));
             }
         }
         public BlurEffect EffectCombo
@@ -81,13 +81,13 @@ namespace CrytonCore.ViewModel
             set
             {
                 effectCombo = value;
-                OnPropertyChanged("EffectCombo");
+                OnPropertyChanged(nameof(EffectCombo));
             }
         }
-        public RelayCommand EffectComboFocusLost { get => new RelayCommand(EffectComboFocusLostCommand, true); }
+        public RelayCommand EffectComboFocusLost { get => new(EffectComboFocusLostCommand, true); }
 
         private void EffectComboFocusLostCommand() => UnblurWindow();
-        public RelayCommand EffectComboClick { get => new RelayCommand(EffectComboClickCommand, true); }
+        public RelayCommand EffectComboClick { get => new(EffectComboClickCommand, true); }
 
         private void EffectComboClickCommand()
         {
@@ -97,7 +97,7 @@ namespace CrytonCore.ViewModel
 
         private void BlurWindow()
         {
-            BlurEffect newEffect = new BlurEffect
+            BlurEffect newEffect = new()
             {
                 Radius = 15
             };

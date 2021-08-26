@@ -27,7 +27,7 @@ namespace CrytonCore
         private const int _contentBytesLength = 96;
         private bool _disposed = false;
         private byte[] RecognizableBytesFromEncryption = new byte[_recognizableBytesLength];
-        private Random rand = new Random();
+        private Random rand = new();
 
         // Instantiate a SafeHandle instance.
         private readonly SafeHandle _safeHandle = new SafeFileHandle(IntPtr.Zero, true);
@@ -54,7 +54,7 @@ namespace CrytonCore
 
         public bool Exist { get; set; }
 
-        private readonly List<int> RecognizableLengths = new List<int>() { 
+        private readonly List<int> RecognizableLengths = new() { 
             12, // method
             10, //extension
             24, // extra file info
@@ -126,7 +126,7 @@ namespace CrytonCore
                 RequestedExtension = Extension;
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
                 Title = Status ? "Save encrypted file" : "Save decrypted file",
                 DefaultExt = ".dat", // Default file extension
@@ -155,11 +155,11 @@ namespace CrytonCore
         {
             if (splitName.Length >= 1)
             {
-                Name = splitName[splitName.Length - 1];
+                Name = splitName[^1];
                 string[] splitExtension = Name.Split(new char[] { '.' });
 
                 if (splitExtension.Length >= 1)
-                    Extension = splitExtension[splitExtension.Length - 1];
+                    Extension = splitExtension[^1];
 
                 Name = Name.Remove(Name.Length - Extension.Length - 1);
             }
@@ -184,11 +184,11 @@ namespace CrytonCore
             return Method = enumDisplayStatus.ToString();
         }
 
-        public byte[] FileToByteArray(string fileName) => System.IO.File.ReadAllBytes(fileName);
+        public static byte[] FileToByteArray(string fileName) => System.IO.File.ReadAllBytes(fileName);
 
         public void ByteArrayToFile(string fileName) => System.IO.File.WriteAllBytes(fileName, DivData.SelectMany(x => x).ToArray());
 
-        private int GetChunktSize()
+        private static int GetChunktSize()
         {
             int halfMegabyte = (int)Math.Pow(2, 19);
             return halfMegabyte;// fileSize / halfMegabyte > 1 ? halfMegabyte : fileSize;
@@ -218,7 +218,7 @@ namespace CrytonCore
 
         private string GetRandomChar(int extraLength)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < extraLength; i++)
             {
                 sb.Append((char)rand.Next(0, 255));
@@ -235,7 +235,7 @@ namespace CrytonCore
 
             try
             {
-                List<string> listOfContent = new List<string>
+                List<string> listOfContent = new()
                 {
                     Method,
                     Extension,
@@ -262,7 +262,7 @@ namespace CrytonCore
                     offset += currentLength;
                 }
 
-                MD5 md5 = new MD5
+                MD5 md5 = new()
                 {
                     ValueAsByte = contentArray
                 };
@@ -290,13 +290,13 @@ namespace CrytonCore
             byte[] contentBytes = new byte[_contentBytesLength];
             byte[] controlBytes = new byte[_controlBytesLength];
             byte[] relativeLengths = new byte[RecognizableLengths.Count];
-            List<string> tempContentArray = new List<string>();
+            List<string> tempContentArray = new();
 
             try
             {
                 Buffer.BlockCopy(origin, 0, contentBytes, 0, _contentBytesLength);
                 Buffer.BlockCopy(origin, _contentBytesLength, controlBytes, 0, _controlBytesLength);
-                MD5 md5 = new MD5()
+                MD5 md5 = new()
                 {
                     ValueAsByte = contentBytes
                 };

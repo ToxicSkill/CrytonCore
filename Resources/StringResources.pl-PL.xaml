@@ -108,5 +108,14 @@
     <system:String x:Key="saveFiles_cryptingPage">Zapisz</system:String>
     <system:String x:Key="cancel_cryptingPage">Anuluj</system:String>
     
+    <!--PDF TO IMAGE-->
+    <system:String x:Key="rotate_pdfToImage">Obróć</system:String>
+    <system:String x:Key="switch_pdfToImage">Inwersja proporcji</system:String>
+    <system:String x:Key="rubbish_pdfToImage">Usuń</system:String>
+    
+    
+    
+    
+    
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

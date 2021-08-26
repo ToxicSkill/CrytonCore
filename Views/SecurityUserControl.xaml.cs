@@ -15,7 +15,7 @@ namespace CrytonCore.Views
     {
         public Dictionary<ToggleButton, StackPanel> ToggleButtonsKeysToStackPanelOpacity { get; set; } = new Dictionary<ToggleButton, StackPanel>();
 
-        private readonly PdfFile _pdfFile = new PdfFile();
+        private readonly PdfFile _pdfFile = new();
         public SecurityUserControl()
         {
             InitializeComponent();
@@ -60,7 +60,7 @@ namespace CrytonCore.Views
 
         private void LoadFileButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            OpenFileDialog openFileDialog = new()
             {
                 Filter = "PDF files (*.pdf)|*.pdf",
                 Multiselect = false

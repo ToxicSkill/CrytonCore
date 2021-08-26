@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using CrytonCore.Infra;
 using CrytonCore.Model;
-using Image = CrytonCore.Model.Image;
 
 namespace CrytonCore.ViewModel
 {
@@ -11,7 +9,7 @@ namespace CrytonCore.ViewModel
     {
         public PdfMergeSummaryViewModel()
         {
-            SetCurrentMode(true, true);
+            SetCurrentMode(pdfOnly: true, singleSlider: true);
             FirstRun = true;
         }
 
@@ -47,7 +45,7 @@ namespace CrytonCore.ViewModel
         }
 
         private bool FirstRun;
-        public RelayCommand MouseEnterEvent => new RelayCommand(MouseEnterCommand, true);
+        public RelayCommand MouseEnterEvent => new(MouseEnterCommand, true);
 
         private void MouseEnterCommand()
         {

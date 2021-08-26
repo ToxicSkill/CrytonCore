@@ -32,7 +32,7 @@ namespace CrytonCore
         public PdfToImageUserControl pdfToImageUserControl;
         //public SummaryPdfMergeUserControl summaryPdfMergeUserControl;
 
-        public MapperService mapperService = new MapperService();
+        public MapperService mapperService = new();
         private readonly string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
         public bool PassingDroppedImagesFlag { get; set; } = false;
 
@@ -44,13 +44,13 @@ namespace CrytonCore
 
         public int AppCounter { get; set; } = 0;
 
-        public List<string> droppedStringList = new List<string>();
+        public List<string> droppedStringList = new();
 
         private string _currentErrorMessage;
 
-        public List<SimpleImageManager> simpleImages = new List<SimpleImageManager>();
+        public List<SimpleImageManager> simpleImages = new();
 
-        public readonly List<UpdateThemes> themesUpdaters = new List<UpdateThemes>();
+        public readonly List<UpdateThemes> themesUpdaters = new();
 
         public delegate void UpdateThemes();
 
@@ -70,8 +70,8 @@ namespace CrytonCore
 
         public class Keys
         {
-            public List<BigInteger> numericKeys = new List<BigInteger>();
-            public List<string> stringKeys = new List<string>();
+            public List<BigInteger> numericKeys = new();
+            public List<string> stringKeys = new();
         }
 
         protected override void OnStartup(StartupEventArgs e)

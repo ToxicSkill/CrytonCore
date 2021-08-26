@@ -50,11 +50,11 @@ namespace CrytonCore.Views
 
         private void DragDropButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
             if (openFileDialog.ShowDialog() == true)
             {
-                List<string> list = new List<string>
-                    {
+                List<string> list = new()
+                {
                         openFileDialog.FileName
                     };
                 _droppedString = list.ToArray();
@@ -70,18 +70,18 @@ namespace CrytonCore.Views
             switch (cipher)
             {
                 case nameof(Enumerates.TypesOfCrypting.RSA):
-                    List<string> lines = new List<string>(System.IO.File.ReadAllLines(_droppedString[0]));
+                    List<string> lines = new(System.IO.File.ReadAllLines(_droppedString[0]));
                     if (lines.Count > 0)
                     {
                         if (lines[(int)Enumerates.KeysFileIdentifiers.PublicTitle].Equals("Public Keys: ") &&
                             lines[(int)Enumerates.KeysFileIdentifiers.PrivateTitle].Equals("Private Keys: ") &&
                             lines.Count == 6)
                         {
-                            List<BigInteger> keys = new List<BigInteger>();
+                            List<BigInteger> keys = new();
                             try
                             {
-                                List<bool> isNumberHex = new List<bool>();
-                                List<int> fileLineIndex = new List<int>() {
+                                List<bool> isNumberHex = new();
+                                List<int> fileLineIndex = new() {
                                     (int)Enumerates.KeysFileIdentifiers.PublicKeyFirst,
                                     (int)Enumerates.KeysFileIdentifiers.PublicKeySecond,
                                     (int)Enumerates.KeysFileIdentifiers.PrivateKeyFirst,

@@ -8,18 +8,18 @@ namespace CrytonCore.ViewModel
 {
     public class WelcomePageViewModel : NotificationClass
     {
-        private readonly DispatcherTimer _liveTime = new DispatcherTimer
+        private readonly DispatcherTimer _liveTime = new()
         {
             Interval = TimeSpan.FromSeconds(_secondsDelay)
         };
-        private readonly DispatcherTimer _internetTime = new DispatcherTimer
+        private readonly DispatcherTimer _internetTime = new()
         {
             Interval = TimeSpan.FromMinutes(_minutessDelay)
         };
 
-        private readonly TimeDate _actualTimeDate = new TimeDate();
-        private readonly InternetConnection _internetConnection = new InternetConnection();
-        private SolidColorBrush _internetColorDiode = new SolidColorBrush();
+        private readonly TimeDate _actualTimeDate = new();
+        private readonly InternetConnection _internetConnection = new();
+        private SolidColorBrush _internetColorDiode = new();
 
         private string _currentTime;
         private string _currentDay;
@@ -43,7 +43,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 _currentTime = value;
-                OnPropertyChanged("CurrentTime");
+                OnPropertyChanged(nameof(CurrentTime));
             }
         }
         public string CurrentDay
@@ -52,7 +52,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 _currentDay = value;
-                OnPropertyChanged("CurrentDay");
+                OnPropertyChanged(nameof(CurrentDay));
             }
         }
         public string ToolTip
@@ -61,7 +61,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 _toolTip = value;
-                OnPropertyChanged("ToolTip");
+                OnPropertyChanged(nameof(ToolTip));
             }
         }
         public SolidColorBrush FillDiode
@@ -70,7 +70,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 _internetColorDiode = value;
-                OnPropertyChanged("FillDiode");
+                OnPropertyChanged(nameof(FillDiode));
             }
         }
         public Transform SubtitleTransform => new ScaleTransform(0.9, 1);

@@ -17,7 +17,7 @@ namespace CrytonCore.Model
         public int CryptingMethodIndex { get; set; }
         public ObservableCollection<string> CryptingMethodsCollection { get; set; }
 
-        private readonly MapperService fileMapper = new MapperService();
+        private readonly MapperService fileMapper = new();
 
         private List<Cipher> Ciphers = new();
         
@@ -35,9 +35,9 @@ namespace CrytonCore.Model
         private void InitializeComponents()
         {
             CryptingMethodsCollection = new ObservableCollection<string> {
-                Enums.Enumerates.TypesOfCrypting.CESAR.ToString("g"),
-                Enums.Enumerates.TypesOfCrypting.RSA.ToString("g"),
-                Enums.Enumerates.TypesOfCrypting.TRANSPOSABLE.ToString("g")
+                Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.CESAR),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.TRANSPOSABLE)
             };
             Ciphers = new List<Cipher>()
             {
@@ -91,7 +91,7 @@ namespace CrytonCore.Model
                 else
                 {
                     int numberOfChunksToDisplay = (int)Math.Ceiling((double)(1000 / File.DivData[0].Length));
-                    StringBuilder dataToDisplay = new StringBuilder();
+                    StringBuilder dataToDisplay = new();
                     if (numberOfChunksToDisplay <= File.DivData.Count)
                     {
                         for (int i = 0; i < numberOfChunksToDisplay; i++)

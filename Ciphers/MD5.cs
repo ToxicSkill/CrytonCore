@@ -178,7 +178,7 @@ namespace CrytonCore.Ciphers
             /***********vairable declaration**************/
             byte[] bMsg;    //buffer to hold bits
             uint N;         //N is the size of msg as  word (32 bit) 
-            Digest dg = new Digest();           //  the value to be returned
+            Digest dg = new();           //  the value to be returned
 
             // create a buffer with bits padded and length is alos padded
             bMsg = CreatePaddedBuffer();

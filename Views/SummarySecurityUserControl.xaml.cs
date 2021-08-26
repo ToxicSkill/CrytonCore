@@ -17,7 +17,7 @@ namespace CrytonCore.Views
     /// </summary>
     public partial class NewSecurityUserControl : UserControl
     {
-        private PdfFile _pdfFile = new PdfFile();
+        private PdfFile _pdfFile = new();
         private PdfSharpCore.Pdf.PdfDocument _document = new();
         public NewSecurityUserControl()
         {
@@ -134,7 +134,7 @@ namespace CrytonCore.Views
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
                 Title = "Save pdf file",
                 Filter = "Pdf file (.pdf)|*.pdf" // Filter files by extension
@@ -155,7 +155,7 @@ namespace CrytonCore.Views
 
         private string GenerateToken(int length)
         {
-            using (RNGCryptoServiceProvider cryptRNG = new RNGCryptoServiceProvider())
+            using (RNGCryptoServiceProvider cryptRNG = new())
             {
                 byte[] tokenBuffer = new byte[length];
                 cryptRNG.GetBytes(tokenBuffer);

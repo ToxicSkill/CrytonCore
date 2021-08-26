@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Infra
 {
     public abstract class AsyncCommand<T> : IAsyncCommand<T>
     {

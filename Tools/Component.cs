@@ -4,7 +4,7 @@ namespace CrytonCore.Ciphers
 {
     public class Component
     {
-        private readonly List<int[,]> desTables = new List<int[,]>();
+        private readonly List<int[,]> desTables = new();
 
         public int[] desExpanding,
             desSBlockPermutation, 

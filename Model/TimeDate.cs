@@ -17,7 +17,7 @@ namespace CrytonCore.Model
 
         internal string GetCurrentDay()
         {
-            CultureInfo myCI = new CultureInfo(app.ShortLanguageName);
+            CultureInfo myCI = new(app.ShortLanguageName);
             string newDay = myCI.DateTimeFormat.GetDayName(DateTime.Now.DayOfWeek);
             CurrentDay = char.ToUpper(newDay[0]) + newDay.Substring(1);
             return CurrentDay;

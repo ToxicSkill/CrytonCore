@@ -7,7 +7,7 @@ namespace CrytonCore.Helpers
  /// </summary>
     public interface IFileDragDropTarget
     {
-        void OnFileDrop(string[] filePaths);
+        void OnFileDropAsync(string[] filePaths);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ namespace CrytonCore.Helpers
             {
                 if (_dragEventArgs.Data.GetDataPresent(DataFormats.FileDrop))
                 {
-                    fileTarget.OnFileDrop((string[])_dragEventArgs.Data.GetData(DataFormats.FileDrop));
+                    fileTarget.OnFileDropAsync((string[])_dragEventArgs.Data.GetData(DataFormats.FileDrop));
                 }
             }
             else

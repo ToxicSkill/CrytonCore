@@ -11,7 +11,7 @@ namespace CrytonCore.Ciphers
 {
     public class Transposable : Cipher, ICryptingTools
     {
-        readonly CrytonFile file = new CrytonFile();
+        readonly CrytonFile file = new();
         private string name = "Transposable";
 
         public override string Name
@@ -64,7 +64,7 @@ namespace CrytonCore.Ciphers
             if (file.Size < 5) 
                 return false;
 
-            List<Task> tasks = new List<Task>();
+            List<Task> tasks = new();
 
             int sizeOfDivData = file.DivData.Count;
             var lastIndex = file.DivData.Count - 1;
@@ -160,9 +160,9 @@ namespace CrytonCore.Ciphers
 
         private static void SnailEncryption(byte[] chunk)
         {
-            List<char> encryptedSnail = new List<char>();
-            List<char> temp = new List<char>();
-            List<List<char>> encryptedColumn = new List<List<char>>();
+            List<char> encryptedSnail = new();
+            List<char> temp = new();
+            List<List<char>> encryptedColumn = new();
 
             var size = chunk.Length;
             var matrixDimension = Math.Ceiling(Math.Pow(size, 0.5));
@@ -242,7 +242,7 @@ namespace CrytonCore.Ciphers
 
         private static void SnailDecryption(byte[] chunk)
         {
-            List<char> encryptedSnail = new List<char>();
+            List<char> encryptedSnail = new();
 
             var size = chunk.Length;
             var matrixDimension = Math.Ceiling(Math.Pow(size, 0.5));
@@ -251,7 +251,7 @@ namespace CrytonCore.Ciphers
 
             char[,] Matrix = new char[(int)matrixDimension, (int)matrixDimension];
 
-            List<byte[]> temp = new List<byte[]>(ArraySplit(chunk, (int)matrixDimension));
+            List<byte[]> temp = new(ArraySplit(chunk, (int)matrixDimension));
 
             for (var i = 0; i < matrixDimension; ++i)
                 for (var j = 0; j < matrixDimension; ++j)
@@ -339,7 +339,7 @@ namespace CrytonCore.Ciphers
             try
             {
                 file.MethodId = (int)TypesOfCrypting.TRANSPOSABLE;
-                file.Method = TypesOfCrypting.TRANSPOSABLE.ToString();
+                file.Method = EnumToString(TypesOfCrypting.TRANSPOSABLE);
                 file.Exist = resultOfCrypting;
             }
             catch (Exception)

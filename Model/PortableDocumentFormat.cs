@@ -19,8 +19,8 @@ namespace CrytonCore.Model
         private readonly int pixelsX = 600;
         private readonly int pixelsY = 900;
 
-        public Image ImagePDF = new Image();
-        private ImageTool ImageTools = new ImageTool();
+        public Image ImagePDF = new();
+        private ImageTool ImageTools = new();
         private byte[] _pdfBytes;
 
         public Task LoadPdf()
@@ -74,12 +74,12 @@ namespace CrytonCore.Model
 
         private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
         {
-            using (MemoryStream outStream = new MemoryStream())
+            using (MemoryStream outStream = new())
             {
                 BitmapEncoder enc = new BmpBitmapEncoder();
                 enc.Frames.Add(BitmapFrame.Create(bitmapImage));
                 enc.Save(outStream);
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+                System.Drawing.Bitmap bitmap = new(outStream);
 
                 return new Bitmap(bitmap);
             }
@@ -89,7 +89,7 @@ namespace CrytonCore.Model
 
         public BitmapImage ImageToBitmap()
         {
-            FileStream fileStream = new FileStream(ImagePDF.Url, FileMode.Open, FileAccess.Read);
+            FileStream fileStream = new(ImagePDF.Url, FileMode.Open, FileAccess.Read);
 
             var img = new System.Windows.Media.Imaging.BitmapImage();
             img.BeginInit();
@@ -157,9 +157,9 @@ namespace CrytonCore.Model
             var imageRes = ImageToBitmap();
             var bitmapImage = BitmapImage2Bitmap(imageRes);
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(bitmapImage as System.Drawing.Image, new BaseColor(0, 0, 0, 0));
-            using (FileStream fs = new FileStream(ImagePDF.OutputUrl, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (FileStream fs = new(ImagePDF.OutputUrl, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                iTextSharp.text.Document doc = new Document(PageSize.A4);
+                iTextSharp.text.Document doc = new(PageSize.A4);
                 PdfWriter writer = PdfWriter.GetInstance(doc, fs);
                 doc.Open();
                 image.ScaleToFit(doc.PageSize.Width, doc.PageSize.Height);
@@ -171,7 +171,7 @@ namespace CrytonCore.Model
         public void MergePdf(List<Model.Image> InFiles, String OutFile)
         {
             //Define a new output document and its size, type
-            Document document = new Document(PageSize.A4, 0, 0, 0, 0);
+            Document document = new(PageSize.A4, 0, 0, 0, 0);
             //Create blank output pdf file and get the stream to write on it.
             PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(OutFile, FileMode.Create));
             document.Open();
@@ -180,7 +180,7 @@ namespace CrytonCore.Model
             {
                 if (file.Extension == "pdf")
                 {
-                    PdfReader pdfReader = new PdfReader(file.Url);
+                    PdfReader pdfReader = new(file.Url);
                     for (int i = 1; i <= pdfReader.NumberOfPages; i++)
                     {
                         PdfImportedPage page = writer.GetImportedPage(pdfReader, i);

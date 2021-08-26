@@ -22,10 +22,10 @@ namespace CrytonCore.Views
         const int pixels = 600;
         const int pixelsHQ = 900;
 
-        private PortableDocumentFormat _pdf = new PortableDocumentFormat();
+        private PortableDocumentFormat _pdf = new();
 
         private readonly List<Model.Image> _images = new();
-        private readonly ImageTool _image = new Model.ImageTool();
+        private readonly ImageTool _image = new();
 
         private System.Windows.Navigation.NavigationService _navigation;
 
@@ -87,10 +87,10 @@ namespace CrytonCore.Views
             this.filesListView.Items.Clear();
             this.filesListView.Items.Refresh();
 
-            GridView gridView = new GridView();
+            GridView gridView = new();
             this.filesListView.View = gridView;
 
-            List<dynamic> myItems = new List<dynamic>();
+            List<dynamic> myItems = new();
             dynamic myItem;
 
             IDictionary<string, object> myItemValues;
@@ -110,14 +110,14 @@ namespace CrytonCore.Views
             }
 
             // Assuming that all objects have same columns - using first item to determine the columns
-            List<Column> columns = new List<Column>();
+            List<Column> columns = new();
 
             myItemValues = (IDictionary<string, object>)myItems[0];
 
             // Key is the column, value is the value
             foreach (var pair in myItemValues)
             {
-                Column column = new Column
+                Column column = new()
                 {
                     FileName = pair.Key,
                     FilePath = pair.Key
@@ -174,7 +174,7 @@ namespace CrytonCore.Views
         }
         private void LoadFileButton_Click(object sender, MouseButtonEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
             openFileDialog.Filter = "Image Files(*.JPG;*.JPEG)|*.JPG;*.JPEG";
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
@@ -194,7 +194,7 @@ namespace CrytonCore.Views
 
         private void AddFileToList(string url)
         {
-            Model.Image img = new Model.Image
+            Model.Image img = new()
             {
                 Url = url,
                 Ratio = 0,
@@ -235,7 +235,7 @@ namespace CrytonCore.Views
 
         private async void SaveSelectedButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
                 Title = "Save pdf file",
                 Filter = "Pdf file (.pdf)|*.pdf" // Filter files by extension

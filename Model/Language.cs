@@ -40,10 +40,10 @@ namespace CrytonCore.Model
             };
 
             LanguagesCollection = new ObservableCollection<string> {
-                Enums.Enumerates.Languages.English.ToString("g"),
-                Enums.Enumerates.Languages.Polski.ToString("g"),
-                Enums.Enumerates.Languages.French.ToString("g"),
-                Enums.Enumerates.Languages.Deutsh.ToString("g")
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.English),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.Polski),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.French),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.Deutsh)
             };
         }
 

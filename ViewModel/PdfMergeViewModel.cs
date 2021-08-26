@@ -7,18 +7,14 @@ using CrytonCore.Helpers;
 
 namespace CrytonCore.ViewModel
 {
-    public class PdfMergeViewModel : PortableDocumentFormatManager, IFileDragDropTarget
+    public class PdfMergeViewModel : PortableDocumentFormatManager
     {
         private SummaryPdfMergeUserControl _summaryUserControl;
         public PdfMergeViewModel()
         {
-            SetCurrentMode(true, false);
+            SetCurrentMode(pdfOnly: true,singleSlider: false);
             VisibilityChangeDelegate = new VisibilityDelegate(ChangeVisibility);
             _summaryUserControl = new SummaryPdfMergeUserControl();
-        }
-        public async void OnFileDrop(string[] filePaths)
-        {
-            _ = await LoadFile(filePaths);
         }
 
         private void ChangeVisibility(bool show)

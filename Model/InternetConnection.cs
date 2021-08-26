@@ -35,11 +35,9 @@ namespace CrytonCore.Model
         {
             try
             {
-                using (WebClient client = new WebClient())
-                using (System.IO.Stream stream = client.OpenRead(_pingString))
-                {
-                    return true;
-                }
+                using WebClient client = new();
+                using System.IO.Stream stream = client.OpenRead(_pingString);
+                return true;
             }
             catch (Exception)
             {
@@ -50,11 +48,11 @@ namespace CrytonCore.Model
         {
             try
             {
-                Ping myPing = new Ping();
+                Ping myPing = new();
                 string host = "google.com";
                 byte[] buffer = new byte[32];
                 int timeout = 1000;
-                PingOptions pingOptions = new PingOptions();
+                PingOptions pingOptions = new();
                 PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
                 return reply.Status == IPStatus.Success;
             }

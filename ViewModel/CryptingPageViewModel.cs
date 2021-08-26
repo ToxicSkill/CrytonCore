@@ -21,11 +21,11 @@ namespace CrytonCore.ViewModel
         public SimpleFile SFile { get; set; } = new SimpleFile();
         public bool IsRunning { get; set; } = false;
 
-        private readonly Crypting Crypting = new Crypting();
+        private readonly Crypting Crypting = new();
         private Dictionary<string, object> GridsDict;
-        private readonly Dictionary<Enums.Enumerates.TypesOfCrypting, IHelpersInterface> CrytpingSettings = new Dictionary<Enums.Enumerates.TypesOfCrypting, IHelpersInterface>();
+        private readonly Dictionary<Enums.Enumerates.TypesOfCrypting, IHelpersInterface> CrytpingSettings = new();
 
-        private readonly CancellationTokenSource cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource cts = new();
         private string selectedCryptingMethod;
         private const double barExtension4KReady = 3840;
         private bool moveDetails;
@@ -34,7 +34,7 @@ namespace CrytonCore.ViewModel
         private int progressDivisor = 1;
         private static readonly int secondsDelay = 2;
 
-        private readonly DispatcherTimer infoTime = new DispatcherTimer
+        private readonly DispatcherTimer infoTime = new()
         {
             Interval = TimeSpan.FromSeconds(secondsDelay)
         };
@@ -113,11 +113,11 @@ namespace CrytonCore.ViewModel
             }
             return loadingFileResult;
         }
-        public RelayCommand SaveFile { get => new RelayCommand(SaveFileCommand, true); }
+        public RelayCommand SaveFile { get => new(SaveFileCommand, true); }
 
         private async void SaveFileCommand()
         {
-            Progress<string> progressIndicator = new Progress<string>();
+            Progress<string> progressIndicator = new();
             progressIndicator.ProgressChanged += StringReportProgress;
 
             try
@@ -133,12 +133,12 @@ namespace CrytonCore.ViewModel
         }
         private void StringReportProgress(object sender, string e) => ProcessText = e;
 
-        public async void OnFileDrop(string[] filePaths)
+        public async void OnFileDropAsync(string[] filePaths)
         {
             _ = await LoadFile(filePaths[0]);
         }
 
-        public RelayCommand CipherAction => new RelayCommand(CipherActionCommand, true);
+        public RelayCommand CipherAction => new(CipherActionCommand, true);
 
         private async void CipherActionCommand()
         {
@@ -149,7 +149,7 @@ namespace CrytonCore.ViewModel
             {
                 CheckConditions();
             }
-            Progress<int> progressIndicator = new Progress<int>();
+            Progress<int> progressIndicator = new();
             BeforeCipherAction();
 
             // Task<bool> runningTask = crypting.Crypt(progressIndicator);
@@ -183,7 +183,7 @@ namespace CrytonCore.ViewModel
 
         private void CheckConditions()
         {
-            if (Crypting.GetCryptingMethodName().ToUpper() == Enums.Enumerates.TypesOfCrypting.RSA.ToString("g").ToUpper())
+            if (Crypting.GetCryptingMethodName().ToUpper() == Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA).ToUpper())
             {
                 BlurWindow();
                 Views.InputCryptingWindow dlg = new();
@@ -208,7 +208,7 @@ namespace CrytonCore.ViewModel
             progressDivisor = 1;
             //OnPropertyChanged("CryptingButtonEnabled");
         }
-        public RelayCommand CancelAction => new RelayCommand(CancelActionCommand, true);
+        public RelayCommand CancelAction => new(CancelActionCommand, true);
 
         private void CancelActionCommand()
         {
@@ -240,7 +240,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 progressText = value;
-                OnPropertyChanged("ProgressText");
+                OnPropertyChanged(nameof(ProgressText));
             }
         }
 
@@ -255,7 +255,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 processText = value;
-                OnPropertyChanged("ProcessText");
+                OnPropertyChanged(nameof(ProcessText));
             }
         }
         public string SelectedCryptingMethod
@@ -266,7 +266,7 @@ namespace CrytonCore.ViewModel
                 selectedCryptingMethod = value;
                 Crypting.SetCryptingMethod(selectedCryptingMethod);
                 SetActualGridVisibility();
-                OnPropertyChanged("SelectedCryptingMethod");
+                OnPropertyChanged(nameof(SelectedCryptingMethod));
             }
         }
         public ObservableCollection<string> CryptingMethodsCollection { get; }
@@ -280,7 +280,7 @@ namespace CrytonCore.ViewModel
                 selectedRsaCollection = value;
                 // crytpingSettings[(int)Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst( selectedRsaCollection);
                 CrytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst(selectedRsaCollection);
-                OnPropertyChanged("SelectedRsaCollection");
+                OnPropertyChanged(nameof(SelectedRsaCollection));
             }
         }
         public ObservableCollection<string> RsaCollection { get; set; }
@@ -294,7 +294,7 @@ namespace CrytonCore.ViewModel
                 selectedCesarCollection = value;
                 // crytpingSettings[(int)Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst( selectedRsaCollection);
                 CrytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].SetSelectedItemFirst(selectedCesarCollection);
-                OnPropertyChanged("SelectedCesarCollection");
+                OnPropertyChanged(nameof(SelectedCesarCollection));
             }
         }
         public ObservableCollection<string> CesarCollection { get; set; }
@@ -305,10 +305,10 @@ namespace CrytonCore.ViewModel
             set
             {
                 moveDetails = value;
-                OnPropertyChanged("MoveDetails");
+                OnPropertyChanged(nameof(MoveDetails));
             }
         }
-        public RelayCommand AnimationRectangle => new RelayCommand(MoveDetailsWindow, true);
+        public RelayCommand AnimationRectangle => new(MoveDetailsWindow, true);
 
         private void MoveDetailsWindow()
         {
@@ -321,13 +321,13 @@ namespace CrytonCore.ViewModel
             set
             {
                 opacity = value;
-                OnPropertyChanged("Opacity");
+                OnPropertyChanged(nameof(Opacity));
             }
         }
 
-        public RelayCommand ChangeOpacityFull => new RelayCommand(OpacityChangeFull, true);
+        public RelayCommand ChangeOpacityFull => new(OpacityChangeFull, true);
         private void OpacityChangeFull() => Opacity = 1;
-        public RelayCommand ChangeOpacityPartial => new RelayCommand(OpacityChangePartial, true);
+        public RelayCommand ChangeOpacityPartial => new(OpacityChangePartial, true);
         private void OpacityChangePartial() => Opacity = 0.6;
         public double OpacityHelp
         {
@@ -335,13 +335,13 @@ namespace CrytonCore.ViewModel
             set
             {
                 opacityHelp = value;
-                OnPropertyChanged("OpacityHelp");
+                OnPropertyChanged(nameof(OpacityHelp));
             }
         }
 
-        public RelayCommand ChangeHelpOpacityFull => new RelayCommand(OpacityHelpChangeFull, true);
+        public RelayCommand ChangeHelpOpacityFull => new(OpacityHelpChangeFull, true);
         private void OpacityHelpChangeFull() => OpacityHelp = 1;
-        public RelayCommand ChangeHelpOpacityPartial => new RelayCommand(OpacityHelpChangePartial, true);
+        public RelayCommand ChangeHelpOpacityPartial => new(OpacityHelpChangePartial, true);
         private void OpacityHelpChangePartial() => OpacityHelp = 0.6;
 
         private Visibility visibilityHidden = Visibility.Hidden;
@@ -351,15 +351,15 @@ namespace CrytonCore.ViewModel
         private Visibility openPadlockVisibility = Visibility.Hidden;
         private Visibility closePadlockVisibility = Visibility.Hidden;
 
-        public Visibility OpenPadlockVisibility { get => openPadlockVisibility; set { openPadlockVisibility = value; OnPropertyChanged("OpenPadlockVisibility"); } }
-        public Visibility ClosePadlockVisibility { get => closePadlockVisibility; set { closePadlockVisibility = value; OnPropertyChanged("ClosePadlockVisibility"); } }
+        public Visibility OpenPadlockVisibility { get => openPadlockVisibility; set { openPadlockVisibility = value; OnPropertyChanged(nameof(OpenPadlockVisibility)); } }
+        public Visibility ClosePadlockVisibility { get => closePadlockVisibility; set { closePadlockVisibility = value; OnPropertyChanged(nameof(ClosePadlockVisibility)); } }
         public Visibility VisibilityDefaultAsShowed
         {
             get => visibilityShowed;
             set
             {
                 visibilityShowed = value;
-                OnPropertyChanged("VisibilityDefaultAsShowed");
+                OnPropertyChanged(nameof(VisibilityDefaultAsShowed));
             }
         }
         public Visibility VisibilityDefaultAsHidden
@@ -368,7 +368,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 visibilityHidden = value;
-                OnPropertyChanged("VisibilityDefaultAsHidden");
+                OnPropertyChanged(nameof(VisibilityDefaultAsHidden));
             }
         }
         public Visibility VisibilityProgress
@@ -377,7 +377,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 visibilityProgress = value;
-                OnPropertyChanged("VisibilityProgress");
+                OnPropertyChanged(nameof(VisibilityProgress));
             }
         }
         public Visibility VisibilityProcess
@@ -386,10 +386,10 @@ namespace CrytonCore.ViewModel
             set
             {
                 visibilityProcess = value;
-                OnPropertyChanged("VisibilityProcess");
+                OnPropertyChanged(nameof(VisibilityProcess));
             }
         }
-        public RelayCommand VisibilityHide => new RelayCommand(VisibilityHideCommand, true);
+        public RelayCommand VisibilityHide => new(VisibilityHideCommand, true);
         private void VisibilityHideCommand()
         {
             VisibilityDefaultAsShowed = Visibility.Visible;
@@ -404,7 +404,7 @@ namespace CrytonCore.ViewModel
             VisibilityProgress = Visibility.Hidden;
             VisibilityProcess = Visibility.Hidden;
         }
-        public RelayCommand ClearFile => new RelayCommand(ClearFileCommand, true);
+        public RelayCommand ClearFile => new(ClearFileCommand, true);
         private void ClearFileCommand()
         {
             VisibilityHideCommand();
@@ -453,7 +453,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 fileContentText = value;
-                OnPropertyChanged("FileContentText");
+                OnPropertyChanged(nameof(FileContentText));
             }
         }
         private string methodUsedText;
@@ -463,7 +463,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 methodUsedText = value;
-                OnPropertyChanged("MethodUsedText");
+                OnPropertyChanged(nameof(MethodUsedText));
             }
         }
         private string extensionText;
@@ -473,7 +473,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 extensionText = value;
-                OnPropertyChanged("ExtensionText");
+                OnPropertyChanged(nameof(ExtensionText));
             }
         }
 
@@ -484,7 +484,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 sizeText = value;
-                OnPropertyChanged("SizeText");
+                OnPropertyChanged(nameof(SizeText));
             }
         }
 
@@ -495,7 +495,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 fileStatusText = value;
-                OnPropertyChanged("FileStatusText");
+                OnPropertyChanged(nameof(FileStatusText));
             }
         }
         private string cipherContentText;
@@ -505,7 +505,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 cipherContentText = value;
-                OnPropertyChanged("CipherContentText");
+                OnPropertyChanged(nameof(CipherContentText));
             }
         }
         private string cipherToolTip;
@@ -515,7 +515,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 cipherToolTip = value;
-                OnPropertyChanged("CipherToolTip");
+                OnPropertyChanged(nameof(CipherToolTip));
             }
         }
 
@@ -526,7 +526,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 fileNameText = value;
-                OnPropertyChanged("FileNameText");
+                OnPropertyChanged(nameof(FileNameText));
             }
         }
 
@@ -538,7 +538,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 fileDialogName = value;
-                OnPropertyChanged("FileDialogName");
+                OnPropertyChanged(nameof(FileDialogName));
             }
         }
 
@@ -551,7 +551,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 effect = value;
-                OnPropertyChanged("Effect");
+                OnPropertyChanged(nameof(Effect));
             }
         }
         public BlurEffect EffectCombo
@@ -560,10 +560,10 @@ namespace CrytonCore.ViewModel
             set
             {
                 effectCombo = value;
-                OnPropertyChanged("EffectCombo");
+                OnPropertyChanged(nameof(EffectCombo));
             }
         }
-        public RelayCommand EffectComboFocusLost { get => new RelayCommand(EffectComboFocusLostCommand, true); }
+        public RelayCommand EffectComboFocusLost { get => new(EffectComboFocusLostCommand, true); }
 
         private void EffectComboFocusLostCommand()
         {
@@ -571,11 +571,11 @@ namespace CrytonCore.ViewModel
             EffectCombo = null;
         }
 
-        public RelayCommand EffectComboClick { get => new RelayCommand(EffectComboClickCommand, true); }
+        public RelayCommand EffectComboClick { get => new(EffectComboClickCommand, true); }
 
         private void EffectComboClickCommand()
         {
-            BlurEffect newEffect = new BlurEffect
+            BlurEffect newEffect = new()
             {
                 Radius = 15
             };
@@ -590,11 +590,11 @@ namespace CrytonCore.ViewModel
             set
             {
                 cryptingButtonEnabled = value;
-                OnPropertyChanged("CryptingButtonEnabled");
+                OnPropertyChanged(nameof(CryptingButtonEnabled));
             }
         }
 
-        public RelayCommand CopyRsaKeysToClipboard { get => new RelayCommand(CopyRsaKeysToClipboardCommand, true); }
+        public RelayCommand CopyRsaKeysToClipboard { get => new(CopyRsaKeysToClipboardCommand, true); }
 
         private void CopyRsaKeysToClipboardCommand() => Crypting.GetClipboardString();
 
@@ -608,7 +608,7 @@ namespace CrytonCore.ViewModel
             set
             {
                 moveBars = value;
-                OnPropertyChanged("MoveBars");
+                OnPropertyChanged(nameof(MoveBars));
             }
         }
 
@@ -616,12 +616,12 @@ namespace CrytonCore.ViewModel
         private Visibility cesarGridVisibility = Visibility.Hidden;
         private Visibility cryptingVisibility = Visibility.Hidden;
         private Visibility decryptingVisibility = Visibility.Hidden;
-        public Visibility CryptingVisibility { get => cryptingVisibility; set { cryptingVisibility = value; OnPropertyChanged("CryptingVisibility"); } }
-        public Visibility DecryptingVisibility { get => decryptingVisibility; set { decryptingVisibility = value; OnPropertyChanged("DecryptingVisibility"); } }
-        public Visibility RSAGridVisibility { get => rsaGridVisibility; set { rsaGridVisibility = value; OnPropertyChanged("RSAGridVisibility"); } }
-        public Visibility CesarGridVisibility { get => cesarGridVisibility; set { cesarGridVisibility = value; OnPropertyChanged("CesarGridVisibility"); } }
+        public Visibility CryptingVisibility { get => cryptingVisibility; set { cryptingVisibility = value; OnPropertyChanged(nameof(CryptingVisibility)); } }
+        public Visibility DecryptingVisibility { get => decryptingVisibility; set { decryptingVisibility = value; OnPropertyChanged(nameof(DecryptingVisibility)); } }
+        public Visibility RSAGridVisibility { get => rsaGridVisibility; set { rsaGridVisibility = value; OnPropertyChanged(nameof(RSAGridVisibility)); } }
+        public Visibility CesarGridVisibility { get => cesarGridVisibility; set { cesarGridVisibility = value; OnPropertyChanged(nameof(CesarGridVisibility)); } }
 
-        public RelayCommand DisplayHelpMessage { get => new RelayCommand(DisplayHelpMessageCommand, true); }
+        public RelayCommand DisplayHelpMessage { get => new(DisplayHelpMessageCommand, true); }
 
         private void DisplayHelpMessageCommand()
         {
@@ -630,14 +630,14 @@ namespace CrytonCore.ViewModel
             string keyTitle = "helpTitle_cryptingPage";
             string helpMessageString = (Application.Current as App).Resources.MergedDictionaries[0][keyMessage] as string;
             string helpTitleString = (Application.Current as App).Resources.MergedDictionaries[0][keyTitle] as string;
-            DialogViewModel viewModel = new DialogViewModel(helpMessageString, helpTitleString);
+            DialogViewModel viewModel = new(helpMessageString, helpTitleString);
             dialogService.ShowDialog(viewModel);
             UnblurWindow();
         }
 
         private void BlurWindow()
         {
-            BlurEffect newEffect = new BlurEffect
+            BlurEffect newEffect = new()
             {
                 Radius = 15
             };

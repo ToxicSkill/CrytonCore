@@ -10,7 +10,7 @@ namespace CrytonCore.Ciphers
 {
     public class Cesar : Cipher, ICryptingTools
     {
-        private readonly CrytonFile file = new CrytonFile();
+        private readonly CrytonFile file = new();
         private string name = "Cesar";
         private const int __constRecognizableLenght = 128;
 
@@ -34,7 +34,7 @@ namespace CrytonCore.Ciphers
         {
             return await Task.Run(async () =>
             {
-                List<Task> tasks = new List<Task>();
+                List<Task> tasks = new();
                 int j = 0;
 
                 foreach (var chunk in file.DivData)
@@ -62,7 +62,7 @@ namespace CrytonCore.Ciphers
         {
             return await Task.Run(async () =>
             {
-                List<Task> tasks = new List<Task>();
+                List<Task> tasks = new();
                 int j = 0;
 
                 foreach (var chunk in file.DivData)
@@ -89,7 +89,7 @@ namespace CrytonCore.Ciphers
             try
             {
                 file.MethodId = (int)TypesOfCrypting.CESAR;
-                file.Method = TypesOfCrypting.CESAR.ToString();
+                file.Method = EnumToString(TypesOfCrypting.CESAR);
                 file.Exist = resultOfCrypting;
             }
             catch (Exception)

@@ -21,9 +21,9 @@ namespace CrytonCore.Model
         private void InitializeComponents()
         {
             ThemesCollection = new ObservableCollection<string> {
-                Enums.Enumerates.Themes.Standard.ToString("g"),
-                Enums.Enumerates.Themes.Dark.ToString("g"),
-                Enums.Enumerates.Themes.Light.ToString("g")
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Themes.Standard),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Themes.Dark),
+                Enums.Enumerates.EnumToString(Enums.Enumerates.Themes.Light)
             };
 
             AccentThemesDictionaries = new List<ResourceDictionary>(){

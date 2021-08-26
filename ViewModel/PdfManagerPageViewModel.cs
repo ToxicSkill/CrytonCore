@@ -4,19 +4,19 @@ namespace CrytonCore.ViewModel
 {
     public class PdfManagerPageViewModel : NotificationClass
     {
-        public RelayCommand SecureItemNavigate { get => new RelayCommand(SecureItemNavigateCommand, true); }
+        public RelayCommand SecureItemNavigate { get => new(SecureItemNavigateCommand, true); }
 
         private void SecureItemNavigateCommand() => (App.Current as App).pdfManagerPage.NavigationService.Navigate((App.Current as App).securityUserControl);
 
-        public RelayCommand MergeItemNavigate { get => new RelayCommand(MergeItemNavigateCommand, true); }
+        public RelayCommand MergeItemNavigate { get => new(MergeItemNavigateCommand, true); }
 
         private void MergeItemNavigateCommand() => (App.Current as App).pdfManagerPage.NavigationService.Navigate((App.Current as App).pdfMergeUserControl);
 
-        public RelayCommand ImageToPdfItemNavigate { get => new RelayCommand(ImageToPdfItemNavigateCommand, true); }
+        public RelayCommand ImageToPdfItemNavigate { get => new(ImageToPdfItemNavigateCommand, true); }
 
         private void ImageToPdfItemNavigateCommand() => (App.Current as App).pdfManagerPage.NavigationService.Navigate((App.Current as App).imageToPdfUserControl);
 
-        public RelayCommand PdfToImageNavigate { get => new RelayCommand(PdfToImageNavigateCommand, true); }
+        public RelayCommand PdfToImageNavigate { get => new(PdfToImageNavigateCommand, true); }
 
         private void PdfToImageNavigateCommand() => (App.Current as App).pdfManagerPage.NavigationService.Navigate((App.Current as App).pdfToImageUserControl);
 
@@ -25,7 +25,7 @@ namespace CrytonCore.ViewModel
         public void ChangeBarsSize(int actualSize)
         {
             BarsSize = actualSize > 50 ? actualSize - 50 : actualSize;
-            OnPropertyChanged("BarsSize");
+            OnPropertyChanged(nameof(BarsSize));
         }
     }
 }

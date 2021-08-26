@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Ratio.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.8" />
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
@@ -29,9 +33,7 @@
     <Folder Include="Enums\" />
     <Folder Include="Files\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Infra\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="ViewModel\" />
     <Folder Include="Tools\" />
     <Folder Include="Style\" />
     <Folder Include="Service\" />
@@ -106,6 +108,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\PadlockOpen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Ratio.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Rotate.png">

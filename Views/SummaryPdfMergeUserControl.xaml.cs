@@ -24,7 +24,7 @@ namespace CrytonCore.Views
         }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
                 Title = "Save pdf file",
                 Filter = "Pdf file (.pdf)|*.pdf" // Filter files by extension

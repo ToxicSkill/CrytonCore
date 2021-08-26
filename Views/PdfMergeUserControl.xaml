@@ -238,7 +238,7 @@
             <Grid x:Name="pdfViewGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       Margin="970,68,30,96" SizeChanged="PdfViewGrid_SizeChanged" >
                     <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                            Value="{Binding SliderValue}" Maximum="{Binding SliderMaximum}" Visibility="{Binding SliderVisibility}">
+                            Value="{Binding SliderValue}" Maximum="{Binding SliderMaximum}" Visibility="{Binding SliderVisibility}" SmallChange="1">
                     </Slider>
 
                     <Image x:Name="pdfImage" Margin="0,25,0,0" HorizontalAlignment="Stretch" Source="{Binding BitmapSource}" VerticalAlignment="Stretch"/>

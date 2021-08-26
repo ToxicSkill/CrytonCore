@@ -1,4 +1,5 @@
-﻿using CrytonCore.Infra;
+﻿using CrytonCore.Helpers;
+using CrytonCore.Infra;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ using Image = CrytonCore.Model.Image;
 
 namespace CrytonCore.Model
 {
-    public abstract class PortableDocumentFormatManager : NotificationClass
+    public abstract class PortableDocumentFormatManager : NotificationClass, IFileDragDropTarget
     {
         protected delegate void VisibilityDelegate(bool show);
 
@@ -21,7 +22,7 @@ namespace CrytonCore.Model
 
         private class Mode
         {
-            public bool SingleSlide { get; set; } = false;
+            public bool SingleSlide { get; set; }
 
             public bool OnlyPdf { get; set; } = true;
         }
@@ -55,7 +56,7 @@ namespace CrytonCore.Model
                     OrderVector.Add(i);
             if (!res.Any(x => x)) return false;
             await UpdateListViewImages();
-            UpdateSlider(); 
+            UpdateSlider();
             await Task.Run(() => VisibilityChangeDelegate(true));
             return true;
         }
@@ -137,7 +138,7 @@ namespace CrytonCore.Model
                             max = keys.Max();
                         }
                         var currentPage = Slider.CurrentIndex;
-                        _PDF.TotalPages =
+                        _PDF.CurrentPage =
                         currentIndex > 0 ?
                         currentPage - max - 1 :
                         currentPage;
@@ -184,6 +185,12 @@ namespace CrytonCore.Model
                 if (keys.Any())
                     SliderValue = keys.Min();
             }
+        }
+
+
+        async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
+        {
+            _ = await LoadFile(filePaths);
         }
 
         public int SliderValue

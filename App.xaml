@@ -335,6 +335,17 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        <Style x:Key="TransparentButtonOpacity" TargetType="{x:Type Button}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.6"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Opacity" Value="1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
 
         <Style x:Key="TransparentButtonRightAlignment" TargetType="{x:Type Button}">

@@ -34,15 +34,15 @@ namespace CrytonCore.Ciphers
             public BigInteger PrivateKey;
         }
 
-        private RSA_Keys keysRSA = new RSA_Keys();
+        private RSA_Keys keysRSA = new();
         private string _preparedDecryptionStamp;
-        private readonly Random random = new Random(1410);
-        private readonly CrytonFile file = new CrytonFile();
+        private readonly Random random = new(1410);
+        private readonly CrytonFile file = new();
         private string name = "RSA";
-        private readonly List<BigInteger> _preparedChunkData_Encryption = new List<BigInteger>();
+        private readonly List<BigInteger> _preparedChunkData_Encryption = new();
         private static byte[] ByteZerosArray;
         private byte[] ByteDynamicArray;
-        private readonly List<ValueTuple<int, byte[]>> processedDivData = new List<(int, byte[])>();
+        private readonly List<ValueTuple<int, byte[]>> processedDivData = new();
 
         public override string Name
         {
@@ -85,8 +85,8 @@ namespace CrytonCore.Ciphers
             {
                 TextWriter tw = new StreamWriter(@"C:\Users\Adam\Desktop\keys.txt");
 
-                List<BIGS> bb = new List<BIGS>();
-                BIGS temp = new BIGS();
+                List<BIGS> bb = new();
+                BIGS temp = new();
                 for (int i = 0; i < 100; i++)
                 {
                     GenerateRSAKeys().ContinueWith(t => ComputeComponents());
@@ -107,7 +107,7 @@ namespace CrytonCore.Ciphers
         }
         public override async Task<bool> Encrypt(IProgress<int> progress, CancellationToken cancellation)
         {
-            Stopwatch sw = new Stopwatch();
+            Stopwatch sw = new();
             sw.Start();
 
             await GenerateRSAKeys().ContinueWith(t => ComputeComponents());
@@ -115,7 +115,7 @@ namespace CrytonCore.Ciphers
             if (!CheckKeysStatus())
                 return false;
 
-            List<Task<bool>> tasks = new List<Task<bool>>();
+            List<Task<bool>> tasks = new();
             foreach ((byte[] value, int i) item in file.DivData.Select((value, i) => (value, i)))
             {
                 try
@@ -174,9 +174,9 @@ namespace CrytonCore.Ciphers
         {
             return Task.Run(async () =>
             {
-                List<byte[]> bigBytes = new List<byte[]>();
+                List<byte[]> bigBytes = new();
                 List<byte[]> slices = Operation.ArraySplit(dataChunk, _subChunkSize).ToList();
-                List<Task<BigInteger>> bigTasks = new List<Task<BigInteger>>();
+                List<Task<BigInteger>> bigTasks = new();
 
                 if (chunkIndex == file.DivData.Count - 1)
                 {
@@ -213,7 +213,7 @@ namespace CrytonCore.Ciphers
         {
             BigInteger function()
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 foreach (byte i_chunk in slice)
                 {
                     sb.Append(((int)i_chunk).ToString("D3"));
@@ -244,7 +244,7 @@ namespace CrytonCore.Ciphers
                 }
                 PrepareDecryptionStamp();
 
-                List<Task<bool>> tasks = new List<Task<bool>>();
+                List<Task<bool>> tasks = new();
                 foreach ((byte[] value, int i) item in file.DivData.Select((value, i) => (value, i)))
                 {
                     try
@@ -287,7 +287,7 @@ namespace CrytonCore.Ciphers
             return Task.Run(() =>
             {
                 List<byte[]> preapreBytes = Operation.ArraySplit(slice, _subDynamicChunkSize).ToList();
-                List<byte[]> bigBytes = new List<byte[]>();
+                List<byte[]> bigBytes = new();
 
                 ParallelQuery<byte[]> matches = from item in preapreBytes.AsParallel()
                                                 select Split(BigInteger.ModPow(new BigInteger(item), keysRSA.PrivateKey, keysRSA.PxQ).
@@ -319,7 +319,7 @@ namespace CrytonCore.Ciphers
         }
         private void PrepareDecryptionStamp()
         {
-            StringBuilder stamp = new StringBuilder();
+            StringBuilder stamp = new();
             for (int i = 0; i < _subChunkSize * __constPartLenght; i++)
                 stamp.Append("0");
             _preparedDecryptionStamp = stamp.ToString();
@@ -372,7 +372,7 @@ namespace CrytonCore.Ciphers
         {
             Func<bool> function = () =>
             {
-                StringBuilder bitKey = new StringBuilder();
+                StringBuilder bitKey = new();
                 BigInteger bitIntValue;
                 bool pqDifferent = false;
                 int loopBound = (int)1e5;
@@ -436,7 +436,7 @@ namespace CrytonCore.Ciphers
             try
             {
                 file.MethodId = (int)TypesOfCrypting.RSA;
-                file.Method = TypesOfCrypting.RSA.ToString();
+                file.Method = EnumToString(TypesOfCrypting.RSA);
                 file.Exist = resultOfCrypting;
             }
             catch (Exception)
