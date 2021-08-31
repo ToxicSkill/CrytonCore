@@ -7,16 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using CrytonCore.Interfaces;
 using Image = CrytonCore.Model.Image;
 
 namespace CrytonCore.Model
 {
-    public abstract class PortableDocumentFormatManager : NotificationClass, IFileDragDropTarget
+    public abstract class PortableDocumentFormatManager : PageManager
     {
-        protected delegate void VisibilityDelegate(bool show);
-
-        protected VisibilityDelegate VisibilityChangeDelegate;
-
         protected Dictionary<int, int> SingleSliderDictionary { get; set; }
         private Mode CurrentMode { get; set; }
 
@@ -47,7 +44,7 @@ namespace CrytonCore.Model
             CurrentMode = new Mode() { OnlyPdf = pdfOnly, SingleSlide = singleSlider };
         }
 
-        public async Task<bool> LoadFile(IEnumerable<string> fileNames)
+        public override async Task<bool> LoadFile(IEnumerable<string> fileNames)
         {
             var tasks = fileNames.Select(async url => await AddFileToList(url)).ToList();
             var res = await Task.WhenAll(tasks);
@@ -57,7 +54,8 @@ namespace CrytonCore.Model
             if (!res.Any(x => x)) return false;
             await UpdateListViewImages();
             UpdateSlider();
-            await Task.Run(() => VisibilityChangeDelegate(true));
+            ChangeVisibility(true);
+            //await Task.Run(() => VisibilityChangeDelegate(true));
             return true;
         }
 
@@ -187,12 +185,6 @@ namespace CrytonCore.Model
             }
         }
 
-
-        async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
-        {
-            _ = await LoadFile(filePaths);
-        }
-
         public int SliderValue
         {
             get => Slider.CurrentIndex;
@@ -240,28 +232,6 @@ namespace CrytonCore.Model
                 _ = UpdateImageSourceAsync();
                 UpdateSlider();
                 OnPropertyChanged(nameof(SelectedItemIndex));
-            }
-        }
-
-        private Visibility _visibilityShowed = Visibility.Visible;
-        private Visibility _visibilityHidden = Visibility.Hidden;
-
-        public Visibility VisibilityDefaultAsShowed
-        {
-            get => _visibilityShowed;
-            set
-            {
-                _visibilityShowed = value;
-                OnPropertyChanged(nameof(VisibilityDefaultAsShowed));
-            }
-        }
-        public Visibility VisibilityDefaultAsHidden
-        {
-            get => _visibilityHidden;
-            set
-            {
-                _visibilityHidden = value;
-                OnPropertyChanged(nameof(VisibilityDefaultAsHidden));
             }
         }
     }

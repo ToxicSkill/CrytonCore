@@ -14,13 +14,6 @@ namespace CrytonCore.ViewModel
         public PdfToImageViewModel()
         {
             SetCurrentMode(pdfOnly: true, singleSlider: false);
-            VisibilityChangeDelegate = new VisibilityDelegate(ChangeVisibility);
-        }
-
-        private void ChangeVisibility(bool show)
-        {
-            VisibilityDefaultAsShowed = show ? Visibility.Hidden : Visibility.Visible;
-            VisibilityDefaultAsHidden = show ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }

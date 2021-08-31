@@ -69,10 +69,10 @@ namespace CrytonCore.Model
         public ImageTool()
         {
             Ratios.Add((double)1.414213562373095);
-            Ratios.Add((double)4 / (double)3);
-            Ratios.Add((double)16 / (double)9);
+            Ratios.Add((double)4 / 3);
+            Ratios.Add((double)16 / 9);
             Ratios.Add(1);
-            Ratios.Add((double)18 / (double)9);
+            Ratios.Add((double)18 / 9);
         }
     }
 }

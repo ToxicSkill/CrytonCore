@@ -8,10 +8,9 @@ namespace CrytonCore.Views
     /// <summary>
     /// Interaction logic for NewPdfMergeUserControl.xaml
     /// </summary>
-    public partial class SummaryPdfMergeUserControl : UserControl
+    public partial class SummaryPdfMergePage : Page
     {
-        private System.Windows.Navigation.NavigationService _navigationService;
-        public SummaryPdfMergeUserControl()
+        public SummaryPdfMergePage()
         {
             InitializeComponent();
             (App.Current as App).themesUpdaters.Add(new App.UpdateThemes(UpdateTheme));
@@ -52,10 +51,7 @@ namespace CrytonCore.Views
         {
             try
             {
-                _navigationService = System.Windows.Navigation.NavigationService.GetNavigationService(this);
-                var view = (Application.Current as App)?.pdfMergeUserControl;
-                if (view != null)
-                    _navigationService?.Navigate(view);
+                App.GoPdfMergePage.Invoke();
             }
             catch (Exception exception)
             {

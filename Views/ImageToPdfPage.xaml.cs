@@ -15,7 +15,7 @@ namespace CrytonCore.Views
     /// <summary>
     /// Interaction logic for ImageToPdfUserControl.xaml
     /// </summary>
-    public partial class ImageToPdfUserControl : UserControl
+    public partial class ImageToPdfPage : Page
     {
         private int counter = 0;
         private int LastSelectedIndex = 0;
@@ -29,7 +29,7 @@ namespace CrytonCore.Views
 
         private System.Windows.Navigation.NavigationService _navigation;
 
-        public ImageToPdfUserControl()
+        public ImageToPdfPage()
         {
             InitializeComponent();
             InitializeRatioComboBox();

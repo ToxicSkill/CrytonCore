@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CrytonCore.Views.ImageToPdfUserControl"
+﻿<Page x:Class="CrytonCore.Views.ImageToPdfPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -11,7 +11,7 @@
              Drop="FilesListView_Drop">
 
 
-    <UserControl.Resources>
+    <Page.Resources>
         <ResourceDictionary>
 
             <Storyboard x:Key="ExtendTopBar">
@@ -39,16 +39,16 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
+    </Page.Resources>
 
-    <UserControl.Background>
+    <Page.Background>
         <LinearGradientBrush EndPoint="0.5,1" 
                              MappingMode="RelativeToBoundingBox" 
                              StartPoint="0.5,0" Opacity="1">
             <GradientStop Color="{DynamicResource backgroundTopColor}"/>
             <GradientStop Offset="1"/>
         </LinearGradientBrush>
-    </UserControl.Background>
+    </Page.Background>
 
 
     <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
@@ -262,7 +262,7 @@
             <materialDesign:TransitionerSlide.ForwardWipe>
                 <materialDesign:SlideWipe Direction="Right"/>
             </materialDesign:TransitionerSlide.ForwardWipe>
-            <local:SummaryPdfMergeUserControl />
+            <local:SummaryPdfMergePage />
         </materialDesign:TransitionerSlide>-->
     </materialDesign:Transitioner>
-</UserControl>
+</Page>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrytonCore"
         xmlns:as="CrytonCore.Assets"
+        xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MainWindow" 
         Height="700" 
@@ -15,12 +16,39 @@
         AllowsTransparency="True"
         >
 
+    <Window.DataContext>
+        <ViewModel:MainWindowViewModel/>
+    </Window.DataContext>
+    
     <Window.Background>
         <!--<SolidColorBrush Opacity="0.88" Color="#202048"/>-->
         <!--<SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundColor}"/>-->
         <SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundBottomColor}"/>
     </Window.Background>
 
+
+    <Window.Resources>
+        <Storyboard x:Key="HideStackPanel">
+            <DoubleAnimation                  
+                Storyboard.TargetName="nav_pnl"
+                Storyboard.TargetProperty="Width"
+                BeginTime="0:0:0"
+                From="230" To="65"
+                Duration="0:0:0.2">
+            </DoubleAnimation>
+        </Storyboard>
+        
+        <Storyboard x:Key="ShowStackPanel">
+            <DoubleAnimation
+                Storyboard.TargetName="nav_pnl"
+                Storyboard.TargetProperty="Width"
+                BeginTime="0:0:0"
+                From="65" To="230"
+                Duration="0:0:0.3">
+            </DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
+    
     <Grid>
 
         <!--// Background Color //-->
@@ -29,7 +57,7 @@
 
             <!--// Background Image //-->
 
-            <Grid x:Name="BG" PreviewMouseLeftButtonDown="BG_PreviewMouseLeftButtonDown">
+            <Grid x:Name="BG"> <!--PreviewMouseLeftButtonDown="BG_PreviewMouseLeftButtonDown">-->
 
                 <Grid.Background>
 
@@ -60,6 +88,7 @@
 
                 <Frame 
                     x:Name="Pages"
+                    Content="{Binding DisplayPage, Mode=TwoWay}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch" 
                     NavigationUIVisibility="Hidden" Margin="62,30,0,0" />
@@ -82,14 +111,19 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Button x:Name="CloseBtn"
+                <Button
                         Grid.Column="3"
                         Grid.Row="1"
                         Height="30"
                         Width="30"
                         BorderThickness="0"
-                        Style="{StaticResource Close_btn}" 
-                        Click="CloseBtn_Click">
+                        Style="{StaticResource Close_btn}">
+                    
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding CloseMainWindow}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
                     <Button.Background>
 
@@ -105,8 +139,15 @@
                         Grid.Row="1"
                         BorderThickness="0"
                         Style="{StaticResource Maximize_btn}" 
-                        Click="MaxBtn_Click" Margin="3,3,2,2">
+                         Margin="3,3,2,2">
 
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding MaximizeOrNormalizeMainWindow}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
                     <Button.Background>
 
                         <ImageBrush ImageSource="pack://application:,,,/Assets/Maximize.png"
@@ -123,8 +164,14 @@
                         Width="30"
                         BorderThickness="0"
                         Style="{StaticResource Minimize_btn}" 
-                        Click="MinBtn_Click" Margin="0,0,0,2">
+                        Margin="0,0,0,2">
 
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding MinimizeMainWindow}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
                     <Button.Background>
 
                         <ImageBrush ImageSource="pack://application:,,,/Assets/Minimize.png"
@@ -185,9 +232,17 @@
                                       RenderOptions.BitmapScalingMode="HighQuality"
                                       HorizontalAlignment="Left"
                                       BorderThickness="0"
+                                      IsChecked="{Binding ToggleButtonCheck}"
                                       Style="{StaticResource Menu_btn}" 
-                                      ToolTip="Menu" Click="Tg_Btn_Click">
-
+                                      ToolTip="Menu">
+                            <ToggleButton.Triggers>
+                                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                                    <BeginStoryboard Storyboard="{StaticResource ShowStackPanel}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                                    <BeginStoryboard Storyboard="{StaticResource HideStackPanel}"/>
+                                </EventTrigger>
+                            </ToggleButton.Triggers>
 
                             <!--// Toggle button default background image //-->
 
@@ -202,7 +257,7 @@
 
                             <!--// Toggle Button - Checked, Unchecked events //-->
 
-                            <ToggleButton.Triggers>
+                            <!--<ToggleButton.Triggers>
 
                                 <EventTrigger RoutedEvent="ToggleButton.Unchecked">
 
@@ -248,7 +303,7 @@
 
                                 </EventTrigger>
 
-                            </ToggleButton.Triggers>
+                            </ToggleButton.Triggers>-->
 
 
                         </ToggleButton>
@@ -268,9 +323,12 @@
 
                         <ListViewItem x:Name="CryptBtn" 
                                       HorizontalAlignment="Left"
-                                      Margin="0,45,0,55"
-                                      MouseEnter="ListViewItem_MouseEnter"
-                                      PreviewMouseLeftButtonUp="Crypt_clicked">
+                                      Margin="0,45,0,55">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
 
                             <StackPanel Orientation="Horizontal"
                                         Width="230">
@@ -292,6 +350,7 @@
                             <ListViewItem.ToolTip>
 
                                 <ToolTip x:Name="tt_crypt"
+                                         Visibility="{Binding VisibilityDefaultAsHidden}"
                                          Content="{DynamicResource tipCrypt_mainWindow}"
                                          Style="{StaticResource tt_style}"/>
 
@@ -303,10 +362,12 @@
 
                         <ListViewItem x:Name="SecurityBtn" 
                                       HorizontalAlignment="Left"
-                                      Margin="0,0,0,55" 
-                                      MouseEnter="ListViewItem_MouseEnter"
-                                      PreviewMouseLeftButtonUp="Security_clicked"
-                                      >
+                                      Margin="0,0,0,55">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding GoPdfManager}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
 
                             <StackPanel Orientation="Horizontal"
                                         Width="230">
@@ -327,6 +388,7 @@
                             <ListViewItem.ToolTip>
 
                                 <ToolTip x:Name="tt_security"
+                                         Visibility="{Binding VisibilityDefaultAsHidden}"
                                          Width="150"
                                          Content="{DynamicResource tipPdf_mainWindow}"
                                          Style="{StaticResource tt_style}"/>
@@ -338,10 +400,12 @@
 
                         <ListViewItem x:Name="SettingsBtn"
                                       HorizontalAlignment="Left"
-                                      Margin="0,0,0,55" 
-                                      MouseEnter="ListViewItem_MouseEnter"
-                                      PreviewMouseLeftButtonUp="Settings_clicked"
-                                      >
+                                      Margin="0,0,0,55">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding GoSettings}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
 
                             <StackPanel Orientation="Horizontal"
                                         Width="230">
@@ -363,6 +427,7 @@
                             <ListViewItem.ToolTip>
 
                                 <ToolTip x:Name="tt_settings"
+                                         Visibility="{Binding VisibilityDefaultAsHidden}"
                                          Content="{DynamicResource tipSettings_mainWindow}"
                                          Style="{StaticResource tt_style}"/>
 
@@ -372,9 +437,7 @@
 
                         <ListViewItem x:Name="StatisticsBtn" 
                                       HorizontalAlignment="Left"
-                                      Margin="0,0,0,55" 
-                                      MouseEnter="ListViewItem_MouseEnter"
-                                      >
+                                      Margin="0,0,0,55">
 
                             <StackPanel Orientation="Horizontal"
                                         Width="230">
@@ -397,6 +460,7 @@
                             <ListViewItem.ToolTip>
 
                                 <ToolTip x:Name="tt_statistics"
+                                         Visibility="{Binding VisibilityDefaultAsHidden}"
                                          Content="{DynamicResource tipStatistics_mainWindow}"
                                          Style="{StaticResource tt_style}"/>
 
@@ -406,9 +470,7 @@
 
                         <ListViewItem x:Name="InfoBtn"
                                       HorizontalAlignment="Left"
-                                      VerticalAlignment="Bottom"
-                                      MouseEnter="ListViewItem_MouseEnter"
-                                      >
+                                      VerticalAlignment="Bottom">
 
                             <StackPanel Orientation="Horizontal"
                                         Width="270">
@@ -432,6 +494,7 @@
                             <ListViewItem.ToolTip>
 
                                 <ToolTip x:Name="tt_informations"
+                                         Visibility="{Binding VisibilityDefaultAsHidden}"
                                          Content="{DynamicResource tipInformations_mainWindow}"
                                          Width="125"
                                          Style="{StaticResource tt_style}"/>

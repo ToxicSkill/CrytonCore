@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CrytonCore.Views.PdfToImageUserControl"
+﻿<Page x:Class="CrytonCore.Views.PdfToImagePage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -13,11 +13,11 @@
              helpers:FileDragDropHelper.FileDragDropTarget="{Binding}">
 
 
-    <UserControl.DataContext>
+    <Page.DataContext>
         <ViewModel:PdfToImageViewModel/>
-    </UserControl.DataContext>
+    </Page.DataContext>
     
-    <UserControl.Resources>
+    <Page.Resources>
         <ResourceDictionary>
 
             <Storyboard x:Key="ExtendTopBar">
@@ -46,16 +46,16 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
+    </Page.Resources>
 
-    <UserControl.Background>
+    <Page.Background>
         <LinearGradientBrush EndPoint="0.5,1" 
                              MappingMode="RelativeToBoundingBox" 
                              StartPoint="0.5,0" Opacity="1">
             <GradientStop Color="{DynamicResource backgroundTopColor}"/>
             <GradientStop Offset="1"/>
         </LinearGradientBrush>
-    </UserControl.Background>
+    </Page.Background>
 
 
     <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
@@ -158,13 +158,13 @@
                            Content="{DynamicResource dragAndDropLabel2}"/>
             </Grid>
 
-            <Grid x:Name="controlsGrid" Visibility="{Binding VisibilityDefaultAsShowed}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid x:Name="controlsGrid" Visibility="{Binding VisibilityDefaultAsHidden}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="695,92,0,10" Width="270"  >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="340"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
                            FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
@@ -256,7 +256,7 @@
             <materialDesign:TransitionerSlide.ForwardWipe>
                 <materialDesign:SlideWipe Direction="Right"/>
             </materialDesign:TransitionerSlide.ForwardWipe>
-            <local:SummaryPdfMergeUserControl />
+            <local:SummaryPdfMergePage />
         </materialDesign:TransitionerSlide>-->
     </materialDesign:Transitioner>
-</UserControl>
+</Page>

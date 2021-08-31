@@ -11,7 +11,6 @@ using System.Numerics;
 using CrytonCore.Interfaces;
 using CrytonCore.Helpers;
 using CrytonCore.Views;
-using System.Drawing;
 
 namespace CrytonCore
 {
@@ -22,14 +21,30 @@ namespace CrytonCore
     {
         //PAGES - NAVIAGTION
 
-        public CryptPage cryptWindow;
-        public PdfManagerPage pdfManagerPage;
-        public SettingsPage settingsPage;
-        public WelcomePage welcomePage;
-        public SecurityUserControl securityUserControl;
-        public PdfMergeUserControl pdfMergeUserControl;
-        public ImageToPdfUserControl imageToPdfUserControl;
-        public PdfToImageUserControl pdfToImageUserControl;
+        public delegate void WelcomePageDelegate();
+        public static WelcomePageDelegate GoStartPage;
+
+        public delegate void CryptingPageDelegate();
+        public static CryptingPageDelegate GoCryptingPage;
+
+        public delegate void PdfManagerPageDelegate();
+        public static PdfManagerPageDelegate GoPdfManagerPage;
+
+        public delegate void SettingsPageDelegate();
+        public static SettingsPageDelegate GoSettingsPage;
+
+        public delegate void PdfMergePageDelegate();
+        public static PdfMergePageDelegate GoPdfMergePage;
+
+        public delegate void PdfSecurityPageDelegate();
+        public static PdfSecurityPageDelegate GoPdfSecurityPage;
+
+        public delegate void ImageToPdfPageDelegate();
+        public static ImageToPdfPageDelegate GoImageToPdfPage;
+
+        public delegate void PdfToImagePageDelegate();
+        public static PdfToImagePageDelegate GoPdfToImagePage;
+
         //public SummaryPdfMergeUserControl summaryPdfMergeUserControl;
 
         public MapperService mapperService = new();
@@ -56,6 +71,7 @@ namespace CrytonCore
 
         public string ShortLanguageName { get; set; }
 
+        public static bool AppIsLoaded { get; set; }
         public Keys AppKeys { get; set; } = new Keys();
 
         public string GetCurrentErrorMessage
@@ -77,7 +93,6 @@ namespace CrytonCore
         protected override void OnStartup(StartupEventArgs e)
         {
             InitializeCryptingSettings();
-            InitializePages();
             base.OnStartup(e);
         }
 
@@ -85,19 +100,6 @@ namespace CrytonCore
         private void InitializeCryptingSettings()
         {
             CrytpingSettings.Add(new RSAHelper());
-        }
-
-        private void InitializePages()
-        {
-            securityUserControl = new SecurityUserControl();
-            pdfMergeUserControl = new PdfMergeUserControl();
-            imageToPdfUserControl = new ImageToPdfUserControl();
-            //summaryPdfMergeUserControl = new SummaryPdfMergeUserControl();
-            pdfToImageUserControl = new PdfToImageUserControl();
-            cryptWindow = new CryptPage();
-            pdfManagerPage = new PdfManagerPage();
-            settingsPage = new SettingsPage();
-            welcomePage = new WelcomePage();
         }
 
         public Task<bool> SaveDataInRelativePath(string appendString, string[] data)

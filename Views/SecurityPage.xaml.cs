@@ -11,12 +11,12 @@ namespace CrytonCore.Views
     /// <summary>
     /// Interaction logic for SecurityPage.xaml
     /// </summary>
-    public partial class SecurityUserControl : UserControl
+    public partial class SecurityPage : Page
     {
         public Dictionary<ToggleButton, StackPanel> ToggleButtonsKeysToStackPanelOpacity { get; set; } = new Dictionary<ToggleButton, StackPanel>();
 
         private readonly PdfFile _pdfFile = new();
-        public SecurityUserControl()
+        public SecurityPage()
         {
             InitializeComponent();
             InitializeEntities();

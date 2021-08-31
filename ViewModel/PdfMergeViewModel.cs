@@ -1,26 +1,17 @@
 ﻿using CrytonCore.Infra;
 using CrytonCore.Model;
 using System.Threading.Tasks;
-using System.Windows;
 using CrytonCore.Views;
-using CrytonCore.Helpers;
 
 namespace CrytonCore.ViewModel
 {
     public class PdfMergeViewModel : PortableDocumentFormatManager
     {
-        private SummaryPdfMergeUserControl _summaryUserControl;
+        private SummaryPdfMergePage _summaryPage;
         public PdfMergeViewModel()
         {
             SetCurrentMode(pdfOnly: true,singleSlider: false);
-            VisibilityChangeDelegate = new VisibilityDelegate(ChangeVisibility);
-            _summaryUserControl = new SummaryPdfMergeUserControl();
-        }
-
-        private void ChangeVisibility(bool show)
-        {
-            VisibilityDefaultAsShowed = show ? Visibility.Hidden : Visibility.Visible;
-            VisibilityDefaultAsHidden = show ? Visibility.Visible : Visibility.Hidden;
+            _summaryPage = new SummaryPdfMergePage();
         }
 
         private void MoveIndexes(int selectedIndex, int newIndex)
@@ -114,12 +105,12 @@ namespace CrytonCore.ViewModel
             ChangeVisibility(false);
         }
 
-        public async Task<SummaryPdfMergeUserControl> GetSummaryPage()
+        public async Task<SummaryPdfMergePage> GetSummaryPage()
         {
-            if (_summaryUserControl == null) _summaryUserControl = new SummaryPdfMergeUserControl();
-            var result = ((PdfMergeSummaryViewModel) _summaryUserControl.DataContext).Update(FilesView, PDFCollection,
+            if (_summaryPage == null) _summaryPage = new SummaryPdfMergePage();
+            var result = ((PdfMergeSummaryViewModel)_summaryPage.DataContext).Update(FilesView, PDFCollection,
                 OrderVector);
-            return result ? _summaryUserControl : null;
+            return result ? _summaryPage : null;
         }
     }
 }

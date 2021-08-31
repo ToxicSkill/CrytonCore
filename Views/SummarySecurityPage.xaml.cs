@@ -15,11 +15,11 @@ namespace CrytonCore.Views
     /// <summary>
     /// Interaction logic for UserControlNewSecurity.xaml
     /// </summary>
-    public partial class NewSecurityUserControl : UserControl
+    public partial class SummarySecurityPage : Page
     {
         private PdfFile _pdfFile = new();
         private PdfSharpCore.Pdf.PdfDocument _document = new();
-        public NewSecurityUserControl()
+        public SummarySecurityPage()
         {
             InitializeComponent();
             (App.Current as App).themesUpdaters.Add(new App.UpdateThemes(UpdateTheme));

@@ -67,6 +67,16 @@
 
         <Style x:Key="Close_btn" TargetType="{x:Type Button}">
 
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.5">
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Opacity" Value="1"></Setter>
+                </Trigger>
+            </Style.Triggers>
+            
             <Setter Property="Template">
 
                 <Setter.Value>

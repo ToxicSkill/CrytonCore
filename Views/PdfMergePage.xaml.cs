@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CrytonCore.Helpers;
 
 namespace CrytonCore.Views
 {
@@ -13,18 +12,20 @@ namespace CrytonCore.Views
     /// Interaction logic for _dfMergeUserControl.xaml
     /// </summary>
 
-    public partial class PdfMergeUserControl : UserControl
+    public partial class PdfMergePage : Page
     {
         private System.Windows.Navigation.NavigationService _navigationService;
-        public PdfMergeUserControl()
+        public PdfMergePage()
         {
             InitializeComponent();
         }
 
         private async Task LoadFile()
         {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
+            var openFileDialog = new OpenFileDialog
+            {
+                Multiselect = true
+            };
             if (openFileDialog.ShowDialog() == true)
             {
                 _ = await (DataContext as PdfMergeViewModel)?.LoadFile(openFileDialog.FileNames);
@@ -57,8 +58,9 @@ namespace CrytonCore.Views
         {
             try
             {
-                _navigationService = System.Windows.Navigation.NavigationService.GetNavigationService(this);
-                _navigationService?.Navigate((App.Current as App).pdfManagerPage);
+                App.GoPdfManagerPage.Invoke();
+                //_navigationService = System.Windows.Navigation.NavigationService.GetNavigationService(this);
+                //_navigationService?.Navigate((App.Current as App).pdfManagerPage);
             }
             catch (Exception exception)
             {

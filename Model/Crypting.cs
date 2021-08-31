@@ -1,5 +1,4 @@
-﻿using CrytonCore.Ciphers;
-using CrytonCore.File;
+﻿using CrytonCore.File;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -119,12 +118,6 @@ namespace CrytonCore.Model
         }
         internal async Task<bool> Crypt(IProgress<int> progress, CancellationToken cancellation)
         {
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    await Task.Delay(1000);
-            //    progress.Report(i);
-            //}
-            //return true;
             Cipher cipherObject = Ciphers.FirstOrDefault(x => x.Name.ToString().ToLower() == CryptingMethodName.ToLower());
             Cipher _cipher = (Cipher)Activator.CreateInstance(cipherObject.GetType(), File);
             CurrentCipher = (Enums.Enumerates.TypesOfCrypting)Ciphers.IndexOf(_cipher);

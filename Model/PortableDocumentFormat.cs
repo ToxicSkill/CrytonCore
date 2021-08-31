@@ -1,7 +1,4 @@
-﻿using Docnet.Core;
-using Docnet.Core.Models;
-using ImageMagick;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Patagames.Pdf.Enums;
 using Patagames.Pdf.Net;
@@ -28,17 +25,22 @@ namespace CrytonCore.Model
             _pdfBytes = System.IO.File.ReadAllBytes(ImagePDF.Url);
             return Task.CompletedTask;
         }
-        public BitmapImage GetBitmapImage() => ImagePDF.Extension == "pdf" ? RenderPage() : ImageToBitmap();
+        public BitmapImage GetBitmapImage() => ImagePDF.Extension == "pdf" ? ExtractAllImages() : ImageToBitmap();
 
-        //public Task<BitmapImage> LoadBitmapImage() => Task.FromResult(RenderPage());
         public Bitmap PrepareBitmapImageToSave(BitmapImage img) => BitmapImage2Bitmap(img);
 
-        //private System.Drawing.Image GetPageImage(PdfiumViewer.PdfDocument document, int dpi) =>
-        //    document.Render(ImagePDF.CurrentNumberOfPage, ImagePDF.Size.Width, ImagePDF.Size.Height, dpi, dpi, PdfRenderFlags.Annotations);
-
-        private BitmapImage Convert(System.Drawing.Image img)
+        public BitmapImage ExtractAllImages()
         {
-            var memory = new MemoryStream();
+            using Patagames.Pdf.Net.PdfDocument doc = Patagames.Pdf.Net.PdfDocument.Load(ImagePDF.Url); // C# Read PDF Document
+            var page = doc.Pages[ImagePDF.CurrentNumberOfPage];
+            int width = (int)(page.Width / 72.0 * 96);
+            int height = (int)(page.Height / 72.0 * 96);
+            PdfBitmap bitmap = new(width, height, true);
+
+            bitmap.FillRect(0, 0, width, height, Patagames.Pdf.FS_COLOR.White);
+            page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, RenderFlags.FPDF_RENDER_LIMITEDIMAGECACHE);
+            var img = bitmap.Image;
+            MemoryStream memory = new();
             img.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
             memory.Position = 0;
 
@@ -52,41 +54,17 @@ namespace CrytonCore.Model
             return bitmapImage;
         }
 
-        private BitmapImage RenderPage()
+        private static Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
         {
-            return Convert(ExtractAllImages());
+            using MemoryStream outStream = new();
+            BitmapEncoder enc = new BmpBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+            enc.Save(outStream);
+            Bitmap bitmap = new(outStream);
+
+            return new Bitmap(bitmap);
         }
-
-        public System.Drawing.Image ExtractAllImages()
-        {
-            using (var doc = Patagames.Pdf.Net.PdfDocument.Load(ImagePDF.Url)) // C# Read PDF Document
-            {
-                var page = doc.Pages[ImagePDF.CurrentNumberOfPage];
-                int width = (int)(page.Width / 72.0 * 96);
-                int height = (int)(page.Height / 72.0 * 96);
-                var bitmap = new PdfBitmap(width, height, true);
-                
-                bitmap.FillRect(0, 0, width, height, Patagames.Pdf.FS_COLOR.White);
-                page.Render(bitmap, 0, 0, width, height, PageRotate.Normal, Patagames.Pdf.Enums.RenderFlags.FPDF_RENDER_LIMITEDIMAGECACHE);
-                return bitmap.Image;
-            }
-        }
-
-        private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
-        {
-            using (MemoryStream outStream = new())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
-                enc.Save(outStream);
-                System.Drawing.Bitmap bitmap = new(outStream);
-
-                return new Bitmap(bitmap);
-            }
-        }
-        public void PdfToImage(Bitmap img, string outFileName) => img.Save(outFileName, System.Drawing.Imaging.ImageFormat.Png);
-
-
+        public static void PdfToImage(Bitmap img, string outFileName) => img.Save(outFileName, System.Drawing.Imaging.ImageFormat.Png);
         public BitmapImage ImageToBitmap()
         {
             FileStream fileStream = new(ImagePDF.Url, FileMode.Open, FileAccess.Read);
