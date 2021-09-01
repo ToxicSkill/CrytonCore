@@ -26,6 +26,7 @@ namespace CrytonCore.ViewModel
             App.GoPdfSecurityPage = new App.PdfSecurityPageDelegate(ToPdfSecurityPage);
             App.GoPdfToImagePage = new App.PdfToImagePageDelegate(ToPdfToImagePage);
             App.GoImageToPdfPage = new App.ImageToPdfPageDelegate(ToImageToPdfPage);
+            App.GoSummaryPdfMergePage = new App.SummaryPdfMergePageDelegate(ToPdfSummaryMergePage);
 
             DisplayPage = _welcomePage;
             ToggleButtonCheck = false;
@@ -40,6 +41,7 @@ namespace CrytonCore.ViewModel
         public void ToPdfSecurityPage() => DisplayPage = _pdfSecurityPage;
         public void ToPdfToImagePage() => DisplayPage = _pdfToImagePage;
         public void ToImageToPdfPage() => DisplayPage = _imageToPdfPage;
+        public void ToPdfSummaryMergePage(SummaryPdfMergePage summaryPdfMergePage) => DisplayPage = summaryPdfMergePage;
 
         private bool _toggleButtonCheck = true;
         public bool ToggleButtonCheck

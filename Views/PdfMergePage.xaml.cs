@@ -43,10 +43,8 @@ namespace CrytonCore.Views
         {
             try
             {
-                _navigationService = System.Windows.Navigation.NavigationService.GetNavigationService(this);
                 var view = (DataContext as PdfMergeViewModel)?.GetSummaryPage().Result;
-                if(view != null)
-                    _navigationService?.Navigate(view);
+                App.GoSummaryPdfMergePage.Invoke(view);
             }
             catch (Exception exception)
             {
@@ -59,8 +57,6 @@ namespace CrytonCore.Views
             try
             {
                 App.GoPdfManagerPage.Invoke();
-                //_navigationService = System.Windows.Navigation.NavigationService.GetNavigationService(this);
-                //_navigationService?.Navigate((App.Current as App).pdfManagerPage);
             }
             catch (Exception exception)
             {

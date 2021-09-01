@@ -8,6 +8,7 @@ namespace CrytonCore.ViewModel
     public class PdfMergeViewModel : PortableDocumentFormatManager
     {
         private SummaryPdfMergePage _summaryPage;
+
         public PdfMergeViewModel()
         {
             SetCurrentMode(pdfOnly: true,singleSlider: false);

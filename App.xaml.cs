@@ -45,6 +45,9 @@ namespace CrytonCore
         public delegate void PdfToImagePageDelegate();
         public static PdfToImagePageDelegate GoPdfToImagePage;
 
+        public delegate void SummaryPdfMergePageDelegate(SummaryPdfMergePage summaryPdfMergePage);
+        public static SummaryPdfMergePageDelegate GoSummaryPdfMergePage;
+
         //public SummaryPdfMergeUserControl summaryPdfMergeUserControl;
 
         public MapperService mapperService = new();
