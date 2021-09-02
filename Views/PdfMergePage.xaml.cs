@@ -14,17 +14,15 @@ namespace CrytonCore.Views
 
     public partial class PdfMergePage : Page
     {
-        private System.Windows.Navigation.NavigationService _navigationService;
-        public PdfMergePage()
-        {
-            InitializeComponent();
-        }
+        public PdfMergePage() => InitializeComponent();
 
         private async Task LoadFile()
         {
             var openFileDialog = new OpenFileDialog
             {
-                Multiselect = true
+                Multiselect = true,
+                Filter = "Pdf files (*.pdf)|*.pdf",
+                RestoreDirectory = true
             };
             if (openFileDialog.ShowDialog() == true)
             {
@@ -37,31 +35,6 @@ namespace CrytonCore.Views
         {
             var newSize = pdfViewGrid.ActualHeight * 2;
             pdfViewGrid.Width = newSize / 3;
-        }
-
-        private void MoveNext(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                var view = (DataContext as PdfMergeViewModel)?.GetSummaryPage().Result;
-                App.GoSummaryPdfMergePage.Invoke(view);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-        }
-
-        private void MoveBack(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                App.GoPdfManagerPage.Invoke();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
         }
     }
 }

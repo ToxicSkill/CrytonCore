@@ -1,17 +1,10 @@
-﻿using CrytonCore.Model;
-using CrytonCore.ViewModel;
-using iTextSharp.text.pdf;
+﻿using CrytonCore.ViewModel;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Views
 {
@@ -20,25 +13,34 @@ namespace CrytonCore.Views
     /// </summary>
     public partial class PdfToImagePage : Page
     {
-        private System.Windows.Navigation.NavigationService _navigationService;
         public PdfToImagePage()
         {
             InitializeComponent();
+            (DataContext as PdfToImageViewModel).DoLoadFile = new(LoadFileButton_Click);
         }
 
         private async Task LoadFile()
         {
             var openFileDialog = new OpenFileDialog
             {
-                Multiselect = true
+                Multiselect = true,
+                Filter = "Pdf files (*.pdf)|*.pdf",
+                RestoreDirectory = true
             };
             if (openFileDialog.ShowDialog() == true)
             {
                 _ = await (DataContext as PdfToImageViewModel)?.LoadFile(openFileDialog.FileNames);
             }
+            (DataContext as PdfToImageViewModel).SelectedItemIndex = -1;
         }
+
         private async void LoadFileButton_Click(object sender, EventArgs e) => await LoadFile();
 
+        private void PdfViewGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var newSize = pdfViewGrid.ActualHeight * 2;
+            pdfViewGrid.Width = newSize / 3;
+        }
 
         //private void AddFileToList(string url)
         //{
@@ -63,12 +65,6 @@ namespace CrytonCore.Views
         //        throw;
         //    }
         //}
-
-        private void PdfViewGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var newSize = pdfViewGrid.ActualHeight * 2;
-            pdfViewGrid.Width = newSize / 3;
-        }
 
         //private void FilesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{

@@ -14,9 +14,6 @@ namespace CrytonCore.Model
 {
     public abstract class PortableDocumentFormatManager : PageManager
     {
-        protected Dictionary<int, int> SingleSliderDictionary { get; set; }
-        private Mode CurrentMode { get; set; }
-
         private class Mode
         {
             public bool SingleSlide { get; set; }
@@ -24,17 +21,32 @@ namespace CrytonCore.Model
             public bool OnlyPdf { get; set; } = true;
         }
 
-        protected ObservableCollection<int> OrderVector { get; set; } = new ObservableCollection<int>();
+        private class ImageSlider
+        {
+            public int CurrentIndex { get; set; }
+
+            public int LastIndex { get; set; }
+
+            public int MaxIndex { get; set; }
+        }
+
+        private Mode CurrentMode { get; set; }
+        private ImageSlider Slider { get; }
+
+        private bool FirstRun { get; set; }
 
         private PDF _PDF = new();
-        private ImageSlider Slider { get; }
-        private bool FirstRun { get; set; }
+
+        protected ObservableCollection<int> OrderVector { get; set; } = new ObservableCollection<int>();
         protected ObservableCollection<PDF> PDFCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
 
+        protected Dictionary<int, int> SingleSliderDictionary { get; set; }
+
         protected PortableDocumentFormatManager()
         {
-            FilesView = new ObservableCollection<FileListView>();
+            FilesView = new ObservableCollection<FileListView>();// { new FileListView() { FileName = ":dadaw", FilePath="dadw", Order = 1 } };
+
             PDFCollection = new ObservableCollection<PDF>();
             Slider = new ImageSlider() { CurrentIndex = 0 };
         }
@@ -42,6 +54,10 @@ namespace CrytonCore.Model
         protected void SetCurrentMode(bool pdfOnly, bool singleSlider)
         {
             CurrentMode = new Mode() { OnlyPdf = pdfOnly, SingleSlide = singleSlider };
+        }
+        protected void SetPdfHighQuality(bool highQuality)
+        {
+            _PDF.SetHighQuality(highQuality);
         }
 
         public override async Task<bool> LoadFile(IEnumerable<string> fileNames)
@@ -55,13 +71,12 @@ namespace CrytonCore.Model
             await UpdateListViewImages();
             UpdateSlider();
             ChangeVisibility(true);
-            //await Task.Run(() => VisibilityChangeDelegate(true));
             return true;
         }
 
         private async Task<bool> AddFileToList(string url)
         {
-            PDF newPDF = new();
+            PDF newPDF = new(_PDF);
             try
             {
                 await newPDF.LoadPdf(url);
@@ -73,6 +88,37 @@ namespace CrytonCore.Model
             }
             return newPDF.Bytes.Length > 0;
         }
+
+        public void RemoveIndexes(int selectedIndex)
+        {
+            FilesView.RemoveAt(selectedIndex);
+            PDFCollection.RemoveAt(OrderVector[selectedIndex]);
+            var orderValue = OrderVector[selectedIndex];
+            OrderVector.RemoveAt(selectedIndex);
+            for (var i = 0; i < OrderVector.Count; i++)
+            {
+                if (OrderVector[i] > orderValue)
+                    OrderVector[i]--;
+            }
+        }
+
+        public RelayCommand Clear => new(ClearCommand, true);
+
+        private void ClearCommand()
+        {
+            ClearIndexes();
+            UpdateListView();
+            SelectedItemIndex = 0;
+            ChangeVisibility(false);
+        }
+
+        private void ClearIndexes()
+        {
+            FilesView.Clear();
+            OrderVector.Clear();
+            PDFCollection.Clear();
+        }
+
         private async Task UpdateListViewImages()
         {
             if (FilesView.Count == 0)
@@ -162,14 +208,6 @@ namespace CrytonCore.Model
             }
         }
 
-        private class ImageSlider
-        {
-            public int CurrentIndex { get; set; }
-
-            public int LastIndex { get; set; }
-
-            public int MaxIndex { get; set; }
-        }
         private void UpdateSlider()
         {
             if (!CurrentMode.SingleSlide)
@@ -227,6 +265,7 @@ namespace CrytonCore.Model
             get => _selectedItemIndex;
             set
             {
+                if (_selectedItemIndex == value) return;
                 if (value == -1 && _selectedItemIndex != value) return;
                 _selectedItemIndex = value;
                 _ = UpdateImageSourceAsync();

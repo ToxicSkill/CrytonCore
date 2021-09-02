@@ -156,8 +156,14 @@
 
                 <Label Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}"
                            FontSize="23" Foreground="{DynamicResource backText}" Margin="45,0,10,0" VerticalContentAlignment="Center"
-                           Content="{DynamicResource backText_pdfMerge}" PreviewMouseLeftButtonUp="MoveBack">
+                           Content="{DynamicResource backText_pdfMerge}">
 
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding MoveBack}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
                     <Label.Triggers>
                         <EventTrigger RoutedEvent="Label.MouseEnter">
                             <BeginStoryboard>
@@ -198,7 +204,13 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}"
                            FontSize="23" Foreground="{DynamicResource continueText}" Margin="45,0,10,0" VerticalContentAlignment="Center"
-                           Content="{DynamicResource continueText_pdfMerge}" PreviewMouseLeftButtonUp="MoveNext">
+                           Content="{DynamicResource continueText_pdfMerge}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding MoveNext}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
                     <Label.Triggers>
                         <EventTrigger RoutedEvent="Label.MouseEnter">

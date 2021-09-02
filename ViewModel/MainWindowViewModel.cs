@@ -110,15 +110,19 @@ namespace CrytonCore.ViewModel
         public void MaximizeOrNormalizeMainWindowCommand()
         {
             if (Application.Current.MainWindow.WindowState == WindowState.Normal)
-            {
                 MaximizeMainWindowCommand();
-                return;
-            }
-            if (Application.Current.MainWindow.WindowState != WindowState.Normal)
-            {
+            else if (Application.Current.MainWindow.WindowState != WindowState.Normal)
                 NormalizeMainWindowCommand();
-                return;
-            }
+            //if (Application.Current.MainWindow.WindowState == WindowState.Normal)
+            //{
+            //    MaximizeMainWindowCommand();
+            //    return;
+            //}
+            //if (Application.Current.MainWindow.WindowState != WindowState.Normal)
+            //{
+            //    NormalizeMainWindowCommand();
+            //    return;
+            //}
         }
 
         private void MinimizeMainWindowCommand() => Application.Current.MainWindow.WindowState = WindowState.Minimized;

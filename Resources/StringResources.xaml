@@ -106,12 +106,12 @@
     <!--PDF SUMMARY-->
     <system:String x:Key="saveFiles_cryptingPage">Save</system:String>
     <system:String x:Key="cancel_cryptingPage">Cancel</system:String>
-    
-    
+
+
     <!--PDF TO IMAGE-->
-    <system:String x:Key="rotate_pdfToImage">Tourner</system:String>
-    <system:String x:Key="switch_pdfToImage">Changer de pixels</system:String>
-    <system:String x:Key="rubbish_pdfToImage">Effacer</system:String>
+    <system:String x:Key="loadAntoherFile_pdfToImage">Load file</system:String>
+    <system:String x:Key="saveCurrent_pdfToImage">Save current</system:String>
+    <system:String x:Key="saveAll_pdfToImage">Save all</system:String>
 
 
     <!-- All StringResources Goes Here -->

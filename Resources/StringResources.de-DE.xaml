@@ -94,9 +94,9 @@
     
     
     <!--PDF TO IMAGE-->
-    <system:String x:Key="rotate_pdfToImage">Drehen</system:String>
-    <system:String x:Key="switch_pdfToImage">Pixel wechseln</system:String>
-    <system:String x:Key="rubbish_pdfToImage">Löschen</system:String>
+    <system:String x:Key="loadAntoherFile_pdfToImage">Load file</system:String>
+    <system:String x:Key="saveCurrent_pdfToImage">Save current</system:String>
+    <system:String x:Key="saveAll_pdfToImage">Save all</system:String>
     
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

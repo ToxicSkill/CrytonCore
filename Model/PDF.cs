@@ -16,8 +16,11 @@ namespace CrytonCore.Model
     {
         private readonly int pixelsX = 600;
         private readonly int pixelsY = 900;
+
         public byte[] Bytes { get; private set; }
+
         private MemoryStream BytesStream { get; set; }
+
         public int CurrentPage { get; set; }
 
         public int TotalPages { get; set; }
@@ -31,13 +34,19 @@ namespace CrytonCore.Model
         public string Name { get; set; }
 
         public double Ratio { get; set; }
-        public int Rotation { get; set; } = 0;
-        public bool SwitchPixels { get; set; } = false;
+
+        public int Rotation { get; set; }
+
+        public bool SwitchPixels { get; set; }
 
         public PDF()
         {
             SetHighQuality(false);
-            CurrentPage = 0;
+        }
+
+        public PDF(PDF pdf)
+        {
+            SetHighQuality(pdf.HighQuality);
         }
 
         public void SetHighQuality(bool highQuality)
@@ -48,7 +57,7 @@ namespace CrytonCore.Model
 
         private void SetDimensions()
         {
-            Dimensions = HighQuality ? 2.0d : 1.0d;
+            Dimensions = HighQuality ? 1.5d : 1.0d;
         }
 
         public async Task<bool> LoadPdf(string path)

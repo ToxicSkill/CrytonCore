@@ -91,9 +91,9 @@
     <system:String x:Key="cancel_cryptingPage">Anuluj</system:String>
 
     <!--PDF TO IMAGE-->
-    <system:String x:Key="rotate_pdfToImage">Obróć</system:String>
-    <system:String x:Key="switch_pdfToImage">Inwersja proporcji</system:String>
-    <system:String x:Key="rubbish_pdfToImage">Usuń</system:String>
+    <system:String x:Key="loadAntoherFile_pdfToImage">Load file</system:String>
+    <system:String x:Key="saveCurrent_pdfToImage">Save current</system:String>
+    <system:String x:Key="saveAll_pdfToImage">Save all</system:String>
 
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

@@ -69,7 +69,7 @@ namespace CrytonCore.Model
         {
             FileStream fileStream = new(ImagePDF.Url, FileMode.Open, FileAccess.Read);
 
-            var img = new System.Windows.Media.Imaging.BitmapImage();
+            BitmapImage img = new();
             img.BeginInit();
             img.StreamSource = fileStream;
             var ratioMulitpler = ImageTools.Ratios[ImagePDF.Ratio];
