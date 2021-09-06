@@ -116,7 +116,7 @@ namespace CrytonCore
                 {
                     if (!Directory.Exists(directoryPath))
                     {
-                        Directory.CreateDirectory(directoryPath ?? string.Empty);
+                        _ = Directory.CreateDirectory(directoryPath ?? string.Empty);
                     }
                     using (var writer = new StreamWriter(fullPath))
                     {

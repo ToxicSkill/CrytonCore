@@ -48,7 +48,7 @@ namespace CrytonCore.Infra
 
         public void Execute(object parameter)
         {
-            Task.Run(() => localAction);
+            _ = Task.Run(() => localAction);
         }
     }
 }

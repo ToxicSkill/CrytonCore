@@ -1,5 +1,4 @@
-﻿using CrytonCore.Helpers;
-using CrytonCore.Infra;
+﻿using CrytonCore.Infra;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,8 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using CrytonCore.Interfaces;
-using Image = CrytonCore.Model.Image;
 
 namespace CrytonCore.Model
 {
@@ -60,13 +57,20 @@ namespace CrytonCore.Model
             _PDF.SetHighQuality(highQuality);
         }
 
-        public override async Task<bool> LoadFile(IEnumerable<string> fileNames)
+        protected override async Task<bool> LoadFile(IEnumerable<string> fileNames)
         {
             var tasks = fileNames.Select(async url => await AddFileToList(url)).ToList();
             var res = await Task.WhenAll(tasks);
-            foreach (var (i, task) in tasks.Select((value, index) => (index, value)))
+            foreach (var task in tasks)
+            {
                 if (task.Result)
-                    OrderVector.Add(i);
+                {
+                    if (OrderVector.Count == 0)
+                        OrderVector.Add(0);
+                    else
+                        OrderVector.Add(OrderVector.Max() + 1);
+                }
+            }
             if (!res.Any(x => x)) return false;
             await UpdateListViewImages();
             UpdateSlider();
@@ -79,7 +83,7 @@ namespace CrytonCore.Model
             PDF newPDF = new(_PDF);
             try
             {
-                await newPDF.LoadPdf(url);
+                _ = await newPDF.LoadPdf(url);
                 PDFCollection.Add(newPDF);
             }
             catch (Exception)
@@ -89,7 +93,7 @@ namespace CrytonCore.Model
             return newPDF.Bytes.Length > 0;
         }
 
-        public void RemoveIndexes(int selectedIndex)
+        protected void RemoveIndexes(int selectedIndex)
         {
             FilesView.RemoveAt(selectedIndex);
             PDFCollection.RemoveAt(OrderVector[selectedIndex]);
@@ -108,12 +112,17 @@ namespace CrytonCore.Model
         {
             ClearIndexes();
             UpdateListView();
-            SelectedItemIndex = 0;
             ChangeVisibility(false);
         }
 
+        protected void SetSelectedItemIndex(int index) => SelectedItemIndex = index;
+
+        protected void SetSliderIndex(int index) => SliderValue = index;
+
         private void ClearIndexes()
         {
+            SetSelectedItemIndex(0);
+            SetSliderIndex(0);
             FilesView.Clear();
             OrderVector.Clear();
             PDFCollection.Clear();
@@ -197,6 +206,11 @@ namespace CrytonCore.Model
             }
         }
 
+        protected bool SavePdfPageImage(string path)
+        {
+            return _PDF.SavePdfPageImage(path, BitmapSource);
+        }
+
         private BitmapImage _imageBitmap;
         public BitmapImage BitmapSource
         {
@@ -265,8 +279,11 @@ namespace CrytonCore.Model
             get => _selectedItemIndex;
             set
             {
-                if (_selectedItemIndex == value) return;
-                if (value == -1 && _selectedItemIndex != value) return;
+                if (_selectedItemIndex == value)
+                {
+                    OnPropertyChanged(nameof(SelectedItemIndex)); return;
+                }
+                    if (value == -1) return;
                 _selectedItemIndex = value;
                 _ = UpdateImageSourceAsync();
                 UpdateSlider();

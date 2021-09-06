@@ -89,7 +89,7 @@ namespace CrytonCore.Ciphers
                 BIGS temp = new();
                 for (int i = 0; i < 100; i++)
                 {
-                    GenerateRSAKeys().ContinueWith(t => ComputeComponents());
+                    _ = GenerateRSAKeys().ContinueWith(t => ComputeComponents());
                     temp.pqProduct = keysRSA.PxQ;
                     temp.privateKey = keysRSA.PrivateKey;
                     temp.phi = keysRSA.Phi;
@@ -110,7 +110,7 @@ namespace CrytonCore.Ciphers
             Stopwatch sw = new();
             sw.Start();
 
-            await GenerateRSAKeys().ContinueWith(t => ComputeComponents());
+            _ = await GenerateRSAKeys().ContinueWith(t => ComputeComponents());
 
             if (!CheckKeysStatus())
                 return false;
@@ -135,7 +135,7 @@ namespace CrytonCore.Ciphers
                     throw;
                 }
             }
-            await Task.WhenAll(tasks);
+            _ = await Task.WhenAll(tasks);
 
             processedDivData.Sort(Comparer<ValueTuple<int, byte[]>>.Default);
             file.DivData.Clear();
@@ -216,7 +216,7 @@ namespace CrytonCore.Ciphers
                 StringBuilder sb = new();
                 foreach (byte i_chunk in slice)
                 {
-                    sb.Append(((int)i_chunk).ToString("D3"));
+                    _ = sb.Append(((int)i_chunk).ToString("D3"));
                 }
                 return ToBigInteger(sb.ToString());
             }
@@ -321,7 +321,7 @@ namespace CrytonCore.Ciphers
         {
             StringBuilder stamp = new();
             for (int i = 0; i < _subChunkSize * __constPartLenght; i++)
-                stamp.Append("0");
+                _ = stamp.Append("0");
             _preparedDecryptionStamp = stamp.ToString();
         }
 
@@ -384,12 +384,12 @@ namespace CrytonCore.Ciphers
                 {
                     for (int j = 0; j < 2; ++j)
                     {
-                        bitKey.Clear();
+                        _ = bitKey.Clear();
                         int pow = _bitKeySizeRSA / __constChunk;
-                        bitKey.Append("1");
+                        _ = bitKey.Append("1");
                         for (int i = 0; i < __constChunk - 2; ++i)
-                            bitKey.Append(random.Next(2));
-                        bitKey.Append("1");
+                            _ = bitKey.Append(random.Next(2));
+                        _ = bitKey.Append("1");
                         ulong tempBigInt = Convert.ToUInt64(bitKey.ToString(), 2);
 
                         bitIntValue = BigInteger.Pow(tempBigInt, pow);

@@ -493,7 +493,7 @@
 
                 </Button>
 
-                <Grid x:Name="rsaGrid" Visibility="{Binding RSAGridVisibility}" HorizontalAlignment="Left" Height="338" Margin="0,143,0,0" VerticalAlignment="Top" Width="361">
+                <Grid x:Name="rsaGrid" Visibility="{Binding RsaGridVisibility}" HorizontalAlignment="Left" Height="338" Margin="0,143,0,0" VerticalAlignment="Top" Width="361">
                     <Grid.Resources>
                         <ResourceDictionary>
                             <ResourceDictionary.MergedDictionaries>

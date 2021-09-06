@@ -30,9 +30,7 @@
   <ItemGroup>
     <Folder Include="Ciphers\" />
     <Folder Include="Dictionaries\" />
-    <Folder Include="Enums\" />
     <Folder Include="Files\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Tools\" />
     <Folder Include="Style\" />
     <Folder Include="Service\" />

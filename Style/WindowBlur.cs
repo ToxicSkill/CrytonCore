@@ -128,7 +128,7 @@ namespace CrytonCore
                 Data = accentPtr
             };
 
-            SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+            _ = SetWindowCompositionAttribute(windowHelper.Handle, ref data);
 
             Marshal.FreeHGlobal(accentPtr);
         }

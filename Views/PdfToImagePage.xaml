@@ -59,7 +59,8 @@
 
 
     <Grid>
-        <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="230" Height="60" Margin="40,0,0,23" >
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="230" Height="60" Margin="40,0,0,25"
+                  Visibility="{Binding VisibilityDefaultAsHidden}" >
 
             <Label Width="200" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}"
                            FontSize="23" Foreground="{DynamicResource backText}" VerticalContentAlignment="Center"
@@ -104,15 +105,47 @@
             </Image>
         </Grid>
 
-        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom"
+               Visibility="{Binding VisibilityDefaultAsHidden}"
                Height="60" Width="200"
                FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
-                           FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,23" VerticalContentAlignment="Center"
-                           Content="{DynamicResource loadAntoherFile_pdfToImage}" >
+               FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,25" 
+               VerticalContentAlignment="Center"
+               Content="{DynamicResource loadAntoherFile_pdfToImage}" >
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
-                    <i:InvokeCommandAction Command="{Binding LoadAnother}" />
+                    <i:InvokeCommandAction Command="{Binding LoadPdfFile}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Label>
+        
+        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom"
+               Visibility="{Binding VisibilityDefaultAsHidden}"
+               Height="60" Width="200"
+               FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+               FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,95" 
+               VerticalContentAlignment="Center"
+               Content="{DynamicResource saveCurrent_pdfToImage}" >
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding SaveCurrent}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Label>
+        
+        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom"
+               Visibility="{Binding VisibilityDefaultAsHidden}"
+               Height="60" Width="200"
+               FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+               FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,165" 
+               VerticalContentAlignment="Center"
+               Content="{DynamicResource saveAll_pdfToImage}" >
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding LoadPdfFile}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Label>
@@ -126,19 +159,27 @@
 
         <ListView x:Name="filesListView" HorizontalContentAlignment="Stretch" 
                   SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
-                  Visibility="{Binding VisibilityDefaultAsHidden}"
-                  IsSynchronizedWithCurrentItem="True"  Foreground="White"
-                  Background="Transparent" 
+                  Visibility="{Binding VisibilityDefaultAsHidden}" Foreground="White"
                   FontSize="24" ItemsSource="{Binding FilesView, Mode=OneWay}" 
                   VerticalAlignment="Top" Margin="0,82,0,0">
-            
-            <ListView.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Transparent" />
-            </ListView.Resources>
 
-            <ListView.ItemContainerStyle>
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Button Background="Transparent" Foreground="White"  FontSize="16" FontWeight="Light">
+                                        <Button.Content>
+                                            <GridViewRowPresenter Content="{TemplateBinding Content}" />
+                                        </Button.Content>
+                                    </Button>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.Resources>
+
+                <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="BorderThickness" Value="0"/>
@@ -168,8 +209,8 @@
         </ListView>
 
 
-        <Grid x:Name="pdfViewGrid" Margin="275,125,275,10" SizeChanged="PdfViewGrid_SizeChanged" Visibility="{Binding VisibilityDefaultAsHidden}">
-            <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+        <Grid x:Name="pdfViewGrid" Margin="275,125,275,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{Binding VisibilityDefaultAsHidden}">
+            <Slider x:Name="pdfSlider" HorizontalAlignment="Center" Width="420" VerticalAlignment="Stretch" Visibility="{Binding SliderVisibility}"
                             Value="{Binding SliderValue}" Maximum="{Binding SliderMaximum}"  SmallChange="1">
             </Slider>
             <Image x:Name="pdfImage" Margin="0,25,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Source="{Binding BitmapSource}"/>

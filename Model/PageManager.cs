@@ -15,9 +15,9 @@ namespace CrytonCore.Model
             _ = await LoadFile(filePaths);
         }
 
-        public virtual async Task<bool> LoadFile(IEnumerable<string> fileNames)
+        protected virtual async Task<bool> LoadFile(IEnumerable<string> fileNames)
         {
-            return await Task.Run(() => { return true; });
+            return await Task.Run(() => { return false; });
         }
 
         public void ChangeVisibility(bool visibile)

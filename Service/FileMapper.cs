@@ -7,7 +7,7 @@ namespace CrytonCore.Mapper
     {
         public FileMapper()
         {
-            CreateMap<CrytonFile, SimpleFile>()
+            _ = CreateMap<CrytonFile, SimpleFile>()
                     .ForMember(c => c.Name, opt => opt.MapFrom(src => src.Name))
                     .ForMember(c => c.Exist, opt => opt.MapFrom(src => src.Exist))
                     .ForMember(c => c.Extension, opt => opt.MapFrom(src => src.Extension))

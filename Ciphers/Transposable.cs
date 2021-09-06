@@ -52,8 +52,8 @@ namespace CrytonCore.Ciphers
             //        ++j;
             //    });
             //await Task.WhenAll(tasks);
-            await TransposableDecryption(file.DivData
-                .Where((v, i) => i != file.DivData.Count - 1).ToList(),progress)
+            _ = await TransposableDecryption(file.DivData
+                .Where((v, i) => i != file.DivData.Count - 1).ToList(), progress)
                 .ConfigureAwait(false);
 
             return ModifyFile(file.DivData.Count > 0, false);
@@ -77,8 +77,8 @@ namespace CrytonCore.Ciphers
             //    ++j;
             //}
             //await Task.WhenAll(tasks);
-            await TransposableEncryption(file.DivData
-                .Where((v,i) => i != file.DivData.Count - 1).ToList(), progress)
+            _ = await TransposableEncryption(file.DivData
+                .Where((v, i) => i != file.DivData.Count - 1).ToList(), progress)
                 .ConfigureAwait(false);
             //await Task.Run(() =>
             //{
@@ -211,7 +211,7 @@ namespace CrytonCore.Ciphers
             }
 
             if ((matrixDimension % 2) == 1)
-                encryptedSnail.Remove((char)(encryptedSnail.Count - 1));
+                _ = encryptedSnail.Remove((char)(encryptedSnail.Count - 1));
 
             for (var i = 0; i < encryptedSnail.Count; ++i)
             {

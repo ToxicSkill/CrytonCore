@@ -95,7 +95,7 @@ namespace CrytonCore.Model
                     {
                         for (int i = 0; i < numberOfChunksToDisplay; i++)
                         {                 //   return System.Text.Encoding.Default.GetString(_file.DivData.SelectMany(x => x).ToArray());
-                            dataToDisplay.Append(Encoding.Default.GetString(File.DivData[i].ToArray()));
+                            _ = dataToDisplay.Append(Encoding.Default.GetString(File.DivData[i].ToArray()));
                         }
                         return dataToDisplay.ToString();
                     }

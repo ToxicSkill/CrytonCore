@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using CrytonCore.ViewModel;
 
 namespace CrytonCore.Views
@@ -11,25 +9,8 @@ namespace CrytonCore.Views
     /// </summary>
     public partial class CryptPage : Page
     {
-        public CryptPage()
-        {
-            InitializeComponent();
-        }
-        private async Task LoadFile()
-        {
-            var openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-            {
-                _ = await (DataContext as CryptingPageViewModel)?.LoadFile(openFileDialog.FileName);
-            }
-        }
-        /// <summary>
-        /// overload method for button and label
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void LoadFile_Clicked(object sender, EventArgs e) => await LoadFile();
+        public CryptPage() => InitializeComponent();
 
-        // public void GetError(Exception exception) => (Application.Current as App).GetCurrentErrorMessage = exception.Message;
+        private async void LoadFile_Clicked(object sender, EventArgs e) => await (DataContext as CryptingPageViewModel)?.LoadFileViaDialog();
     }
 }

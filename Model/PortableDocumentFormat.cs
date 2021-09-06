@@ -162,7 +162,7 @@ namespace CrytonCore.Model
                     for (int i = 1; i <= pdfReader.NumberOfPages; i++)
                     {
                         PdfImportedPage page = writer.GetImportedPage(pdfReader, i);
-                        document.Add(iTextSharp.text.Image.GetInstance(page));
+                        _ = document.Add(iTextSharp.text.Image.GetInstance(page));
                     }
                 }
                 else
@@ -171,8 +171,8 @@ namespace CrytonCore.Model
                     ImagePDF = file;
                     iTextSharp.text.Image image = ImageToPage();
                     image.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
-                    document.Add(PageSize.A4);
-                    document.Add(image);
+                    _ = document.Add(PageSize.A4);
+                    _ = document.Add(image);
                     //writer.DirectContent.AddImage(image);
                 }
             });

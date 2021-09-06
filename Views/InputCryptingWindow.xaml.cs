@@ -45,7 +45,7 @@ namespace CrytonCore.Views
             {
                 _droppedString = e.Data.GetData(DataFormats.FileDrop) as string[];
             }
-            CheckFile("RSA");
+            _ = CheckFile("RSA");
         }
 
         private void DragDropButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -59,7 +59,7 @@ namespace CrytonCore.Views
                     };
                 _droppedString = list.ToArray();
             }
-            CheckFile("RSA");
+            _ = CheckFile("RSA");
         }
 
         private bool CheckFile(string cipher)

@@ -1,8 +1,8 @@
 ﻿using CrytonCore.Infra;
 using CrytonCore.Model;
-using System.Threading.Tasks;
 using CrytonCore.Views;
 using System;
+using System.Threading.Tasks;
 
 namespace CrytonCore.ViewModel
 {
@@ -14,6 +14,18 @@ namespace CrytonCore.ViewModel
         {
             SetCurrentMode(pdfOnly: true, singleSlider: false);
             _summaryPage = new SummaryPdfMergePage();
+        }
+
+        public async Task<bool> LoadFileViaDialog()
+        {
+            WindowDialogs.OpenDialog openDialog = new(new Helpers.DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
+                Multiselect = true,
+                Title = "Open files"
+            });
+            var dialogResult = openDialog.RunDialog();
+            return dialogResult is not null ? await LoadFile(dialogResult) : await Task.Run(() => { return false; });
         }
 
         private void MoveIndexes(int selectedIndex, int newIndex)

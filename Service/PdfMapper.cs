@@ -7,7 +7,7 @@ namespace CrytonCore.Mapper
     {
         public PdfMapper()
         {
-            CreateMap<Model.Image, SimpleImageManager>()
+            _ = CreateMap<Model.Image, SimpleImageManager>()
                 .ForMember(c => c.Url, opt => opt.MapFrom(src => src.Url))
                 .ForMember(c => c.OutputUrl, opt => opt.MapFrom(src => src.OutputUrl))
                 .ForMember(c => c.Extension, opt => opt.MapFrom(src => src.Extension))
@@ -18,7 +18,7 @@ namespace CrytonCore.Mapper
         }
         public PdfMapper(bool SimpleToImage)
         {
-            CreateMap<SimpleImageManager, Model.Image>()
+            _ = CreateMap<SimpleImageManager, Model.Image>()
                 .ForMember(c => c.Url, opt => opt.MapFrom(src => src.Url))
                 .ForMember(c => c.OutputUrl, opt => opt.MapFrom(src => src.OutputUrl))
                 .ForMember(c => c.Extension, opt => opt.MapFrom(src => src.Extension))

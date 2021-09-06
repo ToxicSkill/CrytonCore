@@ -221,7 +221,7 @@ namespace CrytonCore
             StringBuilder sb = new();
             for (int i = 0; i < extraLength; i++)
             {
-                sb.Append((char)rand.Next(0, 255));
+                _ = sb.Append((char)rand.Next(0, 255));
             }
             return sb.ToString();
         }

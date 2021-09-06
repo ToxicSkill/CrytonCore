@@ -1,33 +1,51 @@
-﻿using CrytonCore.Infra;
+﻿using CrytonCore.Helpers;
+using CrytonCore.Infra;
 using CrytonCore.Model;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace CrytonCore.ViewModel
 {
     public class PdfToImageViewModel : PortableDocumentFormatManager
     {
-        public delegate void LoadFileDelegate(object sender, EventArgs e);// (object sender, EventArgs e);
-        public LoadFileDelegate DoLoadFile;
-
         public PdfToImageViewModel()
         {
             SetCurrentMode(pdfOnly: true, singleSlider: false);
             SetPdfHighQuality(highQuality: true);
+            InitializeEmptyCollection();
         }
 
-        public RelayCommand LoadAnother => new(LoadAnotherCommand, true);
-        
-        private void LoadAnotherCommand()
+        private void InitializeEmptyCollection()
         {
-            Clear.Execute(null);
-            DoLoadFile.Invoke(null, null);
-            SelectedItemIndex = -1;
+            FilesView = new
+                System.Collections.ObjectModel.ObservableCollection<FileListView>(){
+                new FileListView(){
+                    FileName=string.Empty,
+                    FilePath=string.Empty,
+                    Order=0
+                }
+            };
+        }
+
+        public async Task<bool> LoadFileViaDialog()
+        {
+            WindowDialogs.OpenDialog openDialog = new(new DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
+                Multiselect = false,
+                Title = "Open file"
+            });
+            var dialogResult = openDialog.RunDialog();
+            if (dialogResult is not null)
+            {
+                Clear.Execute(null);
+                return await LoadFile(new[] { dialogResult.First() });
+            }
+            return await Task.Run(() => false);
+
         }
 
         public RelayCommand MoveBack => new(MoveBackCommand, true);
@@ -44,5 +62,19 @@ namespace CrytonCore.ViewModel
             }
         }
 
+        public RelayCommand SaveCurrent => new(SaveCurrentCommand, true);
+
+        private void SaveCurrentCommand()
+        {
+            WindowDialogs.SaveDialog saveDialog = new(new Helpers.DialogHelper()
+            {
+                DefaultExtension = Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg),
+                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Jpeg),
+                Title = "Save file"
+            });
+            var dialogResult = saveDialog.RunDialog();
+            if (dialogResult is not null)
+                _ = SavePdfPageImage(dialogResult.First());
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace CrytonCore.Model
 
         private void SetDimensions()
         {
-            Dimensions = HighQuality ? 1.5d : 1.0d;
+            Dimensions = HighQuality ? 2.0d : 1.0d;
         }
 
         public async Task<bool> LoadPdf(string path)
@@ -67,7 +67,7 @@ namespace CrytonCore.Model
                 Url = path;
                 Name = path.Split('\\').Last();
                 Bytes = System.IO.File.ReadAllBytes(path);
-                var reader = new iTextSharp.text.pdf.PdfReader(path);
+                PdfReader reader = new(path);
                 TotalPages = reader.NumberOfPages;
                 CurrentPage = 0;
                 return true;
@@ -111,10 +111,8 @@ namespace CrytonCore.Model
             }
             catch (Exception)
             {
-
                 throw;
             }
-
             return Task.FromResult(bitmap);
         }
         private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)
@@ -151,9 +149,9 @@ namespace CrytonCore.Model
             {
                 if (path is null && BytesStream.Length <= 0)
                     return false;
-                using FileStream file = new(path, FileMode.Create, System.IO.FileAccess.Write);
+                using FileStream file = new(path, FileMode.Create, FileAccess.Write);
                 byte[] bytes = new byte[BytesStream.Length];
-                BytesStream.Read(bytes, 0, (int)BytesStream.Length);
+                _ = BytesStream.Read(bytes, 0, (int)BytesStream.Length);
                 file.Write(bytes, 0, bytes.Length);
             }
             finally
@@ -187,6 +185,20 @@ namespace CrytonCore.Model
             finally
             {
                 doc.Close();
+            }
+            return true;
+        }
+        public  bool SavePdfPageImage(string path, BitmapImage bitmapImage)
+        {
+            try
+            {
+                var bitmap = BitmapImage2Bitmap(bitmapImage);
+                bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
             }
             return true;
         }

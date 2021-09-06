@@ -1,10 +1,6 @@
 ﻿using CrytonCore.Interfaces;
 using Microsoft.Expression.Interactivity.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CrytonCore.ViewModel
@@ -18,11 +14,11 @@ namespace CrytonCore.ViewModel
             OkCommand =
                 new ActionCommand(p => CloseRequested?.Invoke(this, new DialogCloseRequestEventArgs(true)));
         }
-
-        public event EventHandler<DialogCloseRequestEventArgs> CloseRequested;
         public string Message { get; }
         public string Title { get; }
 
         public ICommand OkCommand { get; }
+
+        public event EventHandler<DialogCloseRequestEventArgs> CloseRequested;
     }
 }

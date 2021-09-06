@@ -7,6 +7,7 @@ using CrytonCore.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,41 +20,41 @@ namespace CrytonCore.ViewModel
     public class CryptingPageViewModel : NotificationClass, IFileDragDropTarget
     {
         public SimpleFile SFile { get; set; } = new SimpleFile();
-        public bool IsRunning { get; set; } = false;
+        public bool IsRunning { get; set; }
 
-        private readonly Crypting Crypting = new();
+        private readonly Crypting _crypting = new();
         private Dictionary<string, object> GridsDict;
-        private readonly Dictionary<Enums.Enumerates.TypesOfCrypting, IHelpersInterface> CrytpingSettings = new();
+        private readonly Dictionary<Enums.Enumerates.TypesOfCrypting, IHelpersInterface> _crytpingSettings = new();
 
-        private readonly CancellationTokenSource cts = new();
-        private string selectedCryptingMethod;
-        private const double barExtension4KReady = 3840;
-        private bool moveDetails;
-        private double opacity = 0.6;
-        private double opacityHelp = 1;
-        private int progressDivisor = 1;
-        private static readonly int secondsDelay = 2;
+        private readonly CancellationTokenSource _cts = new();
+        private string _selectedCryptingMethod;
+        private const double BarExtension4KReady = 3840;
+        private bool _moveDetails;
+        private double _opacity = 0.6;
+        private double _opacityHelp = 1;
+        private int _progressDivisor = 1;
+        private static readonly int SecondsDelay = 2;
 
-        private readonly DispatcherTimer infoTime = new()
+        private readonly DispatcherTimer _infoTime = new()
         {
-            Interval = TimeSpan.FromSeconds(secondsDelay)
+            Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
 
-        private readonly IDialogService dialogService;
+        private readonly IDialogService _dialogService;
 
         public CryptingPageViewModel()
         {
-            dialogService = new DialogService();
-            dialogService.Register<DialogViewModel, DialogWindow>();
+            _dialogService = new DialogService();
+            _dialogService.Register<DialogViewModel, DialogWindow>();
 
             InitializeCryptingSettings();
 
-            CryptingMethodsCollection = Crypting.Get();
-            selectedCryptingMethod = Crypting.GetCryptingMethodName();
+            CryptingMethodsCollection = _crypting.Get();
+            _selectedCryptingMethod = _crypting.GetCryptingMethodName();
 
-            moveDetails = false;
+            _moveDetails = false;
 
-            infoTime.Tick += InfoTimer_Tick;
+            _infoTime.Tick += InfoTimer_Tick;
 
             InitializeGridsDictionary();
             SetActualGridVisibility();
@@ -61,22 +62,22 @@ namespace CrytonCore.ViewModel
 
         private void InitializeCryptingSettings()
         {
-            CrytpingSettings.Add(Enums.Enumerates.TypesOfCrypting.RSA, new RSAHelper());
-            CrytpingSettings.Add(Enums.Enumerates.TypesOfCrypting.CESAR, new CesarHelper());
+            _crytpingSettings.Add(Enums.Enumerates.TypesOfCrypting.RSA, new RSAHelper());
+            _crytpingSettings.Add(Enums.Enumerates.TypesOfCrypting.CESAR, new CesarHelper());
 
-            RsaCollection = CrytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetFirst();
-            SelectedRsaCollection = CrytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetSelectedItemFirst();
+            RsaCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetFirst();
+            SelectedRsaCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetSelectedItemFirst();
 
-            CesarCollection = CrytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetFirst();
-            SelectedCesarCollection = CrytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetSelectedItemFirst();
+            CesarCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetFirst();
+            SelectedCesarCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetSelectedItemFirst();
         }
 
         private void InitializeGridsDictionary()
         {
             GridsDict = new Dictionary<string, object>
             {
-                { Enums.Enumerates.TypesOfCrypting.CESAR.ToString("g"), typeof(CryptingPageViewModel).GetProperty("CesarGridVisibility") },
-                { Enums.Enumerates.TypesOfCrypting.RSA.ToString("g"), typeof(CryptingPageViewModel).GetProperty("RSAGridVisibility") }
+                { Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.CESAR), typeof(CryptingPageViewModel).GetProperty(nameof(CesarGridVisibility)) },
+                { Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA), typeof(CryptingPageViewModel).GetProperty(nameof(RsaGridVisibility)) }
             };
         }
 
@@ -88,22 +89,47 @@ namespace CrytonCore.ViewModel
             }
             try
             {
-                object property = GridsDict[Crypting.GetCryptingMethodName()];
-                string[] propertyName = property.ToString().Split(' ');
-                (property as PropertyInfo).SetValue(this, Visibility.Visible);
-                OnPropertyChanged(propertyName[1]);
+                object property = GridsDict[_crypting.GetCryptingMethodName()];
+                string[] propertyName = property.ToString()?.Split(' ');
+                (property as PropertyInfo)?.SetValue(this, Visibility.Visible);
+                if (propertyName != null) OnPropertyChanged(propertyName[1]);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
-        public async Task<bool> LoadFile(string fileName)
+        public async void OnFileDropAsync(string[] filePaths)
         {
-            bool loadingFileResult = false;
+            _ = await LoadFile(filePaths[0]);
+        }
+
+        public async Task<bool> LoadFileViaDialog()
+        {
+            WindowDialogs.OpenDialog openDialog = new(new DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.All),
+                Multiselect = false,
+                Title = "Open file"
+            });
+            var dialogResult = openDialog.RunDialog();
+            return dialogResult is not null ? await LoadFile(dialogResult.First()) : await Task.Run(() => false);
+        }
+
+        private async Task<bool> LoadFile(string fileName)
+        {
+            var loadingFileResult = false;
+
             try
             {
-                loadingFileResult = await Crypting.LoadFile(fileName).ConfigureAwait(false);
+                loadingFileResult = await _crypting.LoadFile(fileName).ConfigureAwait(false);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
+
             if (loadingFileResult)
             {
                 UpdatePageContent();
@@ -113,7 +139,7 @@ namespace CrytonCore.ViewModel
             }
             return loadingFileResult;
         }
-        public RelayCommand SaveFile { get => new(SaveFileCommand, true); }
+        public RelayCommand SaveFile => new(SaveFileCommand, true);
 
         private async void SaveFileCommand()
         {
@@ -123,20 +149,19 @@ namespace CrytonCore.ViewModel
             try
             {
                 VisibilityProgress = Visibility.Visible;
-                await Crypting.SaveFile(progressIndicator);
+                _ = await _crypting.SaveFile(progressIndicator);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
             finally
             {
-                infoTime.Start();
+                _infoTime.Start();
             }
         }
         private void StringReportProgress(object sender, string e) => ProcessText = e;
 
-        public async void OnFileDropAsync(string[] filePaths)
-        {
-            _ = await LoadFile(filePaths[0]);
-        }
 
         public RelayCommand CipherAction => new(CipherActionCommand, true);
 
@@ -158,8 +183,8 @@ namespace CrytonCore.ViewModel
             try
             {
                 progressIndicator.ProgressChanged += PercentageReportProgress;
-                bool result = await Crypting.Crypt(progressIndicator, cts.Token);
-                SFile = Crypting.UpdateSimpleFile();
+                var result = await _crypting.Crypt(progressIndicator, _cts.Token);
+                SFile = _crypting.UpdateSimpleFile();
                 if (SFile.Status && result)
                 {
                     UpdatePageContent();
@@ -183,11 +208,11 @@ namespace CrytonCore.ViewModel
 
         private void CheckConditions()
         {
-            if (Crypting.GetCryptingMethodName().ToUpper() == Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA).ToUpper())
+            if (_crypting.GetCryptingMethodName().ToUpper() == Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA).ToUpper())
             {
                 BlurWindow();
                 Views.InputCryptingWindow dlg = new();
-                dlg.ShowDialog();
+                _ = dlg.ShowDialog();
                 UnblurWindow();
             }
         }
@@ -196,7 +221,7 @@ namespace CrytonCore.ViewModel
         {
             IsRunning = true;
             VisibilityProcess = Visibility.Visible;
-            progressDivisor = SFile.ChunkSize;
+            _progressDivisor = SFile.ChunkSize;
             //  cryptingButtonEnabled = false;
             //OnPropertyChanged("CryptingButtonEnabled");
         }
@@ -205,95 +230,95 @@ namespace CrytonCore.ViewModel
             VisibilityProcess = Visibility.Hidden;
             ProgressText = "";
             IsRunning = false;
-            progressDivisor = 1;
+            _progressDivisor = 1;
             //OnPropertyChanged("CryptingButtonEnabled");
         }
         public RelayCommand CancelAction => new(CancelActionCommand, true);
 
         private void CancelActionCommand()
         {
-            cts.Cancel();
+            _cts.Cancel();
         }
         private void PercentageReportProgress(object sender, int value)
         {
-            SetProgressText((value * 100 / progressDivisor) + "%");
+            SetProgressText((value * 100 / _progressDivisor) + "%");
         }
         private void InfoTimer_Tick(object sender, EventArgs e) => ClearProcessInfo();
 
         private void ClearProcessInfo()
         {
-            infoTime.Stop();
+            _infoTime.Stop();
             ProgressText = "";
             ProcessText = "";
             VisibilityProgress = Visibility.Hidden;
         }
 
-        private string progressText;
+        private string _progressText;
 
         public string GetProgressText()
         {
-            return progressText;
+            return _progressText;
         }
         public string ProgressText
         {
-            get => progressText;
+            get => _progressText;
             set
             {
-                progressText = value;
+                _progressText = value;
                 OnPropertyChanged(nameof(ProgressText));
             }
         }
 
-        public void SetProgressText(string value)
+        private void SetProgressText(string value)
         {
             ProgressText = value;
         }
-        private string processText;
+        private string _processText;
         public string ProcessText
         {
-            get => processText;
+            get => _processText;
             set
             {
-                processText = value;
+                _processText = value;
                 OnPropertyChanged(nameof(ProcessText));
             }
         }
         public string SelectedCryptingMethod
         {
-            get => selectedCryptingMethod;
+            get => _selectedCryptingMethod;
             set
             {
-                selectedCryptingMethod = value;
-                Crypting.SetCryptingMethod(selectedCryptingMethod);
+                _selectedCryptingMethod = value;
+                _crypting.SetCryptingMethod(_selectedCryptingMethod);
                 SetActualGridVisibility();
                 OnPropertyChanged(nameof(SelectedCryptingMethod));
             }
         }
         public ObservableCollection<string> CryptingMethodsCollection { get; }
 
-        private string selectedRsaCollection;
+        private string _selectedRsaCollection;
         public string SelectedRsaCollection
         {
-            get => CrytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetSelectedItemFirst();
+            get => _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetSelectedItemFirst();
             set
             {
-                selectedRsaCollection = value;
+                _selectedRsaCollection = value;
                 // crytpingSettings[(int)Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst( selectedRsaCollection);
-                CrytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst(selectedRsaCollection);
+                _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst(_selectedRsaCollection);
                 OnPropertyChanged(nameof(SelectedRsaCollection));
             }
         }
         public ObservableCollection<string> RsaCollection { get; set; }
 
-        private string selectedCesarCollection;
+        private string _selectedCesarCollection;
         public string SelectedCesarCollection
         {
-            get => CrytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetSelectedItemFirst();
+            get => _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetSelectedItemFirst();
             set
             {
-                selectedCesarCollection = value;
+                _selectedCesarCollection = value;
                 // crytpingSettings[(int)Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst( selectedRsaCollection);
-                CrytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].SetSelectedItemFirst(selectedCesarCollection);
+                _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].SetSelectedItemFirst(_selectedCesarCollection);
                 OnPropertyChanged(nameof(SelectedCesarCollection));
             }
         }
@@ -301,10 +326,10 @@ namespace CrytonCore.ViewModel
 
         public bool MoveDetails
         {
-            get => moveDetails;
+            get => _moveDetails;
             set
             {
-                moveDetails = value;
+                _moveDetails = value;
                 OnPropertyChanged(nameof(MoveDetails));
             }
         }
@@ -317,10 +342,10 @@ namespace CrytonCore.ViewModel
 
         public double Opacity
         {
-            get => opacity;
+            get => _opacity;
             set
             {
-                opacity = value;
+                _opacity = value;
                 OnPropertyChanged(nameof(Opacity));
             }
         }
@@ -331,10 +356,10 @@ namespace CrytonCore.ViewModel
         private void OpacityChangePartial() => Opacity = 0.6;
         public double OpacityHelp
         {
-            get => opacityHelp;
+            get => _opacityHelp;
             set
             {
-                opacityHelp = value;
+                _opacityHelp = value;
                 OnPropertyChanged(nameof(OpacityHelp));
             }
         }
@@ -344,48 +369,48 @@ namespace CrytonCore.ViewModel
         public RelayCommand ChangeHelpOpacityPartial => new(OpacityHelpChangePartial, true);
         private void OpacityHelpChangePartial() => OpacityHelp = 0.6;
 
-        private Visibility visibilityHidden = Visibility.Hidden;
-        private Visibility visibilityShowed = Visibility.Visible;
-        private Visibility visibilityProgress = Visibility.Hidden;
-        private Visibility visibilityProcess = Visibility.Hidden;
-        private Visibility openPadlockVisibility = Visibility.Hidden;
-        private Visibility closePadlockVisibility = Visibility.Hidden;
+        private Visibility _visibilityHidden = Visibility.Hidden;
+        private Visibility _visibilityShowed = Visibility.Visible;
+        private Visibility _visibilityProgress = Visibility.Hidden;
+        private Visibility _visibilityProcess = Visibility.Hidden;
+        private Visibility _openPadlockVisibility = Visibility.Hidden;
+        private Visibility _closePadlockVisibility = Visibility.Hidden;
 
-        public Visibility OpenPadlockVisibility { get => openPadlockVisibility; set { openPadlockVisibility = value; OnPropertyChanged(nameof(OpenPadlockVisibility)); } }
-        public Visibility ClosePadlockVisibility { get => closePadlockVisibility; set { closePadlockVisibility = value; OnPropertyChanged(nameof(ClosePadlockVisibility)); } }
+        public Visibility OpenPadlockVisibility { get => _openPadlockVisibility; set { _openPadlockVisibility = value; OnPropertyChanged(nameof(OpenPadlockVisibility)); } }
+        public Visibility ClosePadlockVisibility { get => _closePadlockVisibility; set { _closePadlockVisibility = value; OnPropertyChanged(nameof(ClosePadlockVisibility)); } }
         public Visibility VisibilityDefaultAsShowed
         {
-            get => visibilityShowed;
+            get => _visibilityShowed;
             set
             {
-                visibilityShowed = value;
+                _visibilityShowed = value;
                 OnPropertyChanged(nameof(VisibilityDefaultAsShowed));
             }
         }
         public Visibility VisibilityDefaultAsHidden
         {
-            get => visibilityHidden;
+            get => _visibilityHidden;
             set
             {
-                visibilityHidden = value;
+                _visibilityHidden = value;
                 OnPropertyChanged(nameof(VisibilityDefaultAsHidden));
             }
         }
         public Visibility VisibilityProgress
         {
-            get => visibilityProgress;
+            get => _visibilityProgress;
             set
             {
-                visibilityProgress = value;
+                _visibilityProgress = value;
                 OnPropertyChanged(nameof(VisibilityProgress));
             }
         }
         public Visibility VisibilityProcess
         {
-            get => visibilityProcess;
+            get => _visibilityProcess;
             set
             {
-                visibilityProcess = value;
+                _visibilityProcess = value;
                 OnPropertyChanged(nameof(VisibilityProcess));
             }
         }
@@ -408,8 +433,8 @@ namespace CrytonCore.ViewModel
         private void ClearFileCommand()
         {
             VisibilityHideCommand();
-            Crypting.ClearFile();
-            SFile = Crypting.UpdateSimpleFile();
+            _crypting.ClearFile();
+            SFile = _crypting.UpdateSimpleFile();
             UpdatePageContent();
             FileDialogName = default;
             MoveDetails = false;
@@ -417,7 +442,7 @@ namespace CrytonCore.ViewModel
         }
         private void UpdatePageContent()
         {
-            SFile = Crypting.UpdateSimpleFile();
+            SFile = _crypting.UpdateSimpleFile();
 
             if (SFile.Status)
             {
@@ -437,8 +462,8 @@ namespace CrytonCore.ViewModel
             }
 
 
-            SelectedCryptingMethod = Crypting.GetCryptingMethodName();
-            FileContentText = Crypting.GetDataFromFile();
+            SelectedCryptingMethod = _crypting.GetCryptingMethodName();
+            FileContentText = _crypting.GetDataFromFile();
             FileNameText = SFile.Name;
             ProcessText = "";
             SizeText = SFile.SizeString;
@@ -446,124 +471,124 @@ namespace CrytonCore.ViewModel
             MethodUsedText = SFile.Method;
         }
 
-        private string fileContentText;
+        private string _fileContentText;
         public string FileContentText
         {
-            get => fileContentText;
+            get => _fileContentText;
             set
             {
-                fileContentText = value;
+                _fileContentText = value;
                 OnPropertyChanged(nameof(FileContentText));
             }
         }
-        private string methodUsedText;
+        private string _methodUsedText;
         public string MethodUsedText
         {
-            get => methodUsedText;
+            get => _methodUsedText;
             set
             {
-                methodUsedText = value;
+                _methodUsedText = value;
                 OnPropertyChanged(nameof(MethodUsedText));
             }
         }
-        private string extensionText;
+        private string _extensionText;
         public string ExtensionText
         {
-            get => extensionText;
+            get => _extensionText;
             set
             {
-                extensionText = value;
+                _extensionText = value;
                 OnPropertyChanged(nameof(ExtensionText));
             }
         }
 
-        private string sizeText;
+        private string _sizeText;
         public string SizeText
         {
-            get => sizeText;
+            get => _sizeText;
             set
             {
-                sizeText = value;
+                _sizeText = value;
                 OnPropertyChanged(nameof(SizeText));
             }
         }
 
-        private string fileStatusText;
+        private string _fileStatusText;
         public string FileStatusText
         {
-            get => fileStatusText;
+            get => _fileStatusText;
             set
             {
-                fileStatusText = value;
+                _fileStatusText = value;
                 OnPropertyChanged(nameof(FileStatusText));
             }
         }
-        private string cipherContentText;
+        private string _cipherContentText;
         public string CipherContentText
         {
-            get => cipherContentText;
+            get => _cipherContentText;
             set
             {
-                cipherContentText = value;
+                _cipherContentText = value;
                 OnPropertyChanged(nameof(CipherContentText));
             }
         }
-        private string cipherToolTip;
+        private string _cipherToolTip;
         public string CipherToolTip
         {
-            get => cipherToolTip;
+            get => _cipherToolTip;
             set
             {
-                cipherToolTip = value;
+                _cipherToolTip = value;
                 OnPropertyChanged(nameof(CipherToolTip));
             }
         }
 
-        private string fileNameText;
+        private string _fileNameText;
         public string FileNameText
         {
-            get => fileNameText;
+            get => _fileNameText;
             set
             {
-                fileNameText = value;
+                _fileNameText = value;
                 OnPropertyChanged(nameof(FileNameText));
             }
         }
 
-        private string fileDialogName;
+        private string _fileDialogName;
 
         public string FileDialogName
         {
-            get => fileDialogName;
+            get => _fileDialogName;
             set
             {
-                fileDialogName = value;
+                _fileDialogName = value;
                 OnPropertyChanged(nameof(FileDialogName));
             }
         }
 
-        private BlurEffect effect;
-        private BlurEffect effectCombo;
+        private BlurEffect _effect;
+        private BlurEffect _effectCombo;
 
         public BlurEffect Effect
         {
-            get => effect;
+            get => _effect;
             set
             {
-                effect = value;
+                _effect = value;
                 OnPropertyChanged(nameof(Effect));
             }
         }
         public BlurEffect EffectCombo
         {
-            get => effectCombo;
+            get => _effectCombo;
             set
             {
-                effectCombo = value;
+                _effectCombo = value;
                 OnPropertyChanged(nameof(EffectCombo));
             }
         }
-        public RelayCommand EffectComboFocusLost { get => new(EffectComboFocusLostCommand, true); }
+        public RelayCommand EffectComboFocusLost => new(EffectComboFocusLostCommand, true);
 
         private void EffectComboFocusLostCommand()
         {
@@ -571,7 +596,7 @@ namespace CrytonCore.ViewModel
             EffectCombo = null;
         }
 
-        public RelayCommand EffectComboClick { get => new(EffectComboClickCommand, true); }
+        public RelayCommand EffectComboClick => new(EffectComboClickCommand, true);
 
         private void EffectComboClickCommand()
         {
@@ -583,45 +608,45 @@ namespace CrytonCore.ViewModel
             EffectCombo = null;
         }
 
-        private bool cryptingButtonEnabled = true;
+        private bool _cryptingButtonEnabled = true;
         public bool CryptingButtonEnabled
         {
-            get => cryptingButtonEnabled;
+            get => _cryptingButtonEnabled;
             set
             {
-                cryptingButtonEnabled = value;
+                _cryptingButtonEnabled = value;
                 OnPropertyChanged(nameof(CryptingButtonEnabled));
             }
         }
 
-        public RelayCommand CopyRsaKeysToClipboard { get => new(CopyRsaKeysToClipboardCommand, true); }
+        public RelayCommand CopyRsaKeysToClipboard => new(CopyRsaKeysToClipboardCommand, true);
 
-        private void CopyRsaKeysToClipboardCommand() => Crypting.GetClipboardString();
+        private void CopyRsaKeysToClipboardCommand() => _crypting.GetClipboardString();
 
-        public double ExtendBarRange => barExtension4KReady;
+        public static double ExtendBarRange => BarExtension4KReady;
 
-        private bool moveBars = false;
+        private bool _moveBars = false;
 
         public bool MoveBars
         {
-            get => moveBars;
+            get => _moveBars;
             set
             {
-                moveBars = value;
+                _moveBars = value;
                 OnPropertyChanged(nameof(MoveBars));
             }
         }
 
-        private Visibility rsaGridVisibility = Visibility.Hidden;
-        private Visibility cesarGridVisibility = Visibility.Hidden;
-        private Visibility cryptingVisibility = Visibility.Hidden;
-        private Visibility decryptingVisibility = Visibility.Hidden;
-        public Visibility CryptingVisibility { get => cryptingVisibility; set { cryptingVisibility = value; OnPropertyChanged(nameof(CryptingVisibility)); } }
-        public Visibility DecryptingVisibility { get => decryptingVisibility; set { decryptingVisibility = value; OnPropertyChanged(nameof(DecryptingVisibility)); } }
-        public Visibility RSAGridVisibility { get => rsaGridVisibility; set { rsaGridVisibility = value; OnPropertyChanged(nameof(RSAGridVisibility)); } }
-        public Visibility CesarGridVisibility { get => cesarGridVisibility; set { cesarGridVisibility = value; OnPropertyChanged(nameof(CesarGridVisibility)); } }
+        private Visibility _rsaGridVisibility = Visibility.Hidden;
+        private Visibility _cesarGridVisibility = Visibility.Hidden;
+        private Visibility _cryptingVisibility = Visibility.Hidden;
+        private Visibility _decryptingVisibility = Visibility.Hidden;
+        public Visibility CryptingVisibility { get => _cryptingVisibility; set { _cryptingVisibility = value; OnPropertyChanged(nameof(CryptingVisibility)); } }
+        public Visibility DecryptingVisibility { get => _decryptingVisibility; set { _decryptingVisibility = value; OnPropertyChanged(nameof(DecryptingVisibility)); } }
+        public Visibility RsaGridVisibility { get => _rsaGridVisibility; set { _rsaGridVisibility = value; OnPropertyChanged(nameof(RsaGridVisibility)); } }
+        public Visibility CesarGridVisibility { get => _cesarGridVisibility; set { _cesarGridVisibility = value; OnPropertyChanged(nameof(CesarGridVisibility)); } }
 
-        public RelayCommand DisplayHelpMessage { get => new(DisplayHelpMessageCommand, true); }
+        public RelayCommand DisplayHelpMessage => new(DisplayHelpMessageCommand, true);
 
         private void DisplayHelpMessageCommand()
         {
@@ -631,7 +656,7 @@ namespace CrytonCore.ViewModel
             string helpMessageString = (Application.Current as App).Resources.MergedDictionaries[0][keyMessage] as string;
             string helpTitleString = (Application.Current as App).Resources.MergedDictionaries[0][keyTitle] as string;
             DialogViewModel viewModel = new(helpMessageString, helpTitleString);
-            dialogService.ShowDialog(viewModel);
+            _ = _dialogService.ShowDialog(viewModel);
             UnblurWindow();
         }
 
