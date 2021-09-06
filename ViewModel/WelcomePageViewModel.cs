@@ -10,11 +10,11 @@ namespace CrytonCore.ViewModel
     {
         private readonly DispatcherTimer _liveTime = new()
         {
-            Interval = TimeSpan.FromSeconds(_secondsDelay)
+            Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
         private readonly DispatcherTimer _internetTime = new()
         {
-            Interval = TimeSpan.FromMinutes(_minutessDelay)
+            Interval = TimeSpan.FromMinutes(MinutesDelay)
         };
 
         private readonly TimeDate _actualTimeDate = new();
@@ -25,8 +25,8 @@ namespace CrytonCore.ViewModel
         private string _currentDay;
         private string _toolTip;
 
-        private const int _secondsDelay = 1;
-        private const int _minutessDelay = 1;
+        private const int SecondsDelay = 1;
+        private const int MinutesDelay = 1;
         public WelcomePageViewModel()
         {
             UpdateInternetStatus();

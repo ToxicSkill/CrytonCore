@@ -2,7 +2,7 @@
 
 namespace CrytonCore.Enums
 {
-    public class EDialogFilters
+    public static class EDialogFilters
     {
         public enum DialogFilters
         {

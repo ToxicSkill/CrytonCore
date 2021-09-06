@@ -10,8 +10,6 @@ namespace CrytonCore.ViewModel
         private readonly App app = System.Windows.Application.Current as App;
         private readonly Theme theme = new();
         private readonly Language language = new();
-        private readonly ObservableCollection<string> _themesCollection;
-        private readonly ObservableCollection<string> _languagesCollection;
         private string _selectedTheme;
         private string _selectedLanguage;
         private BlurEffect effect;
@@ -19,8 +17,8 @@ namespace CrytonCore.ViewModel
 
         public SettingsViewModel()
         {
-            _languagesCollection = new ObservableCollection<string>(language.Get());
-            _themesCollection = new ObservableCollection<string>(theme.Get());
+            LanguagesCollection = new ObservableCollection<string>(language.Get());
+            ThemesCollection = new ObservableCollection<string>(theme.Get());
 
             language.FirstRunLanguage();
 
@@ -31,8 +29,8 @@ namespace CrytonCore.ViewModel
             SetGlobalLanguageAndTheme();
         }
 
-        public ObservableCollection<string> ThemesCollection { get => _themesCollection; }
-        public ObservableCollection<string> LanguagesCollection { get => _languagesCollection; }
+        public ObservableCollection<string> ThemesCollection { get; }
+        public ObservableCollection<string> LanguagesCollection { get; }
 
         public string SelectedTheme
         {
@@ -84,10 +82,10 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(EffectCombo));
             }
         }
-        public RelayCommand EffectComboFocusLost { get => new(EffectComboFocusLostCommand, true); }
+        public RelayCommand EffectComboFocusLost => new(EffectComboFocusLostCommand, true);
 
         private void EffectComboFocusLostCommand() => UnblurWindow();
-        public RelayCommand EffectComboClick { get => new(EffectComboClickCommand, true); }
+        public RelayCommand EffectComboClick => new(EffectComboClickCommand, true);
 
         private void EffectComboClickCommand()
         {

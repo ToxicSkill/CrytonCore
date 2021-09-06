@@ -2,7 +2,7 @@
 
 namespace CrytonCore.Enums
 {
-    public class EExtensions
+    public static class EExtensions
     {
         public enum Extensions : int
         {

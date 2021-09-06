@@ -49,12 +49,10 @@ namespace CrytonCore.ViewModel
 
         private void MouseEnterCommand()
         {
-            if (FirstRun)
-            {
-                SliderValue = 0;
-                SelectedItemIndex = 0;
-                FirstRun = false;
-            }
+            if (!FirstRun) return;
+            SliderValue = 0;
+            SelectedItemIndex = 0;
+            FirstRun = false;
         }
     }
 }

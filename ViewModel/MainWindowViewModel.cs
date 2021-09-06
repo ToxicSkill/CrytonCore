@@ -33,15 +33,15 @@ namespace CrytonCore.ViewModel
             App.AppIsLoaded = true;
         }
 
-        public void ToWelcomePage() => DisplayPage = _welcomePage;
-        public void ToCryptingPage() => DisplayPage = _cryptingPage;
-        public void ToPdfManagerPage() => DisplayPage = _pdfManagerPage;
-        public void ToSettingsPage() => DisplayPage = _settingsPage;
-        public void ToPdfMergePage() => DisplayPage = _pdfMergePage;
-        public void ToPdfSecurityPage() => DisplayPage = _pdfSecurityPage;
-        public void ToPdfToImagePage() => DisplayPage = _pdfToImagePage;
-        public void ToImageToPdfPage() => DisplayPage = _imageToPdfPage;
-        public void ToPdfSummaryMergePage(SummaryPdfMergePage summaryPdfMergePage) => DisplayPage = summaryPdfMergePage;
+        private void ToWelcomePage() => DisplayPage = _welcomePage;
+        private void ToCryptingPage() => DisplayPage = _cryptingPage;
+        private void ToPdfManagerPage() => DisplayPage = _pdfManagerPage;
+        private void ToSettingsPage() => DisplayPage = _settingsPage;
+        private void ToPdfMergePage() => DisplayPage = _pdfMergePage;
+        private void ToPdfSecurityPage() => DisplayPage = _pdfSecurityPage;
+        private void ToPdfToImagePage() => DisplayPage = _pdfToImagePage;
+        private void ToImageToPdfPage() => DisplayPage = _imageToPdfPage;
+        private void ToPdfSummaryMergePage(SummaryPdfMergePage summaryPdfMergePage) => DisplayPage = summaryPdfMergePage;
 
         private bool _toggleButtonCheck = true;
         public bool ToggleButtonCheck
@@ -109,9 +109,9 @@ namespace CrytonCore.ViewModel
 
         public void MaximizeOrNormalizeMainWindowCommand()
         {
-            if (Application.Current.MainWindow.WindowState == WindowState.Normal)
+            if (Application.Current.MainWindow is {WindowState: WindowState.Normal})
                 MaximizeMainWindowCommand();
-            else if (Application.Current.MainWindow.WindowState != WindowState.Normal)
+            else if (Application.Current.MainWindow != null && Application.Current.MainWindow.WindowState != WindowState.Normal)
                 NormalizeMainWindowCommand();
             //if (Application.Current.MainWindow.WindowState == WindowState.Normal)
             //{
@@ -125,10 +125,22 @@ namespace CrytonCore.ViewModel
             //}
         }
 
-        private void MinimizeMainWindowCommand() => Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        private void MinimizeMainWindowCommand()
+        {
+            if (Application.Current.MainWindow != null)
+                Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
 
-        private void MaximizeMainWindowCommand() => Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        private void MaximizeMainWindowCommand()
+        {
+            if (Application.Current.MainWindow != null)
+                Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
 
-        private void NormalizeMainWindowCommand() => Application.Current.MainWindow.WindowState = WindowState.Normal;
+        private void NormalizeMainWindowCommand()
+        {
+            if (Application.Current.MainWindow != null) 
+                Application.Current.MainWindow.WindowState = WindowState.Normal;
+        }
     }
 }

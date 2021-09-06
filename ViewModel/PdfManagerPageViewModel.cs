@@ -4,19 +4,19 @@ namespace CrytonCore.ViewModel
 {
     public class PdfManagerPageViewModel : NotificationClass
     {
-        public RelayCommand SecureItemNavigate { get => new(SecureItemNavigateCommand, true); }
+        public RelayCommand SecureItemNavigate => new(SecureItemNavigateCommand, true);
 
         private void SecureItemNavigateCommand() => App.GoPdfSecurityPage.Invoke();// (App.Current as App).GoPdfManagerPage.Invoke(); //pdfManagerPage.NavigationService.Navigate((App.Current as App).securityUserControl);
 
-        public RelayCommand MergeItemNavigate { get => new(MergeItemNavigateCommand, true); }
+        public RelayCommand MergeItemNavigate => new(MergeItemNavigateCommand, true);
 
         private void MergeItemNavigateCommand() => App.GoPdfMergePage.Invoke();//.pdfManagerPage.NavigationService.Navigate((App.Current as App).pdfMergeUserControl);
 
-        public RelayCommand ImageToPdfItemNavigate { get => new(ImageToPdfItemNavigateCommand, true); }
+        public RelayCommand ImageToPdfItemNavigate => new(ImageToPdfItemNavigateCommand, true);
 
         private void ImageToPdfItemNavigateCommand() => App.GoImageToPdfPage.Invoke();//.pdfManagerPage.NavigationService.Navigate((App.Current as App).imageToPdfUserControl);
 
-        public RelayCommand PdfToImageNavigate { get => new(PdfToImageNavigateCommand, true); }
+        public RelayCommand PdfToImageNavigate => new(PdfToImageNavigateCommand, true);
 
         private void PdfToImageNavigateCommand() => App.GoPdfToImagePage.Invoke();//.pdfManagerPage.NavigationService.Navigate((App.Current as App).pdfToImageUserControl);
 

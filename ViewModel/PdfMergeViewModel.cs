@@ -118,7 +118,7 @@ namespace CrytonCore.ViewModel
             }
         }
 
-        public SummaryPdfMergePage GetSummaryPage()
+        private SummaryPdfMergePage GetSummaryPage()
         {
             if (_summaryPage == null) _summaryPage = new SummaryPdfMergePage();
             var result = ((PdfMergeSummaryViewModel)_summaryPage.DataContext).Update(FilesView, PDFCollection,

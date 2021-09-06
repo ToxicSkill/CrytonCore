@@ -12,17 +12,17 @@ namespace CrytonCore.Model
 {
     public class Crypting
     {
-        public string CryptingMethodName { get; set; }
-        public int CryptingMethodIndex { get; set; }
-        public ObservableCollection<string> CryptingMethodsCollection { get; set; }
+        private string CryptingMethodName { get; set; }
+        private int CryptingMethodIndex { get; set; }
+        private ObservableCollection<string> CryptingMethodsCollection { get; set; }
 
-        private readonly MapperService fileMapper = new();
+        private readonly MapperService _fileMapper = new();
 
-        private List<Cipher> Ciphers = new();
+        private List<Cipher> _ciphers = new();
         
         private Enums.Enumerates.TypesOfCrypting CurrentCipher { get; set; }
 
-        public CrytonFile File { get; set; }
+        private CrytonFile File { get; set; }
 
         public Crypting()
         {
@@ -38,7 +38,7 @@ namespace CrytonCore.Model
                 Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA),
                 Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.TRANSPOSABLE)
             };
-            Ciphers = new List<Cipher>()
+            _ciphers = new List<Cipher>()
             {
                 new Ciphers.Cesar(),
                 new Ciphers.RSA(),
@@ -55,7 +55,8 @@ namespace CrytonCore.Model
             CryptingMethodName = input;
             SetCryptingMethodIndexByName(CryptingMethodName);
         }
-        internal void SetCryptingMethod(int input)
+
+        private void SetCryptingMethod(int input)
         {
             CryptingMethodIndex = input;
             SetCryptingMethodNameByIndex(input);
@@ -78,7 +79,7 @@ namespace CrytonCore.Model
         {
             CryptingMethodName = CryptingMethodsCollection[index];
         }
-        internal SimpleFile UpdateSimpleFile() => fileMapper.Mapper.Map<CrytonFile, SimpleFile>(File);
+        internal SimpleFile UpdateSimpleFile() => _fileMapper.Mapper.Map<CrytonFile, SimpleFile>(File);
        
         internal string GetDataFromFile()
         {
@@ -118,11 +119,20 @@ namespace CrytonCore.Model
         }
         internal async Task<bool> Crypt(IProgress<int> progress, CancellationToken cancellation)
         {
-            Cipher cipherObject = Ciphers.FirstOrDefault(x => x.Name.ToString().ToLower() == CryptingMethodName.ToLower());
-            Cipher _cipher = (Cipher)Activator.CreateInstance(cipherObject.GetType(), File);
-            CurrentCipher = (Enums.Enumerates.TypesOfCrypting)Ciphers.IndexOf(_cipher);
-            _cipher.Dispose();
-            return File.Status ? await _cipher.Decrypt(progress, cancellation) : await _cipher.Encrypt(progress, cancellation);
+            var cipherObject = _ciphers.FirstOrDefault(x => String.Equals(x.Name.ToString(), CryptingMethodName, StringComparison.CurrentCultureIgnoreCase));
+            if (cipherObject != null)
+            {
+                var cipher = (Cipher)Activator.CreateInstance(cipherObject.GetType(), File);
+                CurrentCipher = (Enums.Enumerates.TypesOfCrypting)_ciphers.IndexOf(cipher);
+                if (cipher != null)
+                {
+                    cipher.Dispose();
+                    return File.Status
+                        ? await cipher.Decrypt(progress, cancellation)
+                        : await cipher.Encrypt(progress, cancellation);
+                }
+            }
+            return false;
         }
 
         internal async Task<bool> LoadFile(string fileName)
