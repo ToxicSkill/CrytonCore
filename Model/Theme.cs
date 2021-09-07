@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using static CrytonCore.Enums.EThemes;
 
 namespace CrytonCore.Model
 {
@@ -15,15 +16,15 @@ namespace CrytonCore.Model
         public Theme()
         {
             InitializeComponents();
-            SetTheme((int)Enums.Enumerates.Themes.Standard);
+            SetTheme((int)Themes.Standard);
         }
 
         private void InitializeComponents()
         {
             ThemesCollection = new ObservableCollection<string> {
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Themes.Standard),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Themes.Dark),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Themes.Light)
+                EnumToString(Themes.Standard),
+                EnumToString(Themes.Dark),
+                EnumToString(Themes.Light)
             };
 
             AccentThemesDictionaries = new List<ResourceDictionary>(){

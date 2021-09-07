@@ -1,9 +1,7 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,7 +35,7 @@ namespace CrytonCore.ViewModel
                 Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
                 Multiselect = false,
                 Title = "Open file"
-            });
+            }); ;
             var dialogResult = openDialog.RunDialog();
             if (dialogResult is not null)
             {

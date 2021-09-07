@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CrytonCore.Mapper;
+using static CrytonCore.Enums.ETypesOfCrypting;
 
 namespace CrytonCore.Model
 {
@@ -20,23 +21,23 @@ namespace CrytonCore.Model
 
         private List<Cipher> _ciphers = new();
         
-        private Enums.Enumerates.TypesOfCrypting CurrentCipher { get; set; }
+        private TypesOfCrypting CurrentCipher { get; set; }
 
         private CrytonFile File { get; set; }
 
         public Crypting()
         {
             InitializeComponents();
-            SetCryptingMethod((int)Enums.Enumerates.TypesOfCrypting.CESAR);
+            SetCryptingMethod((int)TypesOfCrypting.CESAR);
             File = new CrytonFile();
         }
 
         private void InitializeComponents()
         {
             CryptingMethodsCollection = new ObservableCollection<string> {
-                Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.CESAR),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.TRANSPOSABLE)
+                EnumToString(TypesOfCrypting.CESAR),
+                EnumToString(TypesOfCrypting.RSA),
+                EnumToString(TypesOfCrypting.TRANSPOSABLE)
             };
             _ciphers = new List<Cipher>()
             {
@@ -112,7 +113,7 @@ namespace CrytonCore.Model
 
         internal void GetClipboardString()
         {
-            if (CurrentCipher == Enums.Enumerates.TypesOfCrypting.RSA)
+            if (CurrentCipher == TypesOfCrypting.RSA)
                 if (File.ClipboardString.Length != 0)
                     System.Windows.Clipboard.SetText(File.ClipboardString);
 
@@ -123,7 +124,7 @@ namespace CrytonCore.Model
             if (cipherObject != null)
             {
                 var cipher = (Cipher)Activator.CreateInstance(cipherObject.GetType(), File);
-                CurrentCipher = (Enums.Enumerates.TypesOfCrypting)_ciphers.IndexOf(cipher);
+                CurrentCipher = (TypesOfCrypting)_ciphers.IndexOf(cipher);
                 if (cipher != null)
                 {
                     cipher.Dispose();

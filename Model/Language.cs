@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows;
+using static CrytonCore.Enums.ELanguages;
 
 namespace CrytonCore.Model
 {
@@ -40,10 +41,10 @@ namespace CrytonCore.Model
             };
 
             LanguagesCollection = new ObservableCollection<string> {
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.English),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.Polski),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.French),
-                Enums.Enumerates.EnumToString(Enums.Enumerates.Languages.Deutsh)
+                EnumToString(Languages.English),
+                EnumToString(Languages.Polski),
+                EnumToString(Languages.French),
+                EnumToString(Languages.Deutsh)
             };
         }
 

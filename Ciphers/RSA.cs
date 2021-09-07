@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Diagnostics;
-using static CrytonCore.Enums.Enumerates;
 using System.IO;
 using CrytonCore.Model;
 using System.Threading;
-using CrytonCore.Model;
+using static CrytonCore.Enums.ETypesOfCrypting;
 
 namespace CrytonCore.Ciphers
 {

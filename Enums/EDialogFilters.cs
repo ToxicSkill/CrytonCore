@@ -36,6 +36,5 @@ namespace CrytonCore.Enums
                 return extension + " files (*.*)|*.*";
             return extension + " file(s) (." + extension + ")|*." + extension; 
         }
-        
     }
 }

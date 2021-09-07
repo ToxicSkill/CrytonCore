@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static CrytonCore.Enums.Enumerates;
+using CrytonCore.Enums;
 using System.Threading.Tasks;
 using System.Threading;
 using CrytonCore.Model;
+using static CrytonCore.Enums.ETypesOfCrypting;
 
 namespace CrytonCore.Ciphers
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using static CrytonCore.Enums.Enumerates;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,8 @@ using Microsoft.Win32.SafeHandles;
 using System.Text;
 using Microsoft.Win32;
 using CrytonCore.Ciphers;
+using static CrytonCore.Enums.ETypesOfCrypting;
+using static CrytonCore.Enums.ERecognizableElements;
 
 namespace CrytonCore
 {

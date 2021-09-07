@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Effects;
 using System.Windows.Threading;
+using static CrytonCore.Enums.ETypesOfCrypting;
 
 namespace CrytonCore.ViewModel
 {
@@ -24,7 +25,7 @@ namespace CrytonCore.ViewModel
 
         private readonly Crypting _crypting = new();
         private Dictionary<string, object> GridsDict;
-        private readonly Dictionary<Enums.Enumerates.TypesOfCrypting, IHelpersInterface> _crytpingSettings = new();
+        private readonly Dictionary<TypesOfCrypting, IHelpersInterface> _crytpingSettings = new();
 
         private readonly CancellationTokenSource _cts = new();
         private string _selectedCryptingMethod;
@@ -62,22 +63,22 @@ namespace CrytonCore.ViewModel
 
         private void InitializeCryptingSettings()
         {
-            _crytpingSettings.Add(Enums.Enumerates.TypesOfCrypting.RSA, new RSAHelper());
-            _crytpingSettings.Add(Enums.Enumerates.TypesOfCrypting.CESAR, new CesarHelper());
+            _crytpingSettings.Add(TypesOfCrypting.RSA, new RSAHelper());
+            _crytpingSettings.Add(TypesOfCrypting.CESAR, new CesarHelper());
 
-            RsaCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetFirst();
-            SelectedRsaCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetSelectedItemFirst();
+            RsaCollection = _crytpingSettings[TypesOfCrypting.RSA].GetFirst();
+            SelectedRsaCollection = _crytpingSettings[TypesOfCrypting.RSA].GetSelectedItemFirst();
 
-            CesarCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetFirst();
-            SelectedCesarCollection = _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetSelectedItemFirst();
+            CesarCollection = _crytpingSettings[TypesOfCrypting.CESAR].GetFirst();
+            SelectedCesarCollection = _crytpingSettings[TypesOfCrypting.CESAR].GetSelectedItemFirst();
         }
 
         private void InitializeGridsDictionary()
         {
             GridsDict = new Dictionary<string, object>
             {
-                { Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.CESAR), typeof(CryptingPageViewModel).GetProperty(nameof(CesarGridVisibility)) },
-                { Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA), typeof(CryptingPageViewModel).GetProperty(nameof(RsaGridVisibility)) }
+                { EnumToString(TypesOfCrypting.CESAR), typeof(CryptingPageViewModel).GetProperty(nameof(CesarGridVisibility)) },
+                { EnumToString(TypesOfCrypting.RSA), typeof(CryptingPageViewModel).GetProperty(nameof(RsaGridVisibility)) }
             };
         }
 
@@ -208,7 +209,7 @@ namespace CrytonCore.ViewModel
 
         private void CheckConditions()
         {
-            if (_crypting.GetCryptingMethodName().ToUpper() == Enums.Enumerates.EnumToString(Enums.Enumerates.TypesOfCrypting.RSA).ToUpper())
+            if (_crypting.GetCryptingMethodName().ToUpper() == EnumToString(TypesOfCrypting.RSA).ToUpper())
             {
                 BlurWindow();
                 Views.InputCryptingWindow dlg = new();
@@ -299,12 +300,12 @@ namespace CrytonCore.ViewModel
         private string _selectedRsaCollection;
         public string SelectedRsaCollection
         {
-            get => _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].GetSelectedItemFirst();
+            get => _crytpingSettings[TypesOfCrypting.RSA].GetSelectedItemFirst();
             set
             {
                 _selectedRsaCollection = value;
                 // crytpingSettings[(int)Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst( selectedRsaCollection);
-                _crytpingSettings[Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst(_selectedRsaCollection);
+                _crytpingSettings[TypesOfCrypting.RSA].SetSelectedItemFirst(_selectedRsaCollection);
                 OnPropertyChanged(nameof(SelectedRsaCollection));
             }
         }
@@ -313,12 +314,12 @@ namespace CrytonCore.ViewModel
         private string _selectedCesarCollection;
         public string SelectedCesarCollection
         {
-            get => _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].GetSelectedItemFirst();
+            get => _crytpingSettings[TypesOfCrypting.CESAR].GetSelectedItemFirst();
             set
             {
                 _selectedCesarCollection = value;
                 // crytpingSettings[(int)Enums.Enumerates.TypesOfCrypting.RSA].SetSelectedItemFirst( selectedRsaCollection);
-                _crytpingSettings[Enums.Enumerates.TypesOfCrypting.CESAR].SetSelectedItemFirst(_selectedCesarCollection);
+                _crytpingSettings[TypesOfCrypting.CESAR].SetSelectedItemFirst(_selectedCesarCollection);
                 OnPropertyChanged(nameof(SelectedCesarCollection));
             }
         }

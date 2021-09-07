@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static CrytonCore.Enums.Enumerates;
 using System.Threading.Tasks;
 
 namespace CrytonCore.Ciphers

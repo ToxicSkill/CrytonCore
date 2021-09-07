@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.IO;
 using System.Numerics;
 using System.Linq;
+using static CrytonCore.Enums.EKeysFileIdentifiers;
+using static CrytonCore.Enums.ETypesOfCrypting;
 
 namespace CrytonCore.Views
 {
@@ -69,12 +71,12 @@ namespace CrytonCore.Views
                 return false;
             switch (cipher)
             {
-                case nameof(Enumerates.TypesOfCrypting.RSA):
+                case nameof(TypesOfCrypting.RSA):
                     List<string> lines = new(System.IO.File.ReadAllLines(_droppedString[0]));
                     if (lines.Count > 0)
                     {
-                        if (lines[(int)Enumerates.KeysFileIdentifiers.PublicTitle].Equals("Public Keys: ") &&
-                            lines[(int)Enumerates.KeysFileIdentifiers.PrivateTitle].Equals("Private Keys: ") &&
+                        if (lines[(int)KeysFileIdentifiers.PublicTitle].Equals("Public Keys: ") &&
+                            lines[(int)KeysFileIdentifiers.PrivateTitle].Equals("Private Keys: ") &&
                             lines.Count == 6)
                         {
                             List<BigInteger> keys = new();
@@ -82,10 +84,10 @@ namespace CrytonCore.Views
                             {
                                 List<bool> isNumberHex = new();
                                 List<int> fileLineIndex = new() {
-                                    (int)Enumerates.KeysFileIdentifiers.PublicKeyFirst,
-                                    (int)Enumerates.KeysFileIdentifiers.PublicKeySecond,
-                                    (int)Enumerates.KeysFileIdentifiers.PrivateKeyFirst,
-                                    (int)Enumerates.KeysFileIdentifiers.PrivateKeySecond,
+                                    (int)KeysFileIdentifiers.PublicKeyFirst,
+                                    (int)KeysFileIdentifiers.PublicKeySecond,
+                                    (int)KeysFileIdentifiers.PrivateKeyFirst,
+                                    (int)KeysFileIdentifiers.PrivateKeySecond,
                                   };
                                 foreach (var id in fileLineIndex)
                                 {
