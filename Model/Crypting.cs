@@ -47,10 +47,12 @@ namespace CrytonCore.Model
             };
         }
 
-        internal ObservableCollection<string> Get()
-        {
-            return CryptingMethodsCollection;
-        }
+        internal ObservableCollection<string> Get() => CryptingMethodsCollection;
+
+        internal string GetCryptingMethodName() => CryptingMethodName;
+
+        internal int GetCryptingMethodIndex() => CryptingMethodIndex;
+
         internal void SetCryptingMethod(string input)
         {
             CryptingMethodName = input;
@@ -63,23 +65,10 @@ namespace CrytonCore.Model
             SetCryptingMethodNameByIndex(input);
         }
 
-        internal string GetCryptingMethodName()
-        {
-            return CryptingMethodName;
-        }
-        internal int GetCryptingMethodIndex()
-        {
-            return CryptingMethodIndex;
-        }
+        private void SetCryptingMethodIndexByName(string name) => CryptingMethodIndex = CryptingMethodsCollection.IndexOf(name);
 
-        private void SetCryptingMethodIndexByName(string name)
-        {
-            CryptingMethodIndex = CryptingMethodsCollection.IndexOf(name);
-        }
-        private void SetCryptingMethodNameByIndex(int index)
-        {
-            CryptingMethodName = CryptingMethodsCollection[index];
-        }
+        private void SetCryptingMethodNameByIndex(int index) => CryptingMethodName = CryptingMethodsCollection[index];
+
         internal SimpleFile UpdateSimpleFile() => _fileMapper.Mapper.Map<CrytonFile, SimpleFile>(File);
        
         internal string GetDataFromFile()
@@ -116,17 +105,17 @@ namespace CrytonCore.Model
             if (CurrentCipher == TypesOfCrypting.RSA)
                 if (File.ClipboardString.Length != 0)
                     System.Windows.Clipboard.SetText(File.ClipboardString);
-
         }
+
         internal async Task<bool> Crypt(IProgress<int> progress, CancellationToken cancellation)
         {
             var cipherObject = _ciphers.FirstOrDefault(x => String.Equals(x.Name.ToString(), CryptingMethodName, StringComparison.CurrentCultureIgnoreCase));
             if (cipherObject != null)
             {
                 var cipher = (Cipher)Activator.CreateInstance(cipherObject.GetType(), File);
-                CurrentCipher = (TypesOfCrypting)_ciphers.IndexOf(cipher);
                 if (cipher != null)
                 {
+                    CurrentCipher = (TypesOfCrypting)_ciphers.IndexOf(cipher);
                     cipher.Dispose();
                     return File.Status
                         ? await cipher.Decrypt(progress, cancellation)

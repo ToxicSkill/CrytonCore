@@ -1,11 +1,4 @@
-﻿using CrytonCore.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CrytonCore.Ciphers
+﻿namespace CrytonCore.Ciphers
 {
     //public class DES_ECB : Cipher, ICryptingTools
     //{

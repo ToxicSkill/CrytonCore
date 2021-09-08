@@ -52,7 +52,7 @@
                 <ListViewItem  HorizontalAlignment="Stretch">
 
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
                             <i:InvokeCommandAction Command="{Binding MergeItemNavigate}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
@@ -71,7 +71,7 @@
                 <ListViewItem HorizontalAlignment="Stretch">
 
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
                             <i:InvokeCommandAction Command="{Binding SecureItemNavigate}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
@@ -91,7 +91,7 @@
                 <ListViewItem HorizontalAlignment="Stretch">
 
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
                             <i:InvokeCommandAction Command="{Binding PdfToImageNavigate}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
@@ -111,7 +111,7 @@
                 <ListViewItem HorizontalAlignment="Stretch">
 
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
                             <i:InvokeCommandAction Command="{Binding ImageToPdfItemNavigate}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>

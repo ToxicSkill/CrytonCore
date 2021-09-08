@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
-using CrytonCore.ViewModel;
+﻿using System.Windows.Controls;
 
 namespace CrytonCore.Views
 {
@@ -10,7 +8,5 @@ namespace CrytonCore.Views
     public partial class CryptPage : Page
     {
         public CryptPage() => InitializeComponent();
-
-        private async void LoadFile_Clicked(object sender, EventArgs e) => await (DataContext as CryptingPageViewModel)?.LoadFileViaDialog();
     }
 }

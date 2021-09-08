@@ -106,7 +106,9 @@ namespace CrytonCore.ViewModel
             _ = await LoadFile(filePaths[0]);
         }
 
-        public async Task<bool> LoadFileViaDialog()
+        public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
+
+        public async Task<bool> LoadFileViaDialogCommand(object o)
         {
             WindowDialogs.OpenDialog openDialog = new(new DialogHelper()
             {

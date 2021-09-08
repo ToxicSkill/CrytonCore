@@ -2,6 +2,7 @@
 using CrytonCore.Infra;
 using CrytonCore.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,7 +29,15 @@ namespace CrytonCore.ViewModel
             };
         }
 
-        public async Task<bool> LoadFileViaDialog()
+        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<string> fileNames)
+        {
+            Clear.Execute(null);
+            return await LoadFile(new[] { fileNames.First() });
+        }
+
+        public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
+
+        private async Task<bool> LoadFileViaDialogCommand(object o)
         {
             WindowDialogs.OpenDialog openDialog = new(new DialogHelper()
             {
@@ -43,7 +52,6 @@ namespace CrytonCore.ViewModel
                 return await LoadFile(new[] { dialogResult.First() });
             }
             return await Task.Run(() => false);
-
         }
 
         public RelayCommand MoveBack => new(MoveBackCommand, true);

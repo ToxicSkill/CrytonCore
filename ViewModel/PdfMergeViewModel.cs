@@ -16,7 +16,9 @@ namespace CrytonCore.ViewModel
             _summaryPage = new SummaryPdfMergePage();
         }
 
-        public async Task<bool> LoadFileViaDialog()
+        public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
+
+        private async Task<bool> LoadFileViaDialogCommand(object o)
         {
             WindowDialogs.OpenDialog openDialog = new(new Helpers.DialogHelper()
             {
@@ -30,8 +32,8 @@ namespace CrytonCore.ViewModel
 
         private void MoveIndexes(int selectedIndex, int newIndex)
         {
-            FilesView.Move(selectedIndex, newIndex);
             OrderVector.Move(selectedIndex, newIndex);
+            FilesView.Move(selectedIndex, newIndex);
         }
 
         public RelayCommand SetAsFirst => new(SetAsFirstCommand, true);
@@ -68,6 +70,7 @@ namespace CrytonCore.ViewModel
             UpdateListView();
             SelectedItemIndex = newIndex;
         }
+
         public RelayCommand MoveUp => new(MoveUpCommand, true);
 
         private void MoveUpCommand()
@@ -79,6 +82,7 @@ namespace CrytonCore.ViewModel
             UpdateListView();
             SelectedItemIndex = newIndex;
         }
+
         public RelayCommand Delete => new(DeleteCommand, true);
 
         private void DeleteCommand()

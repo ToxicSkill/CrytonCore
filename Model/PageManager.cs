@@ -12,7 +12,12 @@ namespace CrytonCore.Model
 
         async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
         {
-            _ = await LoadFile(filePaths);
+            _ = await LoadFileViaDragDrop(filePaths);
+        }
+
+        protected virtual async Task<bool> LoadFileViaDragDrop(IEnumerable<string> fileNames)
+        {
+            return await Task.Run(() => { return false; });
         }
 
         protected virtual async Task<bool> LoadFile(IEnumerable<string> fileNames)

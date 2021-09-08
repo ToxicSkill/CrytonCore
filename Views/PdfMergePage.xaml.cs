@@ -1,6 +1,4 @@
-﻿using System;
-using CrytonCore.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace CrytonCore.Views
@@ -12,8 +10,6 @@ namespace CrytonCore.Views
     public partial class PdfMergePage : Page
     {
         public PdfMergePage() => InitializeComponent();
-
-        private async void LoadFileButton_Click(object sender, EventArgs e) => await (DataContext as PdfMergeViewModel)?.LoadFileViaDialog();
 
         private void PdfViewGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {

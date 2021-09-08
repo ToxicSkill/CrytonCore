@@ -223,13 +223,12 @@
                    FontFamily="Lato Light" Background="#00000000"
                    Foreground="{DynamicResource font}"
                    Opacity="{Binding Opacity}" Margin="0,78,0,41" 
-                   PreviewMouseDown="LoadFile_Clicked"
                    Content="{DynamicResource dragAndDropLabel2}">
 
                 <i:Interaction.Triggers>
-                    <!--<i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction  Command="{Binding OpenFileDialog}"/>
-                    </i:EventTrigger>-->
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction  Command="{Binding LoadFileViaDialog}"/>
+                    </i:EventTrigger>
                     <i:EventTrigger EventName="MouseEnter">
                         <i:InvokeCommandAction  Command="{Binding ChangeOpacityFull}"/>
                     </i:EventTrigger>
@@ -473,8 +472,16 @@
 
 
                 <Button x:Name="loadFileButton" Style="{StaticResource TransparentButtonRightAlignment}"  HorizontalContentAlignment="Center" 
-                            Content="{DynamicResource loadFile_cryptingPage}" HorizontalAlignment="Right" Margin="0,0,10,51" VerticalAlignment="Bottom" Width="351" Height="34" FontFamily="Lato Light" FontSize="26" Foreground="{DynamicResource buttonAction}" Background="#00000000"  BorderBrush="Transparent" 
-                        Click="LoadFile_Clicked"/>
+                            Content="{DynamicResource loadFile_cryptingPage}" HorizontalAlignment="Right" Margin="0,0,10,51" VerticalAlignment="Bottom" 
+                        Width="351" Height="34" FontFamily="Lato Light" FontSize="26" Foreground="{DynamicResource buttonAction}" 
+                        Background="#00000000"  BorderBrush="Transparent">
+                    
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click" >
+                            <i:InvokeCommandAction Command="{Binding LoadFileViaDialog}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
 
                 <Button x:Name="clearFileButton" Style="{StaticResource TransparentButtonRightAlignment}"  HorizontalContentAlignment="Center" 
                             Content="{DynamicResource clear_cryptingPage}" 

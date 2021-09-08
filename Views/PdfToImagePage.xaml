@@ -105,50 +105,61 @@
             </Image>
         </Grid>
 
-        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom"
-               Visibility="{Binding VisibilityDefaultAsHidden}"
-               Height="60" Width="200"
-               FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
-               FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,25" 
-               VerticalContentAlignment="Center"
-               Content="{DynamicResource loadAntoherFile_pdfToImage}" >
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" Visibility="{Binding VisibilityDefaultAsHidden}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="220"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
-                    <i:InvokeCommandAction Command="{Binding LoadPdfFile}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Label>
-        
-        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom"
-               Visibility="{Binding VisibilityDefaultAsHidden}"
-               Height="60" Width="200"
-               FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
-               FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,95" 
-               VerticalContentAlignment="Center"
-               Content="{DynamicResource saveCurrent_pdfToImage}" >
+            <Image Grid.Column="0" Grid.Row="0" Source="/CrytonCore;component/Assets/Down.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+            <Label  Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource loadAntoherFile_pdfToImage}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                        <i:InvokeCommandAction Command="{Binding LoadFileViaDialog}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Label>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
-                    <i:InvokeCommandAction Command="{Binding SaveCurrent}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Label>
-        
-        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom"
-               Visibility="{Binding VisibilityDefaultAsHidden}"
-               Height="60" Width="200"
-               FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
-               FontSize="22" Foreground="{DynamicResource text}" Margin="0,0,20,165" 
-               VerticalContentAlignment="Center"
-               Content="{DynamicResource saveAll_pdfToImage}" >
+            <Image Grid.Column="0" Grid.Row="1" Source="/CrytonCore;component/Assets/Down.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+            <Label  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource saveCurrent_pdfToImage}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                        <i:InvokeCommandAction Command="{Binding SaveCurrent}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Label>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
-                    <i:InvokeCommandAction Command="{Binding LoadPdfFile}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Label>
+            <Image Grid.Column="0" Grid.Row="2" Source="/CrytonCore;component/Assets/Down.png" 
+                                   HorizontalAlignment="Left" Width="24"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+            <Label  Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
+                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
+                           Content="{DynamicResource saveAll_pdfToImage}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                        <i:InvokeCommandAction Command="{Binding SaveCurrent}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Label>
+
+        </Grid>
 
         <!--<materialDesign:ColorZone x:Name="topLabel" Grid.Row="0" Mode="Light" Background="#FF156412" VerticalAlignment="Top" 
                                   HorizontalAlignment="Stretch" Height="77" VerticalContentAlignment="Stretch" >-->
@@ -217,7 +228,12 @@
         </Grid>
 
 
-        <Grid x:Name="dragDropGrid" Visibility="{Binding VisibilityDefaultAsShowed}" Margin="45,269,20,229" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid x:Name="dragDropGrid" Margin="45,269,20,229" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  Visibility="{Binding VisibilityDefaultAsShowed}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="479*"/>
+                <ColumnDefinition Width="791*"/>
+            </Grid.ColumnDefinitions>
             <Label x:Name="LabelDropInfo1"  HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            HorizontalContentAlignment="Center"
@@ -225,15 +241,20 @@
                            FontFamily="Lato Light" FontWeight="Bold" 
                            Background="#00000000" Foreground="{DynamicResource font}"
                            Content = "{DynamicResource dragAndDropLabel1}"
-                           Opacity="0.7" Margin="0,38,0,75" />
+                           Opacity="0.7" Margin="0,38,0,75" Grid.ColumnSpan="2" />
 
             <Label x:Name="LabelDropInfo2" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center"
                            VerticalContentAlignment="Top" Width="1269" Height="48" FontSize="22" 
                            FontFamily="Lato Light" Background="#00000000" Foreground="{DynamicResource font}"
-                           Opacity="0.6" Margin="0,78,0,41" 
-                           PreviewMouseDown="LoadFileButton_Click"
-                           Style="{StaticResource TransparentLabelOpacity}"
-                           Content="{DynamicResource dragAndDropLabel2}"/>
+                           Style="{StaticResource TransparentLabelOpacity}" Margin="0,78,0,41" 
+                           Content="{DynamicResource dragAndDropLabel2}" Grid.ColumnSpan="2">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                        <i:InvokeCommandAction Command="{Binding LoadFileViaDialog}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Label>
         </Grid>
 
     </Grid>

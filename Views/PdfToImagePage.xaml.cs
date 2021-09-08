@@ -1,6 +1,4 @@
-﻿using CrytonCore.ViewModel;
-using System;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace CrytonCore.Views
 {
@@ -10,9 +8,6 @@ namespace CrytonCore.Views
     public partial class PdfToImagePage : Page
     {
         public PdfToImagePage() => InitializeComponent();
-
-        private void LoadFileButton_Click(object sender, EventArgs e) =>
-            _ = (DataContext as PdfToImageViewModel).LoadFileViaDialog();
 
         //private void PdfViewGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         //{

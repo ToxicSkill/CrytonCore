@@ -52,9 +52,15 @@ namespace CrytonCore.Model
         {
             CurrentMode = new Mode() { OnlyPdf = pdfOnly, SingleSlide = singleSlider };
         }
+
         protected void SetPdfHighQuality(bool highQuality)
         {
             _PDF.SetHighQuality(highQuality);
+        }
+        
+        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<string> fileNames)
+        {
+            return await LoadFile(fileNames);
         }
 
         protected override async Task<bool> LoadFile(IEnumerable<string> fileNames)
@@ -226,7 +232,7 @@ namespace CrytonCore.Model
         {
             if (!CurrentMode.SingleSlide)
             {
-                SliderMaximum =  _PDF.TotalPages - 1;
+                SliderMaximum = _PDF.TotalPages - 1;
                 SliderVisibility = SliderMaximum == 0 ? Visibility.Hidden : Visibility.Visible;
             }
             if (CurrentMode.SingleSlide)
@@ -279,11 +285,7 @@ namespace CrytonCore.Model
             get => _selectedItemIndex;
             set
             {
-                if (_selectedItemIndex == value)
-                {
-                    OnPropertyChanged(nameof(SelectedItemIndex)); return;
-                }
-                    if (value == -1) return;
+                if (value == -1 || _selectedItemIndex == value) return;
                 _selectedItemIndex = value;
                 _ = UpdateImageSourceAsync();
                 UpdateSlider();

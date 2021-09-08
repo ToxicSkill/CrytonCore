@@ -313,10 +313,14 @@
                            VerticalContentAlignment="Top" Width="1269" Height="48" FontSize="22" 
                            FontFamily="Lato Light" Background="#00000000" Foreground="{DynamicResource font}"
                            Style="{StaticResource TransparentLabelOpacity}" Margin="0,78,0,41" 
-                           PreviewMouseDown="LoadFileButton_Click"
                            Content="{DynamicResource dragAndDropLabel2}" Grid.ColumnSpan="2">
 
-                </Label>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding LoadFileViaDialog}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+            </Label>
             </Grid>
         </Grid>
 </Page>
