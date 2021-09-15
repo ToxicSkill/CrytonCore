@@ -43,7 +43,6 @@ namespace CrytonCore.Model
         protected PortableDocumentFormatManager()
         {
             FilesView = new ObservableCollection<FileListView>();// { new FileListView() { FileName = ":dadaw", FilePath="dadw", Order = 1 } };
-
             PDFCollection = new ObservableCollection<PDF>();
             Slider = new ImageSlider() { CurrentIndex = 0 };
         }
@@ -217,7 +216,13 @@ namespace CrytonCore.Model
             return _PDF.SavePdfPageImage(path, BitmapSource);
         }
 
+        protected async Task<bool> SavePdfPagesImages(string path)
+        {
+            return await _PDF.SavePdfPagesImages(path);
+        }
+
         private BitmapImage _imageBitmap;
+
         public BitmapImage BitmapSource
         {
             get => _imageBitmap;

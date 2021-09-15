@@ -50,6 +50,7 @@ namespace CrytonCore.ViewModel
         private void MouseEnterCommand()
         {
             if (!FirstRun) return;
+            SliderValue = 1; // to be shure, that new is different than current (return otherwise)
             SliderValue = 0;
             SelectedItemIndex = 0;
             FirstRun = false;

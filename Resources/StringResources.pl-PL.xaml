@@ -111,7 +111,7 @@
     <!--PDF TO IMAGE-->
     <system:String x:Key="loadAntoherFile_pdfToImage">Załaduj inny plik</system:String>
     <system:String x:Key="saveCurrent_pdfToImage">Zapisz obecny</system:String>
-    <system:String x:Key="saveAll_pdfToImage">Zapisz wszytskie</system:String>
+    <system:String x:Key="saveAll_pdfToImage">Zapisz wszystkie</system:String>
     
     
     

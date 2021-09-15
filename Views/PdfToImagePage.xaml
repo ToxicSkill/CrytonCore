@@ -114,11 +114,10 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Image Grid.Column="0" Grid.Row="0" Source="/CrytonCore;component/Assets/Down.png" 
-                                   HorizontalAlignment="Left" Width="24"
+            <Image Grid.Column="0" Grid.Row="0" Source="/CrytonCore;component/Assets/Rotate.png" 
+                                   HorizontalAlignment="Right" Width="24"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality"/>
             <Label  Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
@@ -131,8 +130,8 @@
                 </i:Interaction.Triggers>
             </Label>
 
-            <Image Grid.Column="0" Grid.Row="1" Source="/CrytonCore;component/Assets/Down.png" 
-                                   HorizontalAlignment="Left" Width="24"
+            <Image Grid.Column="0" Grid.Row="1" Source="/CrytonCore;component/Assets/SaveFile.png" 
+                                   HorizontalAlignment="Right" Width="24"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality"/>
             <Label  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
@@ -145,8 +144,8 @@
                 </i:Interaction.Triggers>
             </Label>
 
-            <Image Grid.Column="0" Grid.Row="2" Source="/CrytonCore;component/Assets/Down.png" 
-                                   HorizontalAlignment="Left" Width="24"
+            <Image Grid.Column="0" Grid.Row="2" Source="/CrytonCore;component/Assets/SaveFiles.png" 
+                                   HorizontalAlignment="Right" Width="24"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality"/>
             <Label  Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
@@ -154,7 +153,7 @@
                            Content="{DynamicResource saveAll_pdfToImage}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
-                        <i:InvokeCommandAction Command="{Binding SaveCurrent}" />
+                        <i:InvokeCommandAction Command="{Binding SaveAll}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Label>

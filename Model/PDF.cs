@@ -4,6 +4,7 @@ using ImageMagick;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -188,12 +189,41 @@ namespace CrytonCore.Model
             }
             return true;
         }
-        public  bool SavePdfPageImage(string path, BitmapImage bitmapImage)
+
+        public bool SavePdfPageImage(string path, BitmapImage bitmapImage)
         {
             try
             {
                 var bitmap = BitmapImage2Bitmap(bitmapImage);
                 bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+            return true;
+        }
+
+        public async Task<bool> SavePdfPagesImages(string path)
+        {
+            try
+            {
+                List<Task<BitmapImage>> tasks = new();
+                var oldPage = CurrentPage;
+                var newPath = path + "//" + Name + "_";
+                for (int i = 0; i < TotalPages; i++)
+                {
+                    CurrentPage = i;
+                    tasks.Add(GetImageFromPdf());
+                }
+                var results = await Task.WhenAll(tasks);
+                foreach (var result in results.Select((value, i) => (i, value)))
+                {
+                    var bitmap = BitmapImage2Bitmap(result.value);
+                    bitmap.Save(newPath + result.i + "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg), System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
+                CurrentPage = oldPage;
             }
             catch (Exception)
             {

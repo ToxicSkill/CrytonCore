@@ -1,5 +1,6 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
+using CrytonCore.Interfaces;
 using CrytonCore.Model;
 using System;
 using System.Collections.Generic;
@@ -72,7 +73,7 @@ namespace CrytonCore.ViewModel
 
         private void SaveCurrentCommand()
         {
-            WindowDialogs.SaveDialog saveDialog = new(new Helpers.DialogHelper()
+            WindowDialogs.SaveDialog saveDialog = new(new DialogHelper()
             {
                 DefaultExtension = Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg),
                 Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Jpeg),
@@ -81,6 +82,18 @@ namespace CrytonCore.ViewModel
             var dialogResult = saveDialog.RunDialog();
             if (dialogResult is not null)
                 _ = SavePdfPageImage(dialogResult.First());
+        }
+
+        public RelayAsyncCommand<object> SaveAll => new(SaveAllCommand);
+
+        private async Task<bool> SaveAllCommand(object o)
+        {
+            WindowDialogs.FolderDialog folderDialog = new(new DialogHelper()
+            {
+                Title = "Chose folder"
+            });
+            var dialogResult = folderDialog.RunDialog();
+            return dialogResult is not null ? await SavePdfPagesImages(dialogResult.First()) : false;
         }
     }
 }
