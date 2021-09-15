@@ -221,6 +221,11 @@ namespace CrytonCore.Model
             return await _PDF.SavePdfPagesImages(path);
         }
 
+        protected async Task<bool> MergePdf(List<string> files, string outFile)
+        {
+            return await _PDF.MergePdf(files, outFile);
+        }
+
         private BitmapImage _imageBitmap;
 
         public BitmapImage BitmapSource

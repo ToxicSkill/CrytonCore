@@ -113,6 +113,12 @@
     <system:String x:Key="saveCurrent_pdfToImage">Save current</system:String>
     <system:String x:Key="saveAll_pdfToImage">Save all</system:String>
 
+    <!--DIALOGS-->
+    <system:String x:Key="saveFile">Save file</system:String>
+    <system:String x:Key="saveFiles">Save files</system:String>
+    <system:String x:Key="openFile">Open file</system:String>
+    <system:String x:Key="openFiles">Open files</system:String>
+    <system:String x:Key="choseFolder">Chose folder</system:String>
 
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

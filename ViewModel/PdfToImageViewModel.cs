@@ -1,6 +1,5 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
-using CrytonCore.Interfaces;
 using CrytonCore.Model;
 using System;
 using System.Collections.Generic;
@@ -44,7 +43,7 @@ namespace CrytonCore.ViewModel
             {
                 Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
                 Multiselect = false,
-                Title = "Open file"
+                Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFile"]
             }); ;
             var dialogResult = openDialog.RunDialog();
             if (dialogResult is not null)
@@ -77,7 +76,7 @@ namespace CrytonCore.ViewModel
             {
                 DefaultExtension = Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg),
                 Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Jpeg),
-                Title = "Save file"
+                Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["saveFile"]
             });
             var dialogResult = saveDialog.RunDialog();
             if (dialogResult is not null)
@@ -91,9 +90,10 @@ namespace CrytonCore.ViewModel
             WindowDialogs.FolderDialog folderDialog = new(new DialogHelper()
             {
                 Title = "Chose folder"
-            });
+            }); ;
             var dialogResult = folderDialog.RunDialog();
-            return dialogResult is not null ? await SavePdfPagesImages(dialogResult.First()) : false;
+            return dialogResult is not null
+                && await SavePdfPagesImages(dialogResult.First());
         }
     }
 }

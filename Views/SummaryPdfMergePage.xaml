@@ -63,14 +63,26 @@
                 </materialDesign:DialogHost.DialogContent>
                 <Grid>
                     <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right" Margin="0,206,20,20">
-                        <Button Margin="5" Click="Cancel_Click"
+                        <Button Margin="5"
                                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                 Background="#00000000" BorderBrush="#00000000" 
-                                Foreground="White" Content="{DynamicResource cancel_cryptingPage}"></Button>
-                        <!--Click="CancelButton_Click"-->
+                                Foreground="White" Content="{DynamicResource cancel_cryptingPage}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding Cancel}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
 
                         <Button Margin="5"
-                                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SaveButton_Click" Content="{DynamicResource saveFiles_cryptingPage}"></Button>
+                                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="{DynamicResource saveFiles_cryptingPage}">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding SaveMerged}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
                     </StackPanel>
 
                 </Grid>

@@ -247,7 +247,7 @@ namespace CrytonCore.Model
         {
             FileStream fileStream = new(Url, FileMode.Open, FileAccess.Read);
 
-            var img = new System.Windows.Media.Imaging.BitmapImage();
+            var img = new BitmapImage();
             img.BeginInit();
             img.StreamSource = fileStream;
             if (HighQuality)
@@ -294,6 +294,47 @@ namespace CrytonCore.Model
             var imageRes = ImageToBitmap();
             var bitmapImage = BitmapImage2Bitmap(imageRes);
             return iTextSharp.text.Image.GetInstance(bitmapImage as System.Drawing.Image, new BaseColor(0, 0, 0, 0));
+        }
+
+        public async Task<bool> MergePdf(List<string> InFiles, String OutFile)
+        {
+            Document document = new(PageSize.A4, 0, 0, 0, 0);
+            try
+            {
+                //Define a new output document and its size, type
+                //Create blank output pdf file and get the stream to write on it.
+                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(OutFile, FileMode.Create));
+                document.Open();
+
+                InFiles.ForEach(file =>
+                {
+                    PdfReader pdfReader = new(file);
+                    for (int i = 1; i <= pdfReader.NumberOfPages; i++)
+                    {
+                        PdfImportedPage page = writer.GetImportedPage(pdfReader, i);
+                        _ = document.Add(iTextSharp.text.Image.GetInstance(page));
+                    }
+                    //else
+                    //{
+                    //    file.MaxQualityFlag = true;
+                    //    ImagePDF = file;
+                    //    iTextSharp.text.Image image = ImageToPage();
+                    //    image.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+                    //    _ = document.Add(PageSize.A4);
+                    //    _ = document.Add(image);
+                    //    //writer.DirectContent.AddImage(image);
+                    //}
+                });
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                document.Close();
+            }
         }
     }
 }

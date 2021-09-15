@@ -114,7 +114,7 @@ namespace CrytonCore.ViewModel
             {
                 Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.All),
                 Multiselect = false,
-                Title = "Open file"
+                Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFile"]
             });
             var dialogResult = openDialog.RunDialog();
             return dialogResult is not null ? await LoadFile(dialogResult.First()) : await Task.Run(() => false);
@@ -214,7 +214,7 @@ namespace CrytonCore.ViewModel
             if (_crypting.GetCryptingMethodName().ToUpper() == EnumToString(TypesOfCrypting.RSA).ToUpper())
             {
                 BlurWindow();
-                Views.InputCryptingWindow dlg = new();
+                InputCryptingWindow dlg = new();
                 _ = dlg.ShowDialog();
                 UnblurWindow();
             }

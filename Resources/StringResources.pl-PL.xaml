@@ -114,6 +114,12 @@
     <system:String x:Key="saveAll_pdfToImage">Zapisz wszystkie</system:String>
     
     
+    <!--DIALOGS-->
+    <system:String x:Key="saveFile">Zapisz plik</system:String>
+    <system:String x:Key="saveFiles">Zapisz pliki</system:String>
+    <system:String x:Key="openFile">Otwórz plik</system:String>
+    <system:String x:Key="openFiles">Otwórz pliki</system:String>
+    <system:String x:Key="choseFolder">Wybierz folder</system:String>
     
     
     

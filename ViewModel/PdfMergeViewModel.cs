@@ -24,7 +24,7 @@ namespace CrytonCore.ViewModel
             {
                 Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
                 Multiselect = true,
-                Title = "Open files"
+                Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFiles"]
             });
             var dialogResult = openDialog.RunDialog();
             return dialogResult is not null ? await LoadFile(dialogResult) : await Task.Run(() => { return false; });

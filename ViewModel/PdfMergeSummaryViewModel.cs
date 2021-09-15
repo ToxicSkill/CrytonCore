@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
 
@@ -54,6 +57,35 @@ namespace CrytonCore.ViewModel
             SliderValue = 0;
             SelectedItemIndex = 0;
             FirstRun = false;
+        }
+
+        public RelayCommand Cancel => new(CancelCommand, true);
+
+        private void CancelCommand()
+        {
+            App.GoPdfMergePage.Invoke();
+        }
+
+        public RelayAsyncCommand<object> SaveMerged => new(SaveMergedCommand);
+
+        private async Task<bool> SaveMergedCommand(object o)
+        {
+            WindowDialogs.SaveDialog saveDialog = new(new DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
+                Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["saveFiles"]
+            }); ;
+            var dialogResult = saveDialog.RunDialog();
+            if (dialogResult is not null)
+            {
+                var toMergeList = new List<string>();
+                foreach (var pdf in PDFCollection)
+                {
+                    toMergeList.Add(pdf.Url);
+                }
+                return await MergePdf(toMergeList, dialogResult.First());
+            }
+            return true;
         }
     }
 }
