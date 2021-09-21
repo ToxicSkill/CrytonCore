@@ -2,6 +2,8 @@
 using CrytonCore.Model;
 using CrytonCore.Views;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CrytonCore.ViewModel
@@ -22,12 +24,12 @@ namespace CrytonCore.ViewModel
         {
             WindowDialogs.OpenDialog openDialog = new(new Helpers.DialogHelper()
             {
-                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Pdf),
                 Multiselect = true,
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFiles"]
             });
             var dialogResult = openDialog.RunDialog();
-            return dialogResult is not null ? await LoadFile(dialogResult) : await Task.Run(() => { return false; });
+            return dialogResult is not null ? await LoadFile(dialogResult.Select(f => new FileInfo(f)).ToList()) : await Task.Run(() => { return false; });
         }
 
         private void MoveIndexes(int selectedIndex, int newIndex)
@@ -116,9 +118,8 @@ namespace CrytonCore.ViewModel
             {
                 App.GoSummaryPdfMergePage.Invoke(GetSummaryPage());
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Console.WriteLine(exception);
             }
         }
 

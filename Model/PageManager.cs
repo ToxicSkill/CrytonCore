@@ -2,6 +2,8 @@
 using CrytonCore.Infra;
 using CrytonCore.Interfaces;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -12,15 +14,16 @@ namespace CrytonCore.Model
 
         async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
         {
-            _ = await LoadFileViaDragDrop(filePaths);
+            var fileInfos = filePaths.Select(f => new FileInfo(f));
+            _ = await LoadFileViaDragDrop(fileInfos.ToList());
         }
 
-        protected virtual async Task<bool> LoadFileViaDragDrop(IEnumerable<string> fileNames)
+        protected virtual async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
         {
             return await Task.Run(() => { return false; });
         }
 
-        protected virtual async Task<bool> LoadFile(IEnumerable<string> fileNames)
+        protected virtual async Task<bool> LoadFile(IEnumerable<FileInfo> fileNames)
         {
             return await Task.Run(() => { return false; });
         }

@@ -112,7 +112,7 @@ namespace CrytonCore.ViewModel
         {
             WindowDialogs.OpenDialog openDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.All),
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.All),
                 Multiselect = false,
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFile"]
             });

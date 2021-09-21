@@ -66,8 +66,6 @@ namespace CrytonCore
 
         private string _currentErrorMessage;
 
-        public List<SimpleImageManager> simpleImages = new();
-
         public readonly List<UpdateThemes> themesUpdaters = new();
 
         public delegate void UpdateThemes();

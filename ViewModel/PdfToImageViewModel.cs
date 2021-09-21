@@ -3,6 +3,7 @@ using CrytonCore.Infra;
 using CrytonCore.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,10 +30,10 @@ namespace CrytonCore.ViewModel
             };
         }
 
-        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<string> fileNames)
+        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
         {
             Clear.Execute(null);
-            return await LoadFile(new[] { fileNames.First() });
+            return await LoadFile(new[] { new FileInfo(fileNames.First().FullName) });
         }
 
         public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
@@ -41,7 +42,7 @@ namespace CrytonCore.ViewModel
         {
             WindowDialogs.OpenDialog openDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Pdf),
                 Multiselect = false,
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFile"]
             }); ;
@@ -49,7 +50,7 @@ namespace CrytonCore.ViewModel
             if (dialogResult is not null)
             {
                 Clear.Execute(null);
-                return await LoadFile(new[] { dialogResult.First() });
+                return await LoadFile(new[] { new FileInfo(dialogResult.First()) });
             }
             return await Task.Run(() => false);
         }
@@ -75,7 +76,7 @@ namespace CrytonCore.ViewModel
             WindowDialogs.SaveDialog saveDialog = new(new DialogHelper()
             {
                 DefaultExtension = Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg),
-                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Jpeg),
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Images),
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["saveFile"]
             });
             var dialogResult = saveDialog.RunDialog();

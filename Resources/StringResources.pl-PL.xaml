@@ -120,6 +120,11 @@
     <system:String x:Key="openFile">Otwórz plik</system:String>
     <system:String x:Key="openFiles">Otwórz pliki</system:String>
     <system:String x:Key="choseFolder">Wybierz folder</system:String>
+
+    <!--IMAGE TO PDF-->
+    <system:String x:Key="rotate_imageToPdf">Obróć</system:String>
+    <system:String x:Key="switch_imageToPdf">Zamień piksele</system:String>
+    <system:String x:Key="ratio_imageToPdf">Proporcje</system:String>
     
     
     

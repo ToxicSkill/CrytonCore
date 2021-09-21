@@ -289,6 +289,21 @@ namespace CrytonCore.Model
             img.Freeze();
             return img;
         }
+
+        public Task<BitmapImage> GetImage(string url)
+        {
+            return Task.Run(() =>
+            {
+                BitmapImage bitmap = new();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(url);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+                return bitmap;
+            });
+        }
+
         private iTextSharp.text.Image ImageToPage()
         {
             var imageRes = ImageToBitmap();

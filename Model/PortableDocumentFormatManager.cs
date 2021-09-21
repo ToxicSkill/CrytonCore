@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,7 +37,9 @@ namespace CrytonCore.Model
 
         protected ObservableCollection<int> OrderVector { get; set; } = new ObservableCollection<int>();
         protected ObservableCollection<PDF> PDFCollection { get; }
+        protected ObservableCollection<BitmapImage> ImagesCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
+        public List<FileInfo> ImageFiles { get; set; } = new List<FileInfo>();
 
         protected Dictionary<int, int> SingleSliderDictionary { get; set; }
 
@@ -57,14 +60,23 @@ namespace CrytonCore.Model
             _PDF.SetHighQuality(highQuality);
         }
         
-        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<string> fileNames)
+        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
         {
-            return await LoadFile(fileNames);
+            List<FileInfo> infos = new();
+            foreach (var name in fileNames)
+            {
+                if(CurrentMode.OnlyPdf)
+                {
+                    if (name.Extension == "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.pdf))
+                        infos.Add(name);
+                }
+            }
+            return await LoadFile(infos);
         }
 
-        protected override async Task<bool> LoadFile(IEnumerable<string> fileNames)
+        protected override async Task<bool> LoadFile(IEnumerable<FileInfo> filesInfo)
         {
-            var tasks = fileNames.Select(async url => await AddFileToList(url)).ToList();
+            var tasks = filesInfo.Select(async url => await AddFileToList(url)).ToList();
             var res = await Task.WhenAll(tasks);
             foreach (var task in tasks)
             {
@@ -83,19 +95,26 @@ namespace CrytonCore.Model
             return true;
         }
 
-        private async Task<bool> AddFileToList(string url)
+        private async Task<bool> AddFileToList(FileInfo fileInfo)
         {
-            PDF newPDF = new(_PDF);
-            try
+            if (CurrentMode.OnlyPdf)
             {
-                _ = await newPDF.LoadPdf(url);
-                PDFCollection.Add(newPDF);
+                PDF newPDF = new(_PDF);
+                try
+                {
+                    _ = await newPDF.LoadPdf(fileInfo.FullName);
+                    PDFCollection.Add(newPDF);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return newPDF.Bytes.Length > 0;
             }
-            catch (Exception)
+            else
             {
-                return false;
+               return true;  //if()
             }
-            return newPDF.Bytes.Length > 0;
         }
 
         protected void RemoveIndexes(int selectedIndex)
@@ -139,20 +158,38 @@ namespace CrytonCore.Model
                 FirstRun = true;
             FilesView.Clear();
             var orderIndex = 0;
-            foreach (var pdf in PDFCollection)
-            {
-                orderIndex++;
-                var file = new FileListView()
-                {
-                    Order = orderIndex,
-                    FileName = pdf.Name
-                };
 
-                FilesView.Add(file);
+            if (CurrentMode.OnlyPdf)
+            {
+                foreach (var pdf in PDFCollection)
+                {
+                    orderIndex++;
+                    var file = new FileListView()
+                    {
+                        Order = orderIndex,
+                        FileName = pdf.Name
+                    };
+
+                    FilesView.Add(file);
+                }
+                if (FirstRun)
+                    await UpdateImageSourceAsync();
+                FirstRun = false;
             }
-            if (FirstRun)
-                await UpdateImageSourceAsync();
-            FirstRun = false;
+            else
+            {
+                foreach (var image in ImageFiles)
+                {
+                    orderIndex++;
+                    var file = new FileListView()
+                    {
+                        Order = orderIndex,
+                        FileName = image.Name
+                    };
+
+                    FilesView.Add(file);
+                }
+            }
         }
 
         protected void UpdateListView()
@@ -171,6 +208,14 @@ namespace CrytonCore.Model
 
                 FilesView.Add(file);
             }
+        }
+
+        protected async Task LoadImage(FileInfo info)
+        {
+            ImageFiles.Add(info);
+            BitmapSource = await _PDF.GetImage(info.FullName);
+            ChangeVisibility(true);
+            await UpdateListViewImages();
         }
 
         protected async Task UpdateImageSourceAsync()
@@ -231,8 +276,10 @@ namespace CrytonCore.Model
         public BitmapImage BitmapSource
         {
             get => _imageBitmap;
-            private set
+            set
             {
+                if (value == null)
+                    return;
                 _imageBitmap = value;
                 OnPropertyChanged(nameof(BitmapSource));
             }

@@ -72,7 +72,7 @@ namespace CrytonCore.ViewModel
         {
             WindowDialogs.SaveDialog saveDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.EnumToString(Enums.EDialogFilters.DialogFilters.Pdf),
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Pdf),
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["saveFiles"]
             }); ;
             var dialogResult = saveDialog.RunDialog();
