@@ -13,6 +13,7 @@ namespace CrytonCore.Model
         public ObservableCollection<string> ThemesCollection { get; set; }
         private List<ResourceDictionary> ThemesDictionaries { get; set; }
         private List<ResourceDictionary> AccentThemesDictionaries { get; set; }
+
         public Theme()
         {
             InitializeComponents();
@@ -55,7 +56,6 @@ namespace CrytonCore.Model
         {
             return AccentThemesDictionaries[ThemeIndex];
         }
-
 
         internal void SetTheme(string input)
         {

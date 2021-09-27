@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CrytonCore.ViewModel
 {
-    public class PdfMergeViewModel : PortableDocumentFormatManager
+    public class PdfMergeViewModel : PDFPageManager
     {
         private SummaryPdfMergePage _summaryPage;
 

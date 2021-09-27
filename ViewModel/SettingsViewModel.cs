@@ -37,10 +37,13 @@ namespace CrytonCore.ViewModel
             get => _selectedTheme;
             set
             {
-                _selectedTheme = value;
-                theme.SetTheme(_selectedTheme);
-                SetGlobalLanguageAndTheme();
-                OnPropertyChanged(nameof(SelectedTheme));
+                if (value != _selectedTheme)
+                {
+                    _selectedTheme = value;
+                    theme.SetTheme(_selectedTheme);
+                    SetGlobalLanguageAndTheme();
+                    OnPropertyChanged(nameof(SelectedTheme));
+                }
             }
         }
         public string SelectedLanguage
@@ -48,11 +51,14 @@ namespace CrytonCore.ViewModel
             get => _selectedLanguage;
             set
             {
-                _selectedLanguage = value;
-                language.SetLanguage(_selectedLanguage);
-                SetGlobalLanguageAndTheme();
-                SetGlobalLanguageShortName();
-                OnPropertyChanged(nameof(SelectedLanguage));
+                if (value != _selectedLanguage)
+                {
+                    _selectedLanguage = value;
+                    language.SetLanguage(_selectedLanguage);
+                    SetGlobalLanguageAndTheme();
+                    SetGlobalLanguageShortName();
+                    OnPropertyChanged(nameof(SelectedLanguage));
+                }
             }
         }
 

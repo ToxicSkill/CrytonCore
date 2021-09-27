@@ -8,7 +8,7 @@ using CrytonCore.Model;
 
 namespace CrytonCore.ViewModel
 {
-    public class PdfMergeSummaryViewModel : PortableDocumentFormatManager
+    public class PdfMergeSummaryViewModel : PDFPageManager
     {
         public PdfMergeSummaryViewModel()
         {
@@ -81,7 +81,7 @@ namespace CrytonCore.ViewModel
                 var toMergeList = new List<string>();
                 foreach (var pdf in PDFCollection)
                 {
-                    toMergeList.Add(pdf.Url);
+                    toMergeList.Add(pdf.Info.FullName);
                 }
                 return await MergePdf(toMergeList, dialogResult.First());
             }

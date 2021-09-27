@@ -79,16 +79,19 @@
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality"  />
 
-                <Label Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
-                           FontSize="22" Foreground="{DynamicResource text}" Margin="28,0,10,0" VerticalContentAlignment="Center"
-                           Content="{DynamicResource ratio_imageToPdf}">
-
+                <ComboBox Grid.Row="2" VerticalAlignment="Stretch"  Foreground="{DynamicResource text}" 
+                          Background="Transparent" 
+                          IsSynchronizedWithCurrentItem="True"
+                          ItemsSource="{Binding Ratios}"
+                          SelectedItem="{Binding SelectedRatio}" Margin="29,0,285,0"
+                          FontSize="18">
+                    
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                        <i:EventTrigger EventName="SelectionChanged" >
                             <i:InvokeCommandAction Command="{Binding RatioImage}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </Label>
+                </ComboBox>
 
                 <Image Grid.Row="2" Source="/CrytonCore;component/Assets/Ratio.png" 
                                    HorizontalAlignment="Left" Width="24"
@@ -255,10 +258,10 @@
                     <DataTemplate>
                         <Grid  Width="424">
                             <Grid.Background>
-                                <LinearGradientBrush EndPoint="1,1"
-                                                         StartPoint="0,0">
-                                    <GradientStop Offset="1" Color="{DynamicResource gradientListViewItemRight}"/>
-                                    <GradientStop Color="{DynamicResource gradientListViewItemLeft}" Offset="0.1"/>
+                                <LinearGradientBrush EndPoint="1, 0" StartPoint="0, 0">
+                                    <GradientStop Offset="0" Color="Transparent"/>
+                                    <GradientStop Offset="0.2" Color="{DynamicResource gradientListViewItemRight}"/>
+                                    <GradientStop Color="Transparent" Offset="1"/>
                                 </LinearGradientBrush>
                             </Grid.Background>
                             <TextBlock Text="{Binding Order, Mode=OneWay}" Width="50" HorizontalAlignment="Left"/>

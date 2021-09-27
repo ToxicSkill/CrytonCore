@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Model
 {
-    public abstract class PortableDocumentFormatManager : PageManager
+    public abstract class PDFPageManager : PageManager
     {
         private class Mode
         {
@@ -39,11 +39,10 @@ namespace CrytonCore.Model
         protected ObservableCollection<PDF> PDFCollection { get; }
         protected ObservableCollection<BitmapImage> ImagesCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
-        public List<FileInfo> ImageFiles { get; set; } = new List<FileInfo>();
 
         protected Dictionary<int, int> SingleSliderDictionary { get; set; }
 
-        protected PortableDocumentFormatManager()
+        protected PDFPageManager()
         {
             FilesView = new ObservableCollection<FileListView>();// { new FileListView() { FileName = ":dadaw", FilePath="dadw", Order = 1 } };
             PDFCollection = new ObservableCollection<PDF>();
@@ -59,17 +58,24 @@ namespace CrytonCore.Model
         {
             _PDF.SetHighQuality(highQuality);
         }
-        
+
+        protected PDF GetCurrentPDF()
+        {
+            return PDFCollection[OrderVector[SelectedItemIndex]];
+        }
+
+        protected void UpdatePdfImageDimensions()
+        {
+            PDFCollection[OrderVector[SelectedItemIndex]].CurrentHeight = (int)_imageBitmap.Height;
+            PDFCollection[OrderVector[SelectedItemIndex]].CurrentWidth = (int)_imageBitmap.Width;
+        }
+
         protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
         {
             List<FileInfo> infos = new();
             foreach (var name in fileNames)
             {
-                if(CurrentMode.OnlyPdf)
-                {
-                    if (name.Extension == "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.pdf))
-                        infos.Add(name);
-                }
+                infos.Add(name);
             }
             return await LoadFile(infos);
         }
@@ -92,29 +98,29 @@ namespace CrytonCore.Model
             await UpdateListViewImages();
             UpdateSlider();
             ChangeVisibility(true);
+            SetSelectedItemIndex(OrderVector.Max());
             return true;
         }
 
         private async Task<bool> AddFileToList(FileInfo fileInfo)
         {
-            if (CurrentMode.OnlyPdf)
+            var countBeforeAdd = PDFCollection.Count;
+            try
             {
-                PDF newPDF = new(_PDF);
-                try
+                if (CurrentMode.OnlyPdf)
                 {
-                    _ = await newPDF.LoadPdf(fileInfo.FullName);
-                    PDFCollection.Add(newPDF);
+                    PDFCollection.Add(await PDFManager.LoadPdf(fileInfo));
                 }
-                catch (Exception)
+                else
                 {
-                    return false;
+                    PDFCollection.Add(await PDFManager.LoadImage(fileInfo));
                 }
-                return newPDF.Bytes.Length > 0;
             }
-            else
+            catch (Exception)
             {
-               return true;  //if()
+                return false;
             }
+            return PDFCollection.Count - countBeforeAdd > 0;
         }
 
         protected void RemoveIndexes(int selectedIndex)
@@ -159,37 +165,21 @@ namespace CrytonCore.Model
             FilesView.Clear();
             var orderIndex = 0;
 
-            if (CurrentMode.OnlyPdf)
+            foreach (var pdf in PDFCollection)
             {
-                foreach (var pdf in PDFCollection)
+                orderIndex++;
+                var file = new FileListView()
                 {
-                    orderIndex++;
-                    var file = new FileListView()
-                    {
-                        Order = orderIndex,
-                        FileName = pdf.Name
-                    };
+                    Order = orderIndex,
+                    FileName = pdf.Name
+                };
 
-                    FilesView.Add(file);
-                }
-                if (FirstRun)
-                    await UpdateImageSourceAsync();
-                FirstRun = false;
+                FilesView.Add(file);
             }
-            else
-            {
-                foreach (var image in ImageFiles)
-                {
-                    orderIndex++;
-                    var file = new FileListView()
-                    {
-                        Order = orderIndex,
-                        FileName = image.Name
-                    };
+            if (FirstRun)
+                await UpdateImageSourceAsync();
+            FirstRun = false;
 
-                    FilesView.Add(file);
-                }
-            }
         }
 
         protected void UpdateListView()
@@ -210,21 +200,19 @@ namespace CrytonCore.Model
             }
         }
 
-        protected async Task LoadImage(FileInfo info)
-        {
-            ImageFiles.Add(info);
-            BitmapSource = await _PDF.GetImage(info.FullName);
-            ChangeVisibility(true);
-            await UpdateListViewImages();
-        }
-
         protected async Task UpdateImageSourceAsync()
         {
+            _PDF = PDFCollection[OrderVector[SelectedItemIndex]];
+            _PDF.CurrentPage = Slider.CurrentIndex;
+
+            if (!CurrentMode.OnlyPdf)
+            {
+                BitmapSource = await PDFManager.GetImage(_PDF);
+                return;
+            }
             if (!CurrentMode.SingleSlide)
             {
-                _PDF = PDFCollection[OrderVector[SelectedItemIndex]];
-                _PDF.CurrentPage = Slider.CurrentIndex;
-                BitmapSource = await _PDF.GetImageFromPdf();
+                BitmapSource = await PDFManager.GetImageFromPdf(_PDF);
             }
             else
             {
@@ -245,7 +233,7 @@ namespace CrytonCore.Model
                         currentIndex > 0 ?
                         currentPage - max - 1 :
                         currentPage;
-                        BitmapSource = await _PDF.GetImageFromPdf();
+                        BitmapSource = await PDFManager.GetImageFromPdf(_PDF);
 
                     }
                     catch (Exception ex)
@@ -258,17 +246,17 @@ namespace CrytonCore.Model
 
         protected bool SavePdfPageImage(string path)
         {
-            return _PDF.SavePdfPageImage(path, BitmapSource);
+            return PDFManager.SavePdfPageImage(path, BitmapSource);
         }
 
         protected async Task<bool> SavePdfPagesImages(string path)
         {
-            return await _PDF.SavePdfPagesImages(path);
+            return await PDFManager.SavePdfPagesImages(_PDF, path);
         }
 
         protected async Task<bool> MergePdf(List<string> files, string outFile)
         {
-            return await _PDF.MergePdf(files, outFile);
+            return await PDFManager.MergePdf(files, outFile);
         }
 
         private BitmapImage _imageBitmap;

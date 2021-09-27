@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CrytonCore.ViewModel
 {
-    public class PdfToImageViewModel : PortableDocumentFormatManager
+    public class PdfToImageViewModel : PDFPageManager
     {
         public PdfToImageViewModel()
         {
