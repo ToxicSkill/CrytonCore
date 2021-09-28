@@ -279,20 +279,6 @@ namespace CrytonCore.Model
             });
         }
 
-        public static Task<BitmapImage> GetImage(PDF pdf)
-        {
-            return Task.Run(() =>
-            {
-                BitmapImage bitmap = new();
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri(pdf.Info.FullName);
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.EndInit();
-                bitmap.Freeze();
-                return bitmap;
-            });
-        }
-
         //private iTextSharp.text.Image ImageToPage()
         //{
         //    var imageRes = ImageToBitmap();

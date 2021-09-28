@@ -591,6 +591,7 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(EffectCombo));
             }
         }
+
         public RelayCommand EffectComboFocusLost => new(EffectComboFocusLostCommand, true);
 
         private void EffectComboFocusLostCommand()

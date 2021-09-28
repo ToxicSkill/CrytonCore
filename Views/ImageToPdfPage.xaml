@@ -10,7 +10,8 @@
              AllowDrop="True"
              xmlns:helpers="clr-namespace:CrytonCore.Helpers"
              helpers:FileDragDropHelper.IsFileDragDropEnabled="True" 
-             helpers:FileDragDropHelper.FileDragDropTarget="{Binding}">
+             helpers:FileDragDropHelper.FileDragDropTarget="{Binding}"
+      Effect="{Binding Effect}">
 
     <Page.DataContext>
         <ViewModel:ImageToPdfViewModel/>
@@ -19,7 +20,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Green.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -44,7 +45,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="45"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}" 
@@ -79,14 +80,21 @@
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality"  />
 
-                <ComboBox Grid.Row="2" VerticalAlignment="Stretch"  Foreground="{DynamicResource text}" 
-                          Background="Transparent" 
+                <ComboBox Grid.Row="2" VerticalAlignment="Stretch"   
+                          Foreground="{DynamicResource text}" Background="Transparent"
+                          FontSize="22" FontFamily="Lato Light"
                           IsSynchronizedWithCurrentItem="True"
                           ItemsSource="{Binding Ratios}"
-                          SelectedItem="{Binding SelectedRatio}" Margin="29,0,285,0"
-                          FontSize="18">
-                    
+                          SelectedItem="{Binding SelectedRatio}" Margin="32,7,258,0"
+                          Effect="{Binding EffectCombo}">
+
                     <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding EffectComboClick}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="DropDownClosed" >
+                            <i:InvokeCommandAction Command="{Binding EffectComboFocusLost}"/>
+                        </i:EventTrigger>
                         <i:EventTrigger EventName="SelectionChanged" >
                             <i:InvokeCommandAction Command="{Binding RatioImage}" />
                         </i:EventTrigger>
@@ -94,7 +102,7 @@
                 </ComboBox>
 
                 <Image Grid.Row="2" Source="/CrytonCore;component/Assets/Ratio.png" 
-                                   HorizontalAlignment="Left" Width="24"
+                                   HorizontalAlignment="Left" Width="24" Opacity="0.85"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality"  />
             </Grid>

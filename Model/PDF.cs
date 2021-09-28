@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Model
 {
@@ -34,7 +35,7 @@ namespace CrytonCore.Model
 
         public int CurrentHeight { get; set; }
 
-        public bool EnableRatioChange{ get; set; }
+        public int RatioIndex{ get; set; }
 
         public PDF()
         {

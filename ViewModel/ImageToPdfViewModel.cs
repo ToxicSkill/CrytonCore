@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Effects;
 
 namespace CrytonCore.ViewModel
 {
@@ -32,6 +33,7 @@ namespace CrytonCore.ViewModel
         public ImageToPdfViewModel()
         {
             InitializeRatios();
+            RatioDelegate = new(ChangeRatioComboBoxItemCurrentImage);
             SetCurrentMode(pdfOnly: false, singleSlider: false);
             SetPdfHighQuality(highQuality: false);
         }
@@ -56,6 +58,11 @@ namespace CrytonCore.ViewModel
                 1,
                 2
             };
+        }
+
+        private void ChangeRatioComboBoxItemCurrentImage()
+        {
+            SelectedRatio = Ratios[GetCurrentPDF().RatioIndex];
         }
 
         public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
@@ -104,33 +111,86 @@ namespace CrytonCore.ViewModel
             }
         }
 
+        private void RotateCurrentImage90Degrees()
+        {
+            if (++PDFCollection[OrderVector[SelectedItemIndex]].Rotation == 4)
+                PDFCollection[OrderVector[SelectedItemIndex]].Rotation = 0;
+        }
+
         public RelayAsyncCommand<object> RotateImage => new(RotateImageCommand);
 
         private async Task RotateImageCommand(object o)
         {
-            var currentPDF = GetCurrentPDF();
-            currentPDF.Rotation++;
-            if (currentPDF.Rotation == 4)
-                currentPDF.Rotation = 0;
-            BitmapSource = await PDFManager.ManipulateImage(currentPDF);
+            RotateCurrentImage90Degrees();
+            BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
+        }
+
+        private void SwitchPixelsCurrentImage()
+        {
+            PDFCollection[OrderVector[SelectedItemIndex]].SwitchPixels ^= true; 
         }
 
         public RelayAsyncCommand<object> SwitchImage => new(SwitchImageCommand);
 
         private async Task SwitchImageCommand(object o)
         {
-            var currentPDF = GetCurrentPDF();
-            currentPDF.SwitchPixels = !currentPDF.SwitchPixels;
-            BitmapSource = await PDFManager.ManipulateImage(currentPDF);
+            SwitchPixelsCurrentImage();
+            BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
+        }
+
+        private void ChangeRatioCurrentImage()
+        {
+            PDFCollection[OrderVector[SelectedItemIndex]].Ratio = ValueRatios[_ratioIndex];
+            PDFCollection[OrderVector[SelectedItemIndex]].RatioIndex = _ratioIndex;
         }
 
         public RelayAsyncCommand<object> RatioImage => new(RatioImageCommand);
 
         private async Task RatioImageCommand(object o)
         {
-            var currentPDF = GetCurrentPDF();
-            currentPDF.Ratio = ValueRatios[_ratioIndex];
-            BitmapSource = await PDFManager.ManipulateImage(currentPDF);
+            ChangeRatioCurrentImage();
+            BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
+        }
+        private BlurEffect _effect;
+        private BlurEffect _effectCombo;
+
+        public BlurEffect Effect
+        {
+            get => _effect;
+            set
+            {
+                _effect = value;
+                OnPropertyChanged(nameof(Effect));
+            }
+        }
+        public BlurEffect EffectCombo
+        {
+            get => _effectCombo;
+            set
+            {
+                _effectCombo = value;
+                OnPropertyChanged(nameof(EffectCombo));
+            }
+        }
+
+        public RelayCommand EffectComboFocusLost => new(EffectComboFocusLostCommand, true);
+
+        private void EffectComboFocusLostCommand()
+        {
+            Effect = null;
+            EffectCombo = null;
+        }
+
+        public RelayCommand EffectComboClick => new(EffectComboClickCommand, true);
+
+        private void EffectComboClickCommand()
+        {
+            BlurEffect newEffect = new()
+            {
+                Radius = 15
+            };
+            Effect = newEffect;
+            EffectCombo = null;
         }
     }
 }

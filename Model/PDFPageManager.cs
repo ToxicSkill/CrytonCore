@@ -42,6 +42,9 @@ namespace CrytonCore.Model
 
         protected Dictionary<int, int> SingleSliderDictionary { get; set; }
 
+        public delegate void RatioComboBoxDelegate();
+        public RatioComboBoxDelegate RatioDelegate;
+
         protected PDFPageManager()
         {
             FilesView = new ObservableCollection<FileListView>();// { new FileListView() { FileName = ":dadaw", FilePath="dadw", Order = 1 } };
@@ -207,7 +210,8 @@ namespace CrytonCore.Model
 
             if (!CurrentMode.OnlyPdf)
             {
-                BitmapSource = await PDFManager.GetImage(_PDF);
+                RatioDelegate.Invoke();
+                BitmapSource = await PDFManager.ManipulateImage(_PDF);
                 return;
             }
             if (!CurrentMode.SingleSlide)
@@ -254,7 +258,7 @@ namespace CrytonCore.Model
             return await PDFManager.SavePdfPagesImages(_PDF, path);
         }
 
-        protected async Task<bool> MergePdf(List<string> files, string outFile)
+        protected static async Task<bool> MergePdf(List<string> files, string outFile)
         {
             return await PDFManager.MergePdf(files, outFile);
         }
@@ -325,6 +329,7 @@ namespace CrytonCore.Model
         }
 
         private int _selectedItemIndex;
+
         public int SelectedItemIndex
         {
             get => _selectedItemIndex;
