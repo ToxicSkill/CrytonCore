@@ -98,6 +98,25 @@ namespace CrytonCore.ViewModel
             return await LoadFile(filesInfo);
         }
 
+        private async Task<string> GetSavePath()
+        {
+            WindowDialogs.SaveDialog saveDialog = new(new DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Pdf),
+                Title = (string)((App)System.Windows.Application.Current).Resources.MergedDictionaries[0]["saveFiles"]
+            }); ;
+            var dialogResult = saveDialog.RunDialog();
+            return await Task.Run(() => dialogResult is not null ? dialogResult.First() : string.Empty);
+        }
+
+        public RelayAsyncCommand<object> MoveNext => new(MoveNextCommand);
+
+        private async Task MoveNextCommand(object o)
+        {
+            var currnetPdf = GetCurrentPDF();
+            _ = await PDFManager.ImageToPdf(currnetPdf, await PDFManager.ManipulateImage(GetCurrentPDF()), await GetSavePath());
+        }
+
         public RelayCommand MoveBack => new(MoveBackCommand, true);
 
         private void MoveBackCommand()

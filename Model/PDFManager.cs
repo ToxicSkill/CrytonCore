@@ -148,7 +148,7 @@ namespace CrytonCore.Model
             return true;
         }
 
-        public static async Task<bool> ImageToPdf(PDF pdf, string outputPath)
+        public static async Task<bool> ImageToPdf(PDF pdf, BitmapImage bitmap, string outputPath)
         {
             return await Task.Run(async () =>
             {
@@ -156,9 +156,9 @@ namespace CrytonCore.Model
                 pdf.HighQuality = true;
                 try
                 {
-                    var imageRes = await ManipulateImage(pdf);
-                    var bitmapImage = BitmapImage2Bitmap(imageRes);
-                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(bitmapImage as System.Drawing.Image, new BaseColor(0, 0, 0, 0));
+                    //var imageRes = await ManipulateImage(pdf);
+                    var bitmapImage = BitmapImage2Bitmap(bitmap);
+                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(bitmapImage, new BaseColor(0, 0, 0, 0));
                     using FileStream fs = new(outputPath, FileMode.Create, FileAccess.Write, FileShare.None);
                     PdfWriter writer = PdfWriter.GetInstance(doc, fs);
                     doc.Open();

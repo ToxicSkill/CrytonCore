@@ -85,18 +85,6 @@ namespace CrytonCore.ViewModel
             SelectedItemIndex = newIndex;
         }
 
-        public RelayCommand Delete => new(DeleteCommand, true);
-
-        private void DeleteCommand()
-        {
-            RemoveIndexes(SelectedItemIndex);
-            UpdateListView();
-            if (SelectedItemIndex != 0)
-                SelectedItemIndex--;
-            if (FilesView.Count == 0)
-                ChangeVisibility(false);
-        }
-
         public RelayCommand MoveBack => new(MoveBackCommand, true);
 
         private void MoveBackCommand()

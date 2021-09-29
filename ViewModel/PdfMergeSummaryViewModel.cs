@@ -85,7 +85,7 @@ namespace CrytonCore.ViewModel
                 }
                 return await MergePdf(toMergeList, dialogResult.First());
             }
-            return true;
+            return false;
         }
     }
 }

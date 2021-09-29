@@ -139,6 +139,18 @@ namespace CrytonCore.Model
             }
         }
 
+        public RelayCommand Delete => new(DeleteCommand, true);
+
+        private void DeleteCommand()
+        {
+            RemoveIndexes(SelectedItemIndex);
+            UpdateListView();
+            if (SelectedItemIndex != 0)
+                SelectedItemIndex--;
+            if (FilesView.Count == 0)
+                ChangeVisibility(false);
+        }
+
         public RelayCommand Clear => new(ClearCommand, true);
 
         private void ClearCommand()
