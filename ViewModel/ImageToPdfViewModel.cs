@@ -98,7 +98,7 @@ namespace CrytonCore.ViewModel
             return await LoadFile(filesInfo);
         }
 
-        private async Task<string> GetSavePath()
+        private static async Task<string> GetSavePath()
         {
             WindowDialogs.SaveDialog saveDialog = new(new DialogHelper()
             {

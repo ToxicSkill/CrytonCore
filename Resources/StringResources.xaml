@@ -17,13 +17,13 @@
     <system:String x:Key="crypt_mainWindow">Crypt</system:String>
     <system:String x:Key="settings_mainWindow">Settings</system:String>
     <system:String x:Key="informations_mainWindow">Informations</system:String>
-    <system:String x:Key="statistics_mainWindow">Statistics</system:String>
-    
+    <system:String x:Key="passwordManager_mainWindow">Password Manager</system:String>
+
     <system:String x:Key="tipCrypt_mainWindow">Crypt</system:String>
     <system:String x:Key="tipPdf_mainWindow">Pdf manager</system:String>
     <system:String x:Key="tipSettings_mainWindow">Settings</system:String>
     <system:String x:Key="tipInformations_mainWindow">Informations</system:String>
-    <system:String x:Key="tipStatistics_mainWindow">Statistics</system:String>
+    <system:String x:Key="tipPasswordManager_mainWindow">Password manager</system:String>
 
 
     <!--CRYPTING PAGE-->

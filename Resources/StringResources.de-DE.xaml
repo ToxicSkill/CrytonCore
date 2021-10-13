@@ -20,13 +20,13 @@
     <system:String x:Key="crypt_mainWindow">Chiffre</system:String>
     <system:String x:Key="settings_mainWindow">Einstellungen</system:String>
     <system:String x:Key="informations_mainWindow">Information</system:String>
-    <system:String x:Key="statistics_mainWindow">Statistik</system:String>
+    <system:String x:Key="passwordManager_mainWindow">Passwortmanager</system:String>
     
     <system:String x:Key="tipCrypt_mainWindow">Chiffre</system:String>
     <system:String x:Key="tipPdf_mainWindow">Manager Pdf</system:String>
     <system:String x:Key="tipSettings_mainWindow">Einstellungen</system:String>
     <system:String x:Key="tipInformations_mainWindow">Information</system:String>
-    <system:String x:Key="tipStatistics_mainWindow">Statistik</system:String>
+    <system:String x:Key="tipPasswordManager_mainWindow">Passwortmanager</system:String>
     
     
     <!--CRYPTING PAGE-->

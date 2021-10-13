@@ -32,7 +32,7 @@
                 Storyboard.TargetName="nav_pnl"
                 Storyboard.TargetProperty="Width"
                 BeginTime="0:0:0"
-                From="230" To="65"
+                From="290" To="65"
                 Duration="0:0:0.2">
             </DoubleAnimation>
         </Storyboard>
@@ -42,7 +42,7 @@
                 Storyboard.TargetName="nav_pnl"
                 Storyboard.TargetProperty="Width"
                 BeginTime="0:0:0"
-                From="65" To="230"
+                From="65" To="290"
                 Duration="0:0:0.3">
             </DoubleAnimation>
         </Storyboard>
@@ -329,6 +329,40 @@
                             </i:Interaction.Triggers>
 
                             <StackPanel Orientation="Horizontal"
+                                        Width="240">
+
+                                <Image Source="/Assets/PasswordKeeper.png"
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="7,0,0,0" Width="40" Height="36">
+
+                                    <Image.ToolTip>
+                                        <ToolTip
+                                        Visibility="{Binding VisibilityDefaultAsHidden}"
+                                        Content="{DynamicResource tipPasswordManager_mainWindow}"
+                                         Width="150"
+                                        Style="{StaticResource tt_style}"/>
+                                    </Image.ToolTip>
+                                </Image>
+
+                                <TextBlock Text="{DynamicResource passwordManager_mainWindow}"
+                                       Margin="25,0,-10,0"
+                                       Style="{StaticResource font_style}">
+                                </TextBlock>
+
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Row="3" Style="{StaticResource TransparentButton}">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding GoSettings}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                            <StackPanel Orientation="Horizontal"
                                         Width="230">
 
                                 <Image Source="/Assets/Cogs.png"
@@ -346,40 +380,6 @@
                                 </Image>
 
                                 <TextBlock Text="{DynamicResource settings_mainWindow}"
-                                       Margin="25,0,0,0"
-                                       Style="{StaticResource font_style}">
-                                </TextBlock>
-
-                            </StackPanel>
-                        </Button>
-
-
-                        <Button Grid.Row="3" Style="{StaticResource TransparentButton}">
-
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                    <i:InvokeCommandAction Command="{Binding GoSettings}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-
-                            <StackPanel Orientation="Horizontal"
-                                        Width="230">
-
-                                <Image Source="/Assets/Statistical.png"
-                                       Stretch="Uniform"
-                                       RenderOptions.EdgeMode="Aliased"
-                                       RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="45">
-
-                                    <Image.ToolTip>
-                                        <ToolTip
-                                        Visibility="{Binding VisibilityDefaultAsHidden}"
-                                        Content="{DynamicResource tipStatistics_mainWindow}"
-                                        Style="{StaticResource tt_style}"/>
-                                    </Image.ToolTip>
-                                </Image>
-
-                                <TextBlock Text="{DynamicResource statistics_mainWindow}"
                                        Margin="25,0,0,0"
                                        Style="{StaticResource font_style}">
                                 </TextBlock>
