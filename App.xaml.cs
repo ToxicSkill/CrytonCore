@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using CrytonCore.Model;
 using CrytonCore.Mapper;
 using System.Threading.Tasks;
 using System.IO;
@@ -47,6 +46,10 @@ namespace CrytonCore
 
         public delegate void SummaryPdfMergePageDelegate(SummaryPdfMergePage summaryPdfMergePage);
         public static SummaryPdfMergePageDelegate GoSummaryPdfMergePage;
+
+        public delegate void PasswordManagerPageDelegate();
+        public static PasswordManagerPageDelegate GoPasswordManagerPage;
+
 
         //public SummaryPdfMergeUserControl summaryPdfMergeUserControl;
 

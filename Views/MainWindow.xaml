@@ -6,9 +6,9 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:CrytonCore"
         xmlns:as="CrytonCore.Assets"
-        xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel" 
-        mc:Ignorable="d"
+        xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel"
         Title="MainWindow" 
+        mc:Ignorable="d"
         d:Height="750" 
         d:Width="1400"
         WindowStyle="None"
@@ -18,7 +18,7 @@
     <Window.DataContext>
         <ViewModel:MainWindowViewModel/>
     </Window.DataContext>
-    
+
     <Window.Background>
         <!--<SolidColorBrush Opacity="0.88" Color="#202048"/>-->
         <!--<SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundColor}"/>-->
@@ -36,7 +36,7 @@
                 Duration="0:0:0.2">
             </DoubleAnimation>
         </Storyboard>
-        
+
         <Storyboard x:Key="ShowStackPanel">
             <DoubleAnimation
                 Storyboard.TargetName="nav_pnl"
@@ -47,7 +47,7 @@
             </DoubleAnimation>
         </Storyboard>
     </Window.Resources>
-    
+
     <Grid>
 
         <!--// Background Color //-->
@@ -189,12 +189,11 @@
 
                         <!--// Menu title text //-->
 
-                        <TextBlock  Margin="86,67,0,0"
+                        <TextBlock  Margin="105,79,0,0"
                                     Foreground="White"
                                     FontSize="22"
                                     Background="Transparent"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
+                                    VerticalAlignment="Top"
                                     Style="{StaticResource font_style}">
                             
                             <!--// Shadow Effect //-->
@@ -324,7 +323,7 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                    <i:InvokeCommandAction Command="{Binding GoSettings}"/>
+                                    <i:InvokeCommandAction Command="{Binding GoPasswordManager}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 

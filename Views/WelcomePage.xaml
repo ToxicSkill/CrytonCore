@@ -38,9 +38,9 @@
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
             <Grid  VerticalAlignment="Bottom" Margin="673,0,10,190" Height="270" Width="660" >
-                <Label Name="LiveTimeLabel" Content="{Binding CurrentTime}" VerticalAlignment="Top" VerticalContentAlignment="Top"
+                <Label Name="LiveTimeLabel" Content="{Binding CurrentTime}" VerticalAlignment="Top" VerticalContentAlignment="Top" Opacity="0.75"
                        FontSize="200" FontWeight="Normal" Foreground="White"  FontFamily="Lato Light" Height="210" Margin="10,0,0,0" />
-                <Label Name="LiveTimeDayLabel" Content="{Binding CurrentDay}"  VerticalAlignment="Top"
+                <Label Name="LiveTimeDayLabel" Content="{Binding CurrentDay}"  VerticalAlignment="Top" Opacity="0.75"
                        Foreground="{DynamicResource font}" VerticalContentAlignment="Center"
                        FontSize="34" FontFamily="Corbel Light" Margin="40,210,0,0" Height="60"/>
 
@@ -50,18 +50,18 @@
                        Opacity="0.5">
                 <Rectangle.Fill>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FFFF9DA6"/>
-                        <GradientStop Color="#FF67D8F9" Offset="1"/>
+                        <GradientStop Color="#FF67D8F9"/>
+                        <GradientStop Color="#FFFF9DA6" Offset="1"/>
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Grid VerticalAlignment="Top" Margin="159,130,695,0" Width="480">
+            <Grid VerticalAlignment="Top" Margin="160,130,694,0" Width="480" Height="155">
                 <Label Content="{DynamicResource welcome_welcomePage}" HorizontalContentAlignment="Right" VerticalAlignment="Top" 
                    FontSize="54" Foreground="{DynamicResource font}" FontFamily="Corbel Light" FontWeight="Thin" FontStretch="UltraExpanded" Height="87"  />
 
                 <Label Content="C R Y T O N" HorizontalContentAlignment="Center" VerticalAlignment="Top"  HorizontalAlignment="Right"
-                   FontSize="54" Foreground="{DynamicResource font}" FontFamily="Corbel" FontWeight="Thin" FontStretch="UltraExpanded" Height="68" Margin="0,62,0,0"  />
+                   FontSize="54" Foreground="White"  FontFamily="Lato Light" Height="68" Margin="0,87,0,0" FontWeight="Normal" FontStyle="Normal"   />
 
             </Grid>
             <Image HorizontalAlignment="Stretch" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Hidden" Height="136" Margin="765,0,111,529" VerticalAlignment="Stretch" Width="458" Source="/CrytonCore;component/Assets/CL1.png"/>

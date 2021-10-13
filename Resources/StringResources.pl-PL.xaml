@@ -126,6 +126,8 @@
     <system:String x:Key="switch_imageToPdf">Zamień piksele</system:String>
     <system:String x:Key="ratio_imageToPdf">Proporcje</system:String>
     
+    <!--PASSWORD MANAGER-->
+    <system:String x:Key="passwordManagerTitle_passwordManagerPage">Manadżer haseł</system:String>
     
     
     <!-- All StringResources Goes Here -->

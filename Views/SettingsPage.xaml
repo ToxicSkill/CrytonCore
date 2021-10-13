@@ -43,9 +43,6 @@
                        VerticalAlignment="Top" Height="77" Width="959" FontSize="52" Background="#00000000" Foreground="{DynamicResource title}" FontFamily="Lato Light"/>
         <!--</materialDesign:ColorZone>
         </Grid>-->
-        <Grid Margin="36,131,10,193">
-        </Grid>
-
         <ListView  HorizontalAlignment="Stretch" Margin="0,193,0,0">
             
             

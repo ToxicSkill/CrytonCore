@@ -110,5 +110,8 @@
     <system:String x:Key="switch_imageToPdf">Switch</system:String>
     <system:String x:Key="ratio_imageToPdf">Ratio</system:String>
     
+    <!--PASSWORD MANAGER-->
+    <system:String x:Key="passwordManagerTitle_passwordManagerPage">Gestionnaire de mots de passe</system:String>
+    
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

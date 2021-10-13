@@ -16,6 +16,7 @@ namespace CrytonCore.ViewModel
         private readonly SecurityPage _pdfSecurityPage = new();
         private readonly PdfToImagePage _pdfToImagePage = new();
         private readonly ImageToPdfPage _imageToPdfPage = new();
+        private readonly PasswordManagerPage _passwordManagerPage = new();
 
         public MainWindowViewModel()
         {
@@ -27,6 +28,7 @@ namespace CrytonCore.ViewModel
             App.GoPdfToImagePage = new App.PdfToImagePageDelegate(ToPdfToImagePage);
             App.GoImageToPdfPage = new App.ImageToPdfPageDelegate(ToImageToPdfPage);
             App.GoSummaryPdfMergePage = new App.SummaryPdfMergePageDelegate(ToPdfSummaryMergePage);
+            App.GoPasswordManagerPage = new App.PasswordManagerPageDelegate(ToPasswordManagerPage);
 
             DisplayPage = _welcomePage;
             ToggleButtonCheck = false;
@@ -41,6 +43,7 @@ namespace CrytonCore.ViewModel
         private void ToPdfSecurityPage() => DisplayPage = _pdfSecurityPage;
         private void ToPdfToImagePage() => DisplayPage = _pdfToImagePage;
         private void ToImageToPdfPage() => DisplayPage = _imageToPdfPage;
+        private void ToPasswordManagerPage() => DisplayPage = _passwordManagerPage;
         private void ToPdfSummaryMergePage(SummaryPdfMergePage summaryPdfMergePage) => DisplayPage = summaryPdfMergePage;
 
         private bool _toggleButtonCheck = true;
@@ -75,6 +78,9 @@ namespace CrytonCore.ViewModel
 
         private void GoPdfToImageCommand() => ToPdfToImagePage();
         public RelayCommand GoImageToPdf => new(GoImageToPdfCommand, App.AppIsLoaded);
+
+        private void GoPasswordManagerCommand() => ToPasswordManagerPage();
+        public RelayCommand GoPasswordManager => new(GoPasswordManagerCommand, App.AppIsLoaded);
 
         private void GoImageToPdfCommand() => ToImageToPdfPage();
 

@@ -106,6 +106,9 @@
     <system:String x:Key="rotate_imageToPdf">Rotate</system:String>
     <system:String x:Key="switch_imageToPdf">Switch</system:String>
     <system:String x:Key="ratio_imageToPdf">Ratio</system:String>
+
+    <!--PASSWORD MANAGER-->
+    <system:String x:Key="passwordManagerTitle_passwordManagerPage">Passwortmanager</system:String>
     
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 
