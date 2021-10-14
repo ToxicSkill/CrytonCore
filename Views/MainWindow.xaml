@@ -8,12 +8,13 @@
         xmlns:as="CrytonCore.Assets"
         xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel"
         Title="MainWindow" 
-        mc:Ignorable="d"
-        d:Height="750" 
-        d:Width="1400"
         WindowStyle="None"
+        SizeChanged="Window_SizeChanged"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True">
+    <!--mc:Ignorable="d"
+        d:Height="750" 
+        d:Width="1400"-->
 
     <Window.DataContext>
         <ViewModel:MainWindowViewModel/>
@@ -75,7 +76,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch" 
                     NavigationUIVisibility="Hidden"
-                    Margin="62,30,0,0" />
+                    Margin="65,30,0,0" />
 
             </Grid>
 
@@ -123,7 +124,7 @@
                         Grid.Row="1"
                         BorderThickness="0"
                         Style="{StaticResource Maximize_btn}" 
-                         Margin="3,3,2,2">
+                         Margin="2,2,1,1">
 
 
                     <i:Interaction.Triggers>
@@ -334,7 +335,7 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="7,0,0,0" Width="40" Height="36">
+                                       Margin="7,0,0,0" Width="46" >
 
                                     <Image.ToolTip>
                                         <ToolTip

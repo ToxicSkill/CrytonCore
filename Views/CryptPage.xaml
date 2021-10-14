@@ -6,8 +6,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel"   
       xmlns:helpers="clr-namespace:CrytonCore.Helpers" 
-      mc:Ignorable="d" 
-      d:DesignHeight="665" d:DesignWidth="1334"
       Title="Crypt"
       AllowDrop="True" 
       helpers:FileDragDropHelper.IsFileDragDropEnabled="True" 

@@ -36,5 +36,17 @@ namespace CrytonCore.Views
                 (DataContext as MainWindowViewModel).MaximizeOrNormalizeMainWindowCommand();
             }
         }
+
+        public void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.BorderThickness = new System.Windows.Thickness(7);
+            }
+            else
+            {
+                this.BorderThickness = new System.Windows.Thickness(0);
+            }
+        }
     }
 }

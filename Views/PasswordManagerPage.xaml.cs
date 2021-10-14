@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace CrytonCore.Views
 {
@@ -22,12 +24,12 @@ namespace CrytonCore.Views
             Button MyControl1 = new();
             MyControl1.Content = count.ToString();
             MyControl1.Name = "Button" + count.ToString();
-
+            MyControl1.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFE));
+            MyControl1.Foreground = Brushes.Violet;
             Grid.SetColumn(MyControl1, j);
             Grid.SetRow(MyControl1, i);
-            grid.Children.Add(MyControl1);
             j++;
-            if (j == 11)
+            if (j == 6)
             {
                 j = 0;
                 i++;

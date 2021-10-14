@@ -4,8 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel"  
-      mc:Ignorable="d" 
-      d:DesignHeight="665" d:DesignWidth="1334"
       Title="WelcomePage">
 
     <Page.DataContext>
@@ -18,8 +16,10 @@
                 <BeginStoryboard>
                     <Storyboard>
                         <DoubleAnimation From="6" To="0" Duration="00:00:02" 
-               Storyboard.TargetName="blurEffect" 
-               Storyboard.TargetProperty="Radius"></DoubleAnimation>
+                                         Storyboard.TargetName="blurEffect" 
+                                         Storyboard.TargetProperty="Radius">
+                            
+                        </DoubleAnimation>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
@@ -35,6 +35,7 @@
                 <GradientStop Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
+        
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
             <Grid  VerticalAlignment="Bottom" Margin="673,0,10,190" Height="270" Width="660" >
@@ -64,10 +65,8 @@
                    FontSize="54" Foreground="White"  FontFamily="Lato Light" Height="68" Margin="0,87,0,0" FontWeight="Normal" FontStyle="Normal"   />
 
             </Grid>
-            <Image HorizontalAlignment="Stretch" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Hidden" Height="136" Margin="765,0,111,529" VerticalAlignment="Stretch" Width="458" Source="/CrytonCore;component/Assets/CL1.png"/>
-            <Rectangle x:Name="internetConnectionDiode" Fill="{Binding FillDiode}" ToolTip="{Binding ToolTip}" HorizontalAlignment="Right" Height="27" Margin="0,0,10,25" VerticalAlignment="Bottom" Width="4"/>
-
-
+            <Rectangle x:Name="internetConnectionDiode" Fill="{Binding FillDiode}" ToolTip="{Binding ToolTip}" 
+                       HorizontalAlignment="Right" Height="27" Margin="0,0,10,25" VerticalAlignment="Bottom" Width="4"/>
         </Grid>
     </Grid>
 </Page>
