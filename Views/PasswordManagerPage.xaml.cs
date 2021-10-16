@@ -1,17 +1,10 @@
-﻿
-using System.Web;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.Net;
-using System.Net.Http;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Net.Sockets;
 using System.IO;
 using System.Text;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace CrytonCore.Views
@@ -33,7 +26,7 @@ namespace CrytonCore.Views
             var weatherUrlStart = "http://www.7timer.info/bin/api.pl?";
             StringBuilder stringBuilder = new(weatherUrlStart);
             stringBuilder.Append("lon=" + geoLocation.lon + "&lat=" + geoLocation.lat);
-            stringBuilder.Append("&product=astro&output=json");
+            stringBuilder.Append("&product=civil&output=json");
             string respond = "";
             WebRequest request = WebRequest.Create(stringBuilder.ToString());
             using (WebResponse response = request.GetResponse())
