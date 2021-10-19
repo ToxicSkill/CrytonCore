@@ -14,6 +14,8 @@
     <system:String x:Key="subWelcome_welcomePage">d i e s e s   P r o g r a m m   e r m ö g l i c h t   e s   I h n e n:</system:String>
     <system:String x:Key="programDescribe1_welcomePage">- Verschlüsselung &amp; Entschlüsselung dateien,</system:String>
     <system:String x:Key="programDescribe2_welcomePage">- Dateien bearbeiten PDF &amp; sie zu sichern</system:String>
+    <system:String x:Key="humidity_weclomePage">Feuchtigkeit</system:String>
+    <system:String x:Key="wind_weclomePage">Wind</system:String>
     
     
     <!--Main Window-->

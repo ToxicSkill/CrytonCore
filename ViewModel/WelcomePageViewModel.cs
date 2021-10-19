@@ -3,16 +3,17 @@ using CrytonCore.Model;
 using System;
 using System.Windows.Media;
 using System.Windows.Threading;
+using static CrytonCore.Model.Weather;
 
 namespace CrytonCore.ViewModel
 {
     public class WelcomePageViewModel : NotificationClass
     {
-        private readonly DispatcherTimer _liveTime = new()
+        private readonly DispatcherTimer _secondTime = new()
         {
             Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
-        private readonly DispatcherTimer _internetTime = new()
+        private readonly DispatcherTimer _minuteTime = new()
         {
             Interval = TimeSpan.FromMinutes(MinutesDelay)
         };
@@ -20,10 +21,18 @@ namespace CrytonCore.ViewModel
         private readonly TimeDate _actualTimeDate = new();
         private readonly InternetConnection _internetConnection = new();
         private SolidColorBrush _internetColorDiode = new();
+        private Weather _weather = new();
+        private SingleWeather _actualWeather = new();
+        private Web _web = new();
 
         private string _currentTime;
         private string _currentDay;
         private string _toolTip;
+        private string _actualTemperature;
+        private string _actualHumidity;
+        private string _actualCity;
+        private string _actualRegion;
+        private string _actualCountry;
 
         private const int SecondsDelay = 1;
         private const int MinutesDelay = 1;
@@ -31,12 +40,62 @@ namespace CrytonCore.ViewModel
         {
             UpdateInternetStatus();
             UpdateTime();
+            UpdateWeatherStatus();
+            UpdateWebStatus();
 
-            _liveTime.Tick += TimeTimer_Tick;
-            _liveTime.Start();
-            _internetTime.Tick += InternetTimer_Tick;
-            _internetTime.Start();
+            _secondTime.Tick += TimeTimer_Tick;
+            _secondTime.Start();
+            _minuteTime.Tick += InternetTimer_Tick;
+            _minuteTime.Start();
         }
+
+        public string ActualCity
+        { 
+            get => _actualCity;
+            set
+            {
+                _actualCity = value;
+                OnPropertyChanged(nameof(ActualCity));
+            }
+        }
+        public string ActualRegion
+        { 
+            get => _actualRegion;
+            set
+            {
+                _actualRegion = value;
+                OnPropertyChanged(nameof(ActualRegion));
+            }
+        }
+        public string ActualCountry
+        { 
+            get => _actualCountry;
+            set
+            {
+                _actualCountry = value;
+                OnPropertyChanged(nameof(ActualCountry));
+            }
+        }
+        public string ActualTemperature
+        {
+            get => _actualTemperature;
+            set
+            {
+                _actualTemperature = value;
+                OnPropertyChanged(nameof(ActualTemperature));
+            }
+        }
+        public string ActualHumidity
+        {
+            get => _actualHumidity;
+            set
+            {
+                _actualHumidity = value;
+                OnPropertyChanged(nameof(ActualHumidity));
+            }
+        }
+
+
         public string CurrentTime
         {
             get => _currentTime;
@@ -73,8 +132,13 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(FillDiode));
             }
         }
-        public Transform SubtitleTransform => new ScaleTransform(0.9, 1);
-        private void InternetTimer_Tick(object sender, EventArgs e) => UpdateInternetStatus();
+        public static Transform SubtitleTransform => new ScaleTransform(0.9, 1);
+        private void InternetTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateInternetStatus();
+            UpdateWeatherStatus();
+            UpdateWebStatus();
+        }
         private void TimeTimer_Tick(object sender, EventArgs e) => UpdateTime();
         private void UpdateTime()
         {
@@ -86,6 +150,18 @@ namespace CrytonCore.ViewModel
             _internetConnection.SetInternetStatus();
             FillDiode = _internetConnection.GetInternetStatusColor();
             ToolTip = _internetConnection.GetInternetStatusString();
+        }
+        private void UpdateWeatherStatus()
+        {
+            _actualWeather = _weather.GetActualWeather();
+            ActualTemperature = _actualWeather.Temp.ToString() + "ºC";
+            ActualHumidity = _actualWeather.Rh2m.ToString();
+        }
+        private void UpdateWebStatus()
+        {
+            ActualCity = _web.GetCurrentCity();
+            ActualCountry = _web.GetCurrentCountry();
+            ActualRegion = _web.GetCurrentRegion();
         }
     }
 }

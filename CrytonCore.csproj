@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Humidity.png" />
     <None Remove="Assets\PasswordKeeper.png" />
     <None Remove="Assets\Ratio.png" />
     <None Remove="Assets\SaveFile.png" />
     <None Remove="Assets\SaveFiles.png" />
+    <None Remove="Assets\Temperature.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,6 +80,9 @@
     <Resource Include="Assets\Help.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Humidity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Inform.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -136,6 +141,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Switch.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Temperature.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Up.png">

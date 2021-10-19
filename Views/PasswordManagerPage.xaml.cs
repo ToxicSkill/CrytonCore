@@ -11,9 +11,6 @@ namespace CrytonCore.Views
         public PasswordManagerPage()
         {
             InitializeComponent();
-            Weather weather = new();
-            var curr = weather.GetCurrentWeather();
-            var t = 0;
         }
         }
 }

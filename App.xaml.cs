@@ -106,6 +106,11 @@ namespace CrytonCore
             CrytpingSettings.Add(new RSAHelper());
         }
 
+        public static string GetictionaryString(string name)
+        {
+            return App.Current.Resources.MergedDictionaries[0][name].ToString();
+        }
+
         public Task<bool> SaveDataInRelativePath(string appendString, string[] data)
         {
             Func<bool> function = () =>

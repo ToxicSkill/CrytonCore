@@ -1,54 +1,58 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
-using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace CrytonCore.Model
 {
     public class Weather
     {
         public WeatherInfo WholeForecast { get; set; }
-        public SingleWeather CurrnetWeather { get; set; }
+        public SingleWeather ActualWeather { get; set; }
+        private readonly Web web = new();
 
-        public Weather()
-        {
-            Web web = new();
-            GetWeather(web.GetGlobalCoordinates());
-        }
-
-        public SingleWeather GetCurrentWeather()
-        {
-            return CurrnetWeather;
-        }
-        public WeatherInfo GetWholeForecast()
-        {
-            return WholeForecast;
-        }
-
-        private void GetWeather((double lat, double lon) geoLocation)
+        private void DownloadWeatherForecast((double lat, double lon) geoLocation)
         {
             var weatherUrlStart = "http://www.7timer.info/bin/api.pl?";
             StringBuilder stringBuilder = new(weatherUrlStart);
-            stringBuilder.Append("lon=" + geoLocation.lon + "&lat=" + geoLocation.lat);
-            stringBuilder.Append("&product=civil&output=json");
-            string respond = "";
-            WebRequest request = WebRequest.Create(stringBuilder.ToString());
-            using (WebResponse response = request.GetResponse())
-            using (StreamReader stream = new(response.GetResponseStream()))
-            {
-                respond = stream.ReadToEnd();
-            }
+            _ = stringBuilder.Append("lon=" + geoLocation.lon + "&lat=" + geoLocation.lat);
+            _ = stringBuilder.Append("&product=civil&output=json");
             string info = new WebClient().DownloadString(stringBuilder.ToString());
 
             SetWholeForecast(JsonConvert.DeserializeObject<WeatherInfo>(info));
             SetCurrentWeather(FindCurrnetWeather());
         }
 
+        public SingleWeather GetActualWeather()
+        {
+            DownloadWeatherForecast(web.GetGlobalCoordinates());
+            return ActualWeather;
+        }
+
+        public WeatherInfo GetWholeForecast()
+        {
+            DownloadWeatherForecast(web.GetGlobalCoordinates());
+            return WholeForecast;
+        }
+
         private SingleWeather FindCurrnetWeather()
         {
-            return WholeForecast.Dataseries.Single(x => x.Timepoint == "9");
+            var initDate = WholeForecast.Init;
+            DateTime firstDate = DateTime.Now;
+            DateTime secondDate = new(
+                year: int.Parse(initDate.Substring(0, 4)),
+                month: int.Parse(initDate.Substring(4, 2)),
+                day: int.Parse(initDate.Substring(6, 2)),
+                hour: int.Parse(initDate.Substring(8, 2)),
+                minute: 00,
+                second: 00);
+
+            TimeSpan diff = secondDate.Subtract(firstDate);
+            var diffHours = diff.TotalHours;
+            var index = Math.Floor(Math.Abs(diffHours) / 3);
+            return WholeForecast.Dataseries.Single(x => x.Timepoint ==(index*3).ToString());
         }
 
         private void SetWholeForecast(WeatherInfo weatherInfo)
@@ -57,10 +61,8 @@ namespace CrytonCore.Model
         }
         private void SetCurrentWeather(SingleWeather singleWeather)
         {
-            CurrnetWeather = singleWeather;
+            ActualWeather = singleWeather;
         }
-
-
         public class WeatherInfo
         {
 

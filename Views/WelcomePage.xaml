@@ -38,6 +38,36 @@
         
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="30,40,10,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="{Binding ActualTemperature}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="28,2,0,0" 
+                   FontFamily="Lato Light" FontSize="28" Foreground="White"/>
+                <Image Grid.Row="0" Source="/CrytonCore;component/Assets/Temperature.png" 
+                                   HorizontalAlignment="Left" Width="28"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                <Label Grid.Row="1" Content="{Binding ActualHumidity}" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="28,2,0,0" 
+                   FontFamily="Lato Light" FontSize="28" Foreground="White"/>
+                <Image Grid.Row="1" Source="/CrytonCore;component/Assets/Humidity.png" 
+                                   HorizontalAlignment="Left" Width="28"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+            </Grid>
+            
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="30,10,10,40">
+                <Label Content="{Binding ActualCity}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,25,0,0"
+                   FontFamily="Lato Light" FontSize="32" Foreground="White"/>
+                <Label Content="{Binding ActualRegion}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,50,0,0"
+                   FontFamily="Lato Light" FontSize="32" Foreground="White"/>
+                <Label Content="{Binding ActualCountry}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,75,0,0"
+                   FontFamily="Lato Light" FontSize="32" Foreground="White"/>
+            </Grid>
+
+
             <Grid  VerticalAlignment="Bottom" Margin="673,0,10,190" Height="270" Width="660" >
                 <Label Name="LiveTimeLabel" Content="{Binding CurrentTime}" VerticalAlignment="Top" VerticalContentAlignment="Top" Opacity="0.75"
                        FontSize="200" FontWeight="Normal" Foreground="White"  FontFamily="Lato Light" Height="210" Margin="10,0,0,0" />

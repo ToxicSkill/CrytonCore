@@ -12,6 +12,8 @@
     <system:String xml:space="preserve" x:Key="subWelcome_welcomePage">t h i s   i s   p r o g r a m,   w h e r e   y o u   c a n:</system:String>
     <system:String x:Key="programDescribe1_welcomePage">- Encrypting &amp; decrypting file(s),</system:String>
     <system:String x:Key="programDescribe2_welcomePage">- Editing PDF files &amp; make them safe</system:String>
+    <system:String x:Key="humidity_weclomePage">Humidity</system:String>
+    <system:String x:Key="wind_weclomePage">Wind</system:String>
     
     <!--Main Window-->
     <system:String x:Key="crypt_mainWindow">Crypt</system:String>

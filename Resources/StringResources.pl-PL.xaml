@@ -14,6 +14,8 @@
     <system:String x:Key="subWelcome_welcomePage">t e n   p r o g r a m   p o z w a l a   n a:</system:String>
     <system:String x:Key="programDescribe1_welcomePage">- Szyfrowanie &amp; deszyfrowanie plików,</system:String>
     <system:String x:Key="programDescribe2_welcomePage">- Edytowanie plików PDF &amp; zabezpieczanie ich</system:String>
+    <system:String x:Key="humidity_weclomePage">Wilgotność</system:String>
+    <system:String x:Key="wind_weclomePage">Wiatr</system:String>
     
     
     <!--Main Window-->
