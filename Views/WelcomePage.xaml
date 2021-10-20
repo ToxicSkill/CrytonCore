@@ -40,19 +40,32 @@
 
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="30,40,10,10">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="65"/>
                     <RowDefinition Height="45"/>
                     <RowDefinition Height="45"/>
                     <RowDefinition Height="45"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="{Binding ActualTemperature}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="28,2,0,0" 
+
+                <Image Grid.Row="0" Source="{Binding ActualWeatherIcon}" 
+                       Margin="20,0,0,0"
+                                   HorizontalAlignment="Left" Width="110"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                <Label Grid.Row="1" Content="{Binding ActualTemperature}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="28,2,0,0" 
                    FontFamily="Lato Light" FontSize="28" Foreground="White"/>
-                <Image Grid.Row="0" Source="/CrytonCore;component/Assets/Temperature.png" 
+                <Image Grid.Row="1" Source="/CrytonCore;component/Assets/Temperature.png" 
                                    HorizontalAlignment="Left" Width="28"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
-                <Label Grid.Row="1" Content="{Binding ActualHumidity}" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="28,2,0,0" 
+                <Label Grid.Row="2" Content="{Binding ActualHumidity}" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="28,2,0,0" 
                    FontFamily="Lato Light" FontSize="28" Foreground="White"/>
-                <Image Grid.Row="1" Source="/CrytonCore;component/Assets/Humidity.png" 
+                <Image Grid.Row="2" Source="/CrytonCore;component/Assets/Humidity.png" 
+                                   HorizontalAlignment="Left" Width="28"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                <Label Grid.Row="3" Content="{Binding ActualWind}" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="28,2,0,0" 
+                   FontFamily="Lato Light" FontSize="28" Foreground="White"/>
+                <Image Grid.Row="3" Source="/CrytonCore;component/Assets/Wind.png" 
                                    HorizontalAlignment="Left" Width="28"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" />

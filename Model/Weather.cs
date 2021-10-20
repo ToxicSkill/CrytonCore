@@ -11,6 +11,7 @@ namespace CrytonCore.Model
     {
         public WeatherInfo WholeForecast { get; set; }
         public SingleWeather ActualWeather { get; set; }
+        private string ActualWeatherIcon;
         private readonly Web web = new();
 
         private void DownloadWeatherForecast((double lat, double lon) geoLocation)
@@ -23,6 +24,38 @@ namespace CrytonCore.Model
 
             SetWholeForecast(JsonConvert.DeserializeObject<WeatherInfo>(info));
             SetCurrentWeather(FindCurrnetWeather());
+            SetCurrentWeatherIcon();
+        }
+
+        private void SetCurrentWeatherIcon()
+        {
+            var cloundIndex = int.Parse(ActualWeather.Cloudcover);
+            var liftedIndex = int.Parse(ActualWeather.LiftedIndex);
+
+            switch (ActualWeather.PrecType.ToString())
+            {
+                case "rain":
+                    if(liftedIndex < -5)
+                        ActualWeatherIcon = "/CrytonCore;component/Assets/HeavyStorm.png";
+                    else
+                        ActualWeatherIcon = "/CrytonCore;component/Assets/Rain.png";
+                    return;
+                case "snow":
+                    ActualWeatherIcon = "/CrytonCore;component/Assets/Snow.png";
+                    return;
+                case "none":
+                    if (cloundIndex < 3 && liftedIndex > -5) 
+                        ActualWeatherIcon = "/CrytonCore;component/Assets/Sun.png";
+                    if (cloundIndex > 2 && cloundIndex < 9 && liftedIndex > -5)
+                        ActualWeatherIcon = "/CrytonCore;component/Assets/PartialSun.png";
+                    if (cloundIndex > 8 && liftedIndex > -5)
+                        ActualWeatherIcon = "/CrytonCore;component/Assets/Cloud.png";
+                    if (liftedIndex < -5)
+                        ActualWeatherIcon = "/CrytonCore;component/Assets/Storm.png";
+                    break;
+                default:
+                    break;
+            }
         }
 
         public SingleWeather GetActualWeather()
@@ -35,6 +68,12 @@ namespace CrytonCore.Model
         {
             DownloadWeatherForecast(web.GetGlobalCoordinates());
             return WholeForecast;
+        }
+
+        public string GetActualWeatherIcon()
+        {
+            DownloadWeatherForecast(web.GetGlobalCoordinates());
+            return ActualWeatherIcon;
         }
 
         private SingleWeather FindCurrnetWeather()

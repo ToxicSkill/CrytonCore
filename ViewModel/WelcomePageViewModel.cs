@@ -30,6 +30,8 @@ namespace CrytonCore.ViewModel
         private string _toolTip;
         private string _actualTemperature;
         private string _actualHumidity;
+        private string _actualWind;
+        private string _actualWeatherIcon;
         private string _actualCity;
         private string _actualRegion;
         private string _actualCountry;
@@ -94,6 +96,24 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(ActualHumidity));
             }
         }
+        public string ActualWind
+        {
+            get => _actualWind;
+            set
+            {
+                _actualWind = value;
+                OnPropertyChanged(nameof(ActualWind));
+            }
+        }
+        public string ActualWeatherIcon
+        {
+            get => _actualWeatherIcon;
+            set
+            {
+                _actualWeatherIcon = value;
+                OnPropertyChanged(nameof(ActualWeatherIcon));
+            }
+        }
 
 
         public string CurrentTime
@@ -156,6 +176,8 @@ namespace CrytonCore.ViewModel
             _actualWeather = _weather.GetActualWeather();
             ActualTemperature = _actualWeather.Temp.ToString() + "ºC";
             ActualHumidity = _actualWeather.Rh2m.ToString();
+            ActualWind = _actualWeather.Wind10m.Direction.ToString();
+            ActualWeatherIcon = _weather.GetActualWeatherIcon();
         }
         private void UpdateWebStatus()
         {
