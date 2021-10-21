@@ -34,7 +34,9 @@ namespace CrytonCore.ViewModel
         private string _actualWeatherIcon;
         private string _actualCity;
         private string _actualRegion;
-        private string _actualCountry;
+        private string _actualCountry; 
+        private string _sunrise;
+        private string _sunset;
 
         private const int SecondsDelay = 1;
         private const int MinutesDelay = 1;
@@ -114,6 +116,26 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(ActualWeatherIcon));
             }
         }
+        public string Sunrise
+        {
+            get => _sunrise;
+            set
+            {
+                _sunrise = value;
+                OnPropertyChanged(nameof(Sunrise));
+            }
+        }
+        public string Sunset
+        {
+            get => _sunset;
+            set
+            {
+                _sunset = value;
+                OnPropertyChanged(nameof(Sunset));
+            }
+        }
+
+
 
 
         public string CurrentTime
@@ -178,6 +200,8 @@ namespace CrytonCore.ViewModel
             ActualHumidity = _actualWeather.Rh2m.ToString();
             ActualWind = _actualWeather.Wind10m.Direction.ToString();
             ActualWeatherIcon = _weather.GetActualWeatherIcon();
+            Sunrise = _weather.GetCurrentSunrise();
+            Sunset = _weather.GetCurrentSunset();
         }
         private void UpdateWebStatus()
         {

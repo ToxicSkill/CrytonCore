@@ -20,6 +20,8 @@
     <None Remove="Assets\Snow.png" />
     <None Remove="Assets\Storm.png" />
     <None Remove="Assets\Sun.png" />
+    <None Remove="Assets\Sunrise.png" />
+    <None Remove="Assets\Sunset.png" />
     <None Remove="Assets\Temperature.png" />
     <None Remove="Assets\Wind.png" />
   </ItemGroup>
@@ -167,6 +169,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Sun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Sunrise.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Sunset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Switch.png">
