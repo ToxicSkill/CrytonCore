@@ -1,6 +1,9 @@
 ﻿using CrytonCore.Infra;
 using CrytonCore.Model;
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static CrytonCore.Model.Weather;
@@ -9,21 +12,28 @@ namespace CrytonCore.ViewModel
 {
     public class WelcomePageViewModel : NotificationClass
     {
-        private readonly DispatcherTimer _secondTime = new()
+        private readonly DispatcherTimer _timeTime = new()
         {
             Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
-        private readonly DispatcherTimer _minuteTime = new()
+        private readonly DispatcherTimer _webTime = new()
         {
             Interval = TimeSpan.FromMinutes(MinutesDelay)
+        };
+        private readonly DispatcherTimer _weatherTime = new()
+        {
+            Interval = TimeSpan.FromMinutes(MinutesDelay)
+        };
+        private readonly DispatcherTimer _firstRunDelayer = new()
+        {
+            Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
 
         private readonly TimeDate _actualTimeDate = new();
         private readonly InternetConnection _internetConnection = new();
         private SolidColorBrush _internetColorDiode = new();
-        private Weather _weather = new();
-        private SingleWeather _actualWeather = new();
-        private Web _web = new();
+        private readonly Weather _weather = new();
+        private readonly Web _web = new();
 
         private string _currentTime;
         private string _currentDay;
@@ -40,18 +50,6 @@ namespace CrytonCore.ViewModel
 
         private const int SecondsDelay = 1;
         private const int MinutesDelay = 1;
-        public WelcomePageViewModel()
-        {
-            UpdateInternetStatus();
-            UpdateTime();
-            UpdateWeatherStatus();
-            UpdateWebStatus();
-
-            _secondTime.Tick += TimeTimer_Tick;
-            _secondTime.Start();
-            _minuteTime.Tick += InternetTimer_Tick;
-            _minuteTime.Start();
-        }
 
         public string ActualCity
         { 
@@ -175,39 +173,93 @@ namespace CrytonCore.ViewModel
             }
         }
         public static Transform SubtitleTransform => new ScaleTransform(0.9, 1);
-        private void InternetTimer_Tick(object sender, EventArgs e)
-        {
-            UpdateInternetStatus();
-            UpdateWeatherStatus();
-            UpdateWebStatus();
-        }
-        private void TimeTimer_Tick(object sender, EventArgs e) => UpdateTime();
-        private void UpdateTime()
+        
+        private async Task TimeTimer_Tick(object sender, EventArgs e) => await UpdateTime();
+
+        private async Task UpdateTime()
         {
             CurrentTime = _actualTimeDate.GetCurrentTime();
             CurrentDay = _actualTimeDate.GetCurrentDay();
+            await Thread;
         }
-        private void UpdateInternetStatus()
+
+        private async Task WeatherInfoTimer_Tick(object s, EventArgs e) => await UpdateWeatherStatus();
+
+        private async Task WebInfoTimer_Tick(object sender, EventArgs e) => await UpdateWebStatus();
+
+        private async Task UpdateWebStatus()
         {
-            _internetConnection.SetInternetStatus();
-            FillDiode = _internetConnection.GetInternetStatusColor();
-            ToolTip = _internetConnection.GetInternetStatusString();
+            try
+            {
+                await _internetConnection.UpdateInternetStatus();
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                await Thread;
+
+                ActualCity = _web.GetCurrentCity();
+                ActualCountry = _web.GetCurrentCountry();
+                ActualRegion = _web.GetCurrentRegion();
+                FillDiode = _internetConnection.GetInternetStatusColor();
+                ToolTip = _internetConnection.GetInternetStatusString();
+            }
         }
-        private void UpdateWeatherStatus()
+        private async Task UpdateWeatherStatus()
         {
-            _actualWeather = _weather.GetActualWeather();
-            ActualTemperature = _actualWeather.Temp.ToString() + "ºC";
-            ActualHumidity = _actualWeather.Rh2m.ToString();
-            ActualWind = _actualWeather.Wind10m.Direction.ToString();
-            ActualWeatherIcon = _weather.GetActualWeatherIcon();
-            Sunrise = _weather.GetCurrentSunrise();
-            Sunset = _weather.GetCurrentSunset();
+            try
+            {
+                await _weather.UpdateWeather();
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                await Thread;
+                ActualTemperature = _weather.GetActualTemperature();
+                ActualHumidity = _weather.GetActualHumidity();
+                ActualWind = _weather.GetActualWind();
+                ActualWeatherIcon = _weather.GetActualWeatherIcon();
+                Sunrise = _weather.GetCurrentSunrise();
+                Sunset = _weather.GetCurrentSunset();
+            }
         }
-        private void UpdateWebStatus()
+        public WelcomePageViewModel()
         {
-            ActualCity = _web.GetCurrentCity();
-            ActualCountry = _web.GetCurrentCountry();
-            ActualRegion = _web.GetCurrentRegion();
+            _firstRunDelayer.Tick += (s, e) => Task.Run(() => FirstRunUpdates(s, e));
+            _firstRunDelayer.Start();
+            _timeTime.Tick += (s, e) => Task.Run(() => TimeTimer_Tick(s, e));
+            _timeTime.Start();
+            _webTime.Tick += (s, e) => Task.Run(() => WebInfoTimer_Tick(s, e));
+            _webTime.Start();
+            _weatherTime.Tick += (s, e) => Task.Run(() => WeatherInfoTimer_Tick(s, e));
+            _weatherTime.Start();
+        }
+
+
+        private async Task FirstRunUpdates(object s, EventArgs e)
+        {
+            await UpdateWebStatus();
+            _firstRunDelayer.Stop();
+        }
+
+        public static DispatcherAwaiter Thread => new();
+
+        public struct DispatcherAwaiter : INotifyCompletion
+        {
+            public bool IsCompleted => Application.Current.Dispatcher.CheckAccess();
+
+            public void OnCompleted(Action continuation) => Application.Current.Dispatcher.Invoke(continuation);
+
+            public void GetResult() { }
+
+            public DispatcherAwaiter GetAwaiter()
+            {
+                return this;
+            }
         }
     }
 }

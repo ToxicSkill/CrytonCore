@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace CrytonCore.Model
@@ -13,53 +14,59 @@ namespace CrytonCore.Model
         public SolidColorBrush InternetSatusColor { get; set; }
         public InternetConnection()
         {
-            SetInternetStatus();
+            Task.Run(() => UpdateInternetStatus()).ConfigureAwait(true);
         }
         internal string GetInternetStatusString()
         {
             return InternetStatus ? "Connected to internet" : "Not connected to internet";
         }
-        internal bool GetInternetStatus()
+        internal async Task<bool> GetInternetStatus()
         {
-            return CheckForInternetConnection() || CheckForInternetConnectionSec();
+            return await CheckForInternetConnection() || await CheckForInternetConnectionSec();
         }
-        internal void SetInternetStatus()
+        internal async Task UpdateInternetStatus()
         {
-            InternetStatus = GetInternetStatus();
+            InternetStatus = await GetInternetStatus();
         }
         internal SolidColorBrush GetInternetStatusColor()
         {
             return InternetStatus ? new SolidColorBrush(Colors.YellowGreen) : new SolidColorBrush(Colors.Red);
         }
-        private static bool CheckForInternetConnection()
+        private async Task<bool> CheckForInternetConnection()
         {
-            try
+            return await Task.Run(() =>
             {
-                using WebClient client = new();
-                using System.IO.Stream stream = client.OpenRead(_pingString);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+                try
+                {
+                    using WebClient client = new();
+                    using System.IO.Stream stream = client.OpenRead(_pingString);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            });
         }
-        private static bool CheckForInternetConnectionSec()
+        private async Task<bool> CheckForInternetConnectionSec()
         {
-            try
+            return await Task.Run(() =>
             {
-                Ping myPing = new();
-                string host = "google.com";
-                byte[] buffer = new byte[32];
-                int timeout = 1000;
-                PingOptions pingOptions = new();
-                PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-                return reply.Status == IPStatus.Success;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+                try
+                {
+                    Ping myPing = new();
+                    string host = "google.com";
+                    byte[] buffer = new byte[32];
+                    int timeout = 1000;
+                    PingOptions pingOptions = new();
+                    PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
+                    return reply.Status == IPStatus.Success;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            });
         }
     }
 }

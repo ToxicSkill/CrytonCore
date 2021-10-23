@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace CrytonCore.Model
 {
@@ -14,45 +15,66 @@ namespace CrytonCore.Model
         public SunInfo TodaySunInfo { get; set; }
         private string ActualWeatherIcon;
         private readonly Web web = new();
+        
 
-        private void DownloadWeatherForecast((double lat, double lon) geoLocation)
+        private class WebClient : System.Net.WebClient
+        {
+            public int Timeout { get; set; }
+
+            protected override WebRequest GetWebRequest(Uri uri)
+            {
+                WebRequest lWebRequest = base.GetWebRequest(uri);
+                lWebRequest.Timeout = Timeout;
+                ((HttpWebRequest)lWebRequest).ReadWriteTimeout = Timeout;
+                return lWebRequest;
+            }
+        }
+
+        private static string GetRequest(string aURL)
+        {
+            using var lWebClient = new WebClient();
+            lWebClient.Timeout = 2 * 60 * 1000;
+            return lWebClient.DownloadString(aURL);
+        }
+
+        private async Task DownloadWeatherForecast((double lat, double lon) geoLocation)
         {
             var weatherUrlStart = "http://www.7timer.info/bin/api.pl?";
             StringBuilder stringBuilder = new(weatherUrlStart);
-            _ = stringBuilder.Append("lon=" + geoLocation.lon + "&lat=" + geoLocation.lat);
+            _ = stringBuilder.Append("lon=" + Math.Round(geoLocation.lon, 2) + "&lat=" + Math.Round(geoLocation.lat, 2));
             _ = stringBuilder.Append("&product=civil&output=json");
-            string info = new WebClient().DownloadString(stringBuilder.ToString());
-
+            var info =  GetRequest(stringBuilder.ToString());//.DownloadString(stringBuilder.ToString());
+           // var res = info.GetWebRequest(new Uri(stringBuilder.ToString()));
             SetWholeForecast(JsonConvert.DeserializeObject<WeatherInfo>(info));
             SetCurrentWeather(FindCurrnetWeather());
             SetCurrentWeatherIcon();
-            GetSunraiseSunset(geoLocation);
+            await SetSunraiseSunset(geoLocation);
         }
 
-        private void GetSunraiseSunset((double lat, double lon) geoLocation)
+        private async Task SetSunraiseSunset((double lat, double lon) geoLocation)
         {
-            //var y = (2 * Math.PI / 365) * (DateTime.Now.DayOfYear - 1 + (DateTime.Now.Hour - 12) / 24);
-            //var eqtime = 229.18 * (0.000075 + 0.001868 * Math.Cos(y) - 0.032077 * Math.Sin(y) - .014615 * Math.Cos(2 * y) - 0.040849 * Math.Sin(2 * y));
-            //var declin = 0.06918 - 0.399912 * Math.Cos(y) + 0.070257 * Math.Sin(y) - 0.006758 * Math.Cos(2 * y) + 0.000907 * Math.Sin(2 * y) - 0.002687 * Math.Cos(3 * y) + 0.00148 * Math.Sin(3 * y);
+            await Task.Run(() =>
+            {
+                var sunsetSunriseStart = "https://api.sunrise-sunset.org/json?";
+                StringBuilder stringBuilder = new(sunsetSunriseStart);
+                _ = stringBuilder.Append("lat=" + geoLocation.lat + "&lng=" + geoLocation.lon);
+                _ = stringBuilder.Append("&date=today");
+                string info = new WebClient().DownloadString(stringBuilder.ToString());
+                SetTodaySunInfo(JsonConvert.DeserializeObject<SunInfo>(info));
+                //var y = (2 * Math.PI / 365) * (DateTime.Now.DayOfYear - 1 + (DateTime.Now.Hour - 12) / 24);
+                //var eqtime = 229.18 * (0.000075 + 0.001868 * Math.Cos(y) - 0.032077 * Math.Sin(y) - .014615 * Math.Cos(2 * y) - 0.040849 * Math.Sin(2 * y));
+                //var declin = 0.06918 - 0.399912 * Math.Cos(y) + 0.070257 * Math.Sin(y) - 0.006758 * Math.Cos(2 * y) + 0.000907 * Math.Sin(2 * y) - 0.002687 * Math.Cos(3 * y) + 0.00148 * Math.Sin(3 * y);
 
-            //var utcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTimeOffset.Now);
-            //var timeOffset = eqtime - 4 * geoLocation.lon + 60 * utcOffset.Hours;
-            //var tst = DateTime.Now.Hour * 60 + DateTime.Now.Minute + timeOffset;
-            //var ha1 = tst / 4 - 180;
-            //var cosPhi = Math.Sin(geoLocation.lat) * Math.Sin(declin) + Math.Cos(geoLocation.lat) * Math.Cos(declin) * Math.Cos(ha1);
-            //var cos180Theta =-(Math.Sin(geoLocation.lat) * Math.Cos(cosPhi) - Math.Sin(declin))/(Math.Cos(geoLocation.lat)  * Math.Sin(cosPhi));
-            //var ha = Math.Acos(Math.Cos(90.833 / (Math.Cos(geoLocation.lat) * Math.Cos(declin))) - Math.Tan(geoLocation.lat) * Math.Tan(declin));
-            //var sunrise = (720 + 4 * (geoLocation.lat - ha) - eqtime) / 60;
-            //var snoon = (720 + 4 * geoLocation.lat - eqtime) / 60;
-
-            var sunsetSunriseStart = "https://api.sunrise-sunset.org/json?";
-            StringBuilder stringBuilder = new(sunsetSunriseStart);
-            _ = stringBuilder.Append("lat=" + geoLocation.lat + "&lng=" + geoLocation.lon);
-            _ = stringBuilder.Append("&date=today");
-            string info = new WebClient().DownloadString(stringBuilder.ToString());
-            SetTodaySunInfo(JsonConvert.DeserializeObject<SunInfo>(info));
-            GetCurrentSunrise();
-            GetCurrentSunset();
+                //var utcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTimeOffset.Now);
+                //var timeOffset = eqtime - 4 * geoLocation.lon + 60 * utcOffset.Hours;
+                //var tst = DateTime.Now.Hour * 60 + DateTime.Now.Minute + timeOffset;
+                //var ha1 = tst / 4 - 180;
+                //var cosPhi = Math.Sin(geoLocation.lat) * Math.Sin(declin) + Math.Cos(geoLocation.lat) * Math.Cos(declin) * Math.Cos(ha1);
+                //var cos180Theta =-(Math.Sin(geoLocation.lat) * Math.Cos(cosPhi) - Math.Sin(declin))/(Math.Cos(geoLocation.lat)  * Math.Sin(cosPhi));
+                //var ha = Math.Acos(Math.Cos(90.833 / (Math.Cos(geoLocation.lat) * Math.Cos(declin))) - Math.Tan(geoLocation.lat) * Math.Tan(declin));
+                //var sunrise = (720 + 4 * (geoLocation.lat - ha) - eqtime) / 60;
+                //var snoon = (720 + 4 * geoLocation.lat - eqtime) / 60;
+            });
         }
 
         private void SetTodaySunInfo(SunInfo sunInfo)
@@ -91,22 +113,37 @@ namespace CrytonCore.Model
             }
         }
 
+        public async Task UpdateWeather()
+        {
+            await DownloadWeatherForecast(await web.GetGlobalCoordinates());
+        }
+
         public SingleWeather GetActualWeather()
         {
-            DownloadWeatherForecast(web.GetGlobalCoordinates());
             return ActualWeather;
         }
 
         public WeatherInfo GetWholeForecast()
         {
-            DownloadWeatherForecast(web.GetGlobalCoordinates());
             return WholeForecast;
         }
 
         public string GetActualWeatherIcon()
         {
-            DownloadWeatherForecast(web.GetGlobalCoordinates());
             return ActualWeatherIcon;
+        }
+
+        public string GetActualTemperature()
+        {
+            return ActualWeather?.Temp.ToString() + "ºC";
+        }
+        public string GetActualWind()
+        {
+            return ActualWeather?.Wind10m.Direction.ToString();
+        }
+        public string GetActualHumidity()
+        {
+            return ActualWeather?.Rh2m.ToString();
         }
 
         public string GetCurrentSunrise()
@@ -137,6 +174,8 @@ namespace CrytonCore.Model
 
         private SingleWeather FindCurrnetWeather()
         {
+            if (WholeForecast is null)
+                return new SingleWeather();
             var initDate = WholeForecast.Init;
             DateTime firstDate = DateTime.Now;
             DateTime secondDate = new(
@@ -155,6 +194,8 @@ namespace CrytonCore.Model
 
         private void SetWholeForecast(WeatherInfo weatherInfo)
         {
+            if (weatherInfo is null)
+                return;
             WholeForecast = weatherInfo;
         }
         private void SetCurrentWeather(SingleWeather singleWeather)
