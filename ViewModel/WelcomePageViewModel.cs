@@ -227,6 +227,11 @@ namespace CrytonCore.ViewModel
                 Sunset = _weather.GetCurrentSunset();
             }
         }
+        private async Task UpdateWebWeatherStatus()
+        {
+            await UpdateWebStatus();
+            await UpdateWeatherStatus();
+        }
         public WelcomePageViewModel()
         {
             _firstRunDelayer.Tick += (s, e) => Task.Run(() => FirstRunUpdates(s, e));
@@ -242,9 +247,11 @@ namespace CrytonCore.ViewModel
 
         private async Task FirstRunUpdates(object s, EventArgs e)
         {
-            await UpdateWebStatus();
+            await UpdateWebWeatherStatus();
             _firstRunDelayer.Stop();
         }
+
+
 
         public static DispatcherAwaiter Thread => new();
 
