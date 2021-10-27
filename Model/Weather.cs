@@ -15,7 +15,8 @@ namespace CrytonCore.Model
         public SunInfo TodaySunInfo { get; set; }
         private string ActualWeatherIcon;
         private readonly Web web = new();
-        
+        public bool Status { get; set; }
+
 
         private class WeatherWebClient : System.Net.WebClient
         {
@@ -56,32 +57,37 @@ namespace CrytonCore.Model
 
         private void SetSunraiseSunset((double lat, double lon) geoLocation)
         {
-                var sunsetSunriseStart = "https://api.sunrise-sunset.org/json?";
-                StringBuilder stringBuilder = new(sunsetSunriseStart);
-                _ = stringBuilder.Append("lat=" + geoLocation.lat + "&lng=" + geoLocation.lon);
-                _ = stringBuilder.Append("&date=today");
-                string info = new WebClient().DownloadString(stringBuilder.ToString());
-                SetTodaySunInfo(JsonConvert.DeserializeObject<SunInfo>(info));
-                //var y = (2 * Math.PI / 365) * (DateTime.Now.DayOfYear - 1 + (DateTime.Now.Hour - 12) / 24);
-                //var eqtime = 229.18 * (0.000075 + 0.001868 * Math.Cos(y) - 0.032077 * Math.Sin(y) - .014615 * Math.Cos(2 * y) - 0.040849 * Math.Sin(2 * y));
-                //var declin = 0.06918 - 0.399912 * Math.Cos(y) + 0.070257 * Math.Sin(y) - 0.006758 * Math.Cos(2 * y) + 0.000907 * Math.Sin(2 * y) - 0.002687 * Math.Cos(3 * y) + 0.00148 * Math.Sin(3 * y);
+            var sunsetSunriseStart = "https://api.sunrise-sunset.org/json?";
+            StringBuilder stringBuilder = new(sunsetSunriseStart);
+            _ = stringBuilder.Append("lat=" + geoLocation.lat + "&lng=" + geoLocation.lon);
+            _ = stringBuilder.Append("&date=today");
+            string info = new WebClient().DownloadString(stringBuilder.ToString());
+            SetTodaySunInfo(JsonConvert.DeserializeObject<SunInfo>(info));
+            //var y = (2 * Math.PI / 365) * (DateTime.Now.DayOfYear - 1 + (DateTime.Now.Hour - 12) / 24);
+            //var eqtime = 229.18 * (0.000075 + 0.001868 * Math.Cos(y) - 0.032077 * Math.Sin(y) - .014615 * Math.Cos(2 * y) - 0.040849 * Math.Sin(2 * y));
+            //var declin = 0.06918 - 0.399912 * Math.Cos(y) + 0.070257 * Math.Sin(y) - 0.006758 * Math.Cos(2 * y) + 0.000907 * Math.Sin(2 * y) - 0.002687 * Math.Cos(3 * y) + 0.00148 * Math.Sin(3 * y);
 
-                //var utcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTimeOffset.Now);
-                //var timeOffset = eqtime - 4 * geoLocation.lon + 60 * utcOffset.Hours;
-                //var tst = DateTime.Now.Hour * 60 + DateTime.Now.Minute + timeOffset;
-                //var ha1 = tst / 4 - 180;
-                //var cosPhi = Math.Sin(geoLocation.lat) * Math.Sin(declin) + Math.Cos(geoLocation.lat) * Math.Cos(declin) * Math.Cos(ha1);
-                //var cos180Theta =-(Math.Sin(geoLocation.lat) * Math.Cos(cosPhi) - Math.Sin(declin))/(Math.Cos(geoLocation.lat)  * Math.Sin(cosPhi));
-                //var ha = Math.Acos(Math.Cos(90.833 / (Math.Cos(geoLocation.lat) * Math.Cos(declin))) - Math.Tan(geoLocation.lat) * Math.Tan(declin));
-                //var sunrise = (720 + 4 * (geoLocation.lat - ha) - eqtime) / 60;
-                //var snoon = (720 + 4 * geoLocation.lat - eqtime) / 60;
-         
+            //var utcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTimeOffset.Now);
+            //var timeOffset = eqtime - 4 * geoLocation.lon + 60 * utcOffset.Hours;
+            //var tst = DateTime.Now.Hour * 60 + DateTime.Now.Minute + timeOffset;
+            //var ha1 = tst / 4 - 180;
+            //var cosPhi = Math.Sin(geoLocation.lat) * Math.Sin(declin) + Math.Cos(geoLocation.lat) * Math.Cos(declin) * Math.Cos(ha1);
+            //var cos180Theta =-(Math.Sin(geoLocation.lat) * Math.Cos(cosPhi) - Math.Sin(declin))/(Math.Cos(geoLocation.lat)  * Math.Sin(cosPhi));
+            //var ha = Math.Acos(Math.Cos(90.833 / (Math.Cos(geoLocation.lat) * Math.Cos(declin))) - Math.Tan(geoLocation.lat) * Math.Tan(declin));
+            //var sunrise = (720 + 4 * (geoLocation.lat - ha) - eqtime) / 60;
+            //var snoon = (720 + 4 * geoLocation.lat - eqtime) / 60;
+
         }
 
         private void SetTodaySunInfo(SunInfo sunInfo)
         {
-            if(sunInfo is not null)
+            if (sunInfo is not null)
+            {
                 TodaySunInfo = sunInfo;
+                Status = true;
+            }
+            else
+                Status = false;
         }
 
         private void SetCurrentWeatherIcon()
@@ -197,7 +203,12 @@ namespace CrytonCore.Model
         private void SetWholeForecast(WeatherInfo weatherInfo)
         {
             if (weatherInfo is not null)
+            {
                 WholeForecast = weatherInfo;
+                Status = true;
+            }
+            else
+                Status = false;
         }
         private void SetCurrentWeather(SingleWeather singleWeather)
         {

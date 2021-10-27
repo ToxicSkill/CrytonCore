@@ -44,15 +44,25 @@ namespace CrytonCore.ViewModel
         private string _actualWeatherIcon;
         private string _actualCity;
         private string _actualRegion;
-        private string _actualCountry; 
+        private string _actualCountry;
         private string _sunrise;
         private string _sunset;
 
         private const int SecondsDelay = 1;
         private const int MinutesDelay = 1;
 
+
+        public WelcomePageViewModel()
+        {
+            Task.Run(() => UpdateWebWeatherStatus());
+            _timeTime.Tick += (s, e) => Task.Run(() => TimeTimer_Tick(s, e));
+            _timeTime.Start();
+            _webTime.Tick += (s, e) => Task.Run(() => WebWeatherInfoTimer_Tick(s, e));
+            _webTime.Start();
+        }
+
         public string ActualCity
-        { 
+        {
             get => _actualCity;
             set
             {
@@ -61,7 +71,7 @@ namespace CrytonCore.ViewModel
             }
         }
         public string ActualRegion
-        { 
+        {
             get => _actualRegion;
             set
             {
@@ -70,7 +80,7 @@ namespace CrytonCore.ViewModel
             }
         }
         public string ActualCountry
-        { 
+        {
             get => _actualCountry;
             set
             {
@@ -134,8 +144,6 @@ namespace CrytonCore.ViewModel
         }
 
 
-
-
         public string CurrentTime
         {
             get => _currentTime;
@@ -173,7 +181,7 @@ namespace CrytonCore.ViewModel
             }
         }
         public static Transform SubtitleTransform => new ScaleTransform(0.9, 1);
-        
+
         private async Task TimeTimer_Tick(object sender, EventArgs e) => await UpdateTime();
 
         private async Task UpdateTime()
@@ -183,9 +191,7 @@ namespace CrytonCore.ViewModel
             await Thread;
         }
 
-        private async Task WeatherInfoTimer_Tick(object s, EventArgs e) => await UpdateWeatherStatus();
-
-        private async Task WebInfoTimer_Tick(object sender, EventArgs e) => await UpdateWebStatus();
+        private async Task WebWeatherInfoTimer_Tick(object sender, EventArgs e) => await UpdateWebWeatherStatus();
 
         private async Task UpdateWebStatus()
         {
@@ -231,27 +237,34 @@ namespace CrytonCore.ViewModel
         {
             await UpdateWebStatus();
             await UpdateWeatherStatus();
+            if(_web.Status)
+                WebVisibility = Visibility.Visible;
+            if (_weather.Status)
+                WeatherVisibility = Visibility.Visible;
         }
-        public WelcomePageViewModel()
+
+        private Visibility _webVisibility = Visibility.Hidden;
+        private Visibility _weatherVisibility = Visibility.Hidden;
+
+        public Visibility WebVisibility
         {
-            _firstRunDelayer.Tick += (s, e) => Task.Run(() => FirstRunUpdates(s, e));
-            _firstRunDelayer.Start();
-            _timeTime.Tick += (s, e) => Task.Run(() => TimeTimer_Tick(s, e));
-            _timeTime.Start();
-            _webTime.Tick += (s, e) => Task.Run(() => WebInfoTimer_Tick(s, e));
-            _webTime.Start();
-            _weatherTime.Tick += (s, e) => Task.Run(() => WeatherInfoTimer_Tick(s, e));
-            _weatherTime.Start();
+            get => _webVisibility;
+            set
+            {
+                _webVisibility = value;
+                OnPropertyChanged(nameof(WebVisibility));
+            }
         }
 
-
-        private async Task FirstRunUpdates(object s, EventArgs e)
+        public Visibility WeatherVisibility
         {
-            await UpdateWebWeatherStatus();
-            _firstRunDelayer.Stop();
+            get => _weatherVisibility;
+            set
+            {
+                _weatherVisibility = value;
+                OnPropertyChanged(nameof(WeatherVisibility));
+            }
         }
-
-
 
         public static DispatcherAwaiter Thread => new();
 

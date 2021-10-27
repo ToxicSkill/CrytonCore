@@ -38,7 +38,7 @@
         
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-            <Grid HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="30,40,10,10">
+            <Grid Visibility="{Binding WeatherVisibility}" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="30,40,10,10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="65"/>
                     <RowDefinition Height="45"/>
@@ -84,8 +84,8 @@
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
             </Grid>
-            
-            <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="30,10,10,40">
+
+            <Grid Visibility="{Binding WebVisibility}"  HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="30,10,10,40">
                 <Label Content="{Binding ActualCity}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,25,0,0"
                    FontFamily="Lato Light" FontSize="32" Foreground="White"/>
                 <Label Content="{Binding ActualRegion}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,50,0,0"
