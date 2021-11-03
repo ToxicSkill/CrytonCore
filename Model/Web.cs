@@ -14,13 +14,11 @@ namespace CrytonCore.Model
 
         public Web()
         {
-            Task.Run(() => GetIPAddressPublic()).ConfigureAwait(true);
+            _ = Task.Run(() => GetIPAddressPublic()).ConfigureAwait(false);
         }
 
-        public JsonWeb GetAllWebInfo()
-        {
-            return WebInfo;
-        }
+        public JsonWeb GetAllWebInfo() => WebInfo;
+        
 
         public async Task<(double latitude, double longnitude)> GetGlobalCoordinates()
         {
@@ -33,12 +31,15 @@ namespace CrytonCore.Model
                     info.DownloadStringAsync(new Uri("http://ipinfo.io/" + WebInfo?.Ip), respond);
 
                     var gelocString = WebInfo?.Loc.Split(',');
+                    if (gelocString is null)
+                        throw new Exception("Data was null");
                     var resOne = double.Parse(gelocString[0], CultureInfo.InvariantCulture);
                     var resTwo = double.Parse(gelocString[1], CultureInfo.InvariantCulture);
                     return (latitude: resOne, longnitude: resTwo);
                 }
                 catch (Exception)
                 {
+                    Status = false;
                     return (latitude: -1, longnitude: -1);
                 }
             });

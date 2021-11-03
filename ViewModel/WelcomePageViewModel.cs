@@ -24,16 +24,13 @@ namespace CrytonCore.ViewModel
         {
             Interval = TimeSpan.FromMinutes(MinutesDelay)
         };
-        private readonly DispatcherTimer _firstRunDelayer = new()
-        {
-            Interval = TimeSpan.FromSeconds(SecondsDelay)
-        };
+
 
         private readonly TimeDate _actualTimeDate = new();
         private readonly InternetConnection _internetConnection = new();
         private SolidColorBrush _internetColorDiode = new();
-        private readonly Weather _weather = new();
-        private readonly Web _web = new();
+        private readonly Weather _weather;
+        private readonly Web _web;
 
         private string _currentTime;
         private string _currentDay;
@@ -54,7 +51,9 @@ namespace CrytonCore.ViewModel
 
         public WelcomePageViewModel()
         {
-            Task.Run(() => UpdateWebWeatherStatus());
+            _web = new();
+            _weather = new(_web);
+            _ = Task.Run(() => UpdateWebWeatherStatus());
             _timeTime.Tick += (s, e) => Task.Run(() => TimeTimer_Tick(s, e));
             _timeTime.Start();
             _webTime.Tick += (s, e) => Task.Run(() => WebWeatherInfoTimer_Tick(s, e));

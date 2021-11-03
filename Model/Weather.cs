@@ -14,11 +14,15 @@ namespace CrytonCore.Model
         public SingleWeather ActualWeather { get; set; }
         public SunInfo TodaySunInfo { get; set; }
         private string ActualWeatherIcon;
-        private readonly Web web = new();
         public bool Status { get; set; }
+        private readonly Web _web;
 
+        public Weather(Web web)
+        {
+            _web = web;
+        }
 
-        private class WeatherWebClient : System.Net.WebClient
+        private class WeatherWebClient : WebClient
         {
             public int Timeout { get; set; }
 
@@ -42,16 +46,25 @@ namespace CrytonCore.Model
         {
             await Task.Run(() =>
             {
-                var weatherUrlStart = "http://www.7timer.info/bin/api.pl?";
-                StringBuilder stringBuilder = new(weatherUrlStart);
-                _ = stringBuilder.Append("lon=" + Math.Round(geoLocation.lon, 2) + "&lat=" + Math.Round(geoLocation.lat, 2));
-                _ = stringBuilder.Append("&product=civil&output=json");
-                var info = GetRequest(stringBuilder.ToString());//.DownloadString(stringBuilder.ToString());
-                                                                // var res = info.GetWebRequest(new Uri(stringBuilder.ToString()));
-                SetWholeForecast(JsonConvert.DeserializeObject<WeatherInfo>(info));
-                SetCurrentWeather(FindCurrnetWeather());
-                SetCurrentWeatherIcon();
-                SetSunraiseSunset(geoLocation);
+                try
+                {
+                    if (geoLocation.lat == -1 || geoLocation.lon == -1)
+                        throw new Exception("Invalid global coordinates");
+                    var weatherUrlStart = "http://www.7timer.info/bin/api.pl?";
+                    StringBuilder stringBuilder = new(weatherUrlStart);
+                    _ = stringBuilder.Append("lon=" + Math.Round(geoLocation.lon, 2) + "&lat=" + Math.Round(geoLocation.lat, 2));
+                    _ = stringBuilder.Append("&product=civil&output=json");
+                    var info = GetRequest(stringBuilder.ToString());//.DownloadString(stringBuilder.ToString());
+                                                                    // var res = info.GetWebRequest(new Uri(stringBuilder.ToString()));
+                    SetWholeForecast(JsonConvert.DeserializeObject<WeatherInfo>(info));
+                    SetCurrentWeather(FindCurrnetWeather());
+                    SetCurrentWeatherIcon();
+                    SetSunraiseSunset(geoLocation);
+                }
+                catch (Exception)
+                {
+                    Status = false;
+                }
             });
         }
 
@@ -123,7 +136,7 @@ namespace CrytonCore.Model
 
         public async Task UpdateWeather()
         {
-            await DownloadWeatherForecast(await web.GetGlobalCoordinates());
+            await DownloadWeatherForecast(await _web.GetGlobalCoordinates());
         }
 
         public SingleWeather GetActualWeather()
@@ -156,6 +169,8 @@ namespace CrytonCore.Model
 
         public string GetCurrentSunrise()
         {
+            if (Status == false)
+                return string.Empty;
             var sunrise = TodaySunInfo.Details.Sunrise;
             var date = sunrise.ToString().Substring(0, sunrise.Length - 3);
             var time = date.Split(':');
@@ -169,6 +184,8 @@ namespace CrytonCore.Model
 
         public string GetCurrentSunset()
         {
+            if (Status == false)
+                return string.Empty;
             var sunset = TodaySunInfo.Details.Sunset;
             var date = sunset.ToString().Substring(0, sunset.Length - 3);
             var time = date.Split(':');
