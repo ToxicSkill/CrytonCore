@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CrytonCore.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.IO;
@@ -7,14 +8,24 @@ using System.Threading.Tasks;
 
 namespace CrytonCore.Model
 {
-    public class Web
+    public class Web : IService
     {
         public JsonWeb WebInfo { get; set; }
         public bool Status { get; set; }
 
-        public Web()
+        public bool GetStatus()
         {
-            _ = Task.Run(() => GetIPAddressPublic()).ConfigureAwait(false);
+            return Status;
+        }
+
+        public async Task InitializeService(object obj)
+        {
+            if (!Equals(obj.GetType(), typeof(InternetConnection)))
+                return;
+
+            var internetStatus = obj.GetType().GetProperty("Status").GetValue(obj, null);
+            if((bool)internetStatus)
+                await Task.Run(() => GetIPAddressPublic()).ConfigureAwait(false);
         }
 
         public JsonWeb GetAllWebInfo() => WebInfo;

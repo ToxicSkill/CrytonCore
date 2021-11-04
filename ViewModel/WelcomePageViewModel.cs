@@ -1,36 +1,34 @@
 ﻿using CrytonCore.Infra;
+using CrytonCore.Interfaces;
 using CrytonCore.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static CrytonCore.Model.Weather;
 
 namespace CrytonCore.ViewModel
 {
     public class WelcomePageViewModel : NotificationClass
     {
-        private readonly DispatcherTimer _timeTime = new()
+        private readonly DispatcherTimer _secondTime = new()
         {
             Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
-        private readonly DispatcherTimer _webTime = new()
+        private readonly DispatcherTimer _minuteTime = new()
         {
             Interval = TimeSpan.FromMinutes(MinutesDelay)
         };
-        private readonly DispatcherTimer _weatherTime = new()
-        {
-            Interval = TimeSpan.FromMinutes(MinutesDelay)
-        };
-
 
         private readonly TimeDate _actualTimeDate = new();
-        private readonly InternetConnection _internetConnection = new();
+        private InternetConnection _internetConnection = new();
         private SolidColorBrush _internetColorDiode = new();
-        private readonly Weather _weather;
-        private readonly Web _web;
+        private Weather _weather;
+        private Web _web;
+        private List<Tuple<IService, string>> _services = new();
 
         private string _currentTime;
         private string _currentDay;
@@ -51,13 +49,138 @@ namespace CrytonCore.ViewModel
 
         public WelcomePageViewModel()
         {
-            _web = new();
-            _weather = new(_web);
-            _ = Task.Run(() => UpdateWebWeatherStatus());
-            _timeTime.Tick += (s, e) => Task.Run(() => TimeTimer_Tick(s, e));
-            _timeTime.Start();
-            _webTime.Tick += (s, e) => Task.Run(() => WebWeatherInfoTimer_Tick(s, e));
-            _webTime.Start();
+            Task.Run(() => InitializeServices());
+            InitializeTimers();
+        }
+
+        private async Task InitializeServices()
+        {
+            _services.Add(new Tuple<IService, string>(new InternetConnection(), nameof(InternetConnection)));
+            _services.Add(new Tuple<IService, string>(new Web(), nameof(Web)));
+            _services.Add(new Tuple<IService, string>(new Weather(), nameof(Weather)));
+
+            await InitializeServiceByName(nameof(InternetConnection), null);
+            await InitializeServiceByName(nameof(Web), GetServiceByName(nameof(InternetConnection)));
+            await InitializeServiceByName(nameof(Weather), GetServiceByName(nameof(Web)));
+
+            await UpdateUIServices(nameof(InternetConnection));
+            await UpdateUIServices(nameof(Web));
+            await UpdateUIServices(nameof(Weather));
+        }
+
+        private async Task UpdateUIServices(string serviceName)
+        {
+            await Thread;
+            var service = GetServiceByName(serviceName);
+            switch (serviceName)
+            {
+                case nameof(InternetConnection):
+                    InternetConnection internet = service as InternetConnection;
+                    FillDiode = internet.GetInternetStatusColor();
+                    ToolTip = internet.GetInternetStatusString();
+                    break;
+                case nameof(Web):
+                    Web web = service as Web;
+                    WebVisibility = web.Status ? Visibility.Visible : Visibility.Hidden;
+                    ActualCity = web.GetCurrentCity();
+                    ActualCountry = web.GetCurrentCountry();
+                    ActualRegion = web.GetCurrentRegion();
+                    break;
+                case nameof(Weather):
+                    Weather weather = service as Weather;
+                    WeatherVisibility = weather.Status ? Visibility.Visible : Visibility.Hidden;
+                    ActualTemperature = weather.GetActualTemperature();
+                    ActualHumidity = weather.GetActualHumidity();
+                    ActualWind = weather.GetActualWind();
+                    ActualWeatherIcon = weather.GetActualWeatherIcon();
+                    Sunrise = weather.GetCurrentSunrise();
+                    Sunset = weather.GetCurrentSunset();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private IService GetServiceByName(string name)
+        {
+            return _services.Where(x => x.Item2 == name).Select(x => x.Item1).FirstOrDefault();
+        }
+
+        private async Task InitializeServiceByName(string name, object obj)
+        {
+            var index = _services.IndexOf(_services.Where(x => x.Item2 == name).FirstOrDefault());
+            await _services[index].Item1.InitializeService(obj);
+        }
+
+        private void InitializeTimers()
+        {
+            _secondTime.Tick += (s, e) => Task.Run(() => SecondTimer_Tick(s, e));
+            _secondTime.Start();
+            _minuteTime.Tick += (s, e) => Task.Run(() => MinuteTimer_Tick(s, e));
+            _minuteTime.Start();
+        }
+
+        public static Transform SubtitleTransform => new ScaleTransform(0.9, 1);
+
+        private async Task SecondTimer_Tick(object sender, EventArgs e)
+        {
+            await InitializeServiceByName(nameof(InternetConnection), null);
+            await UpdateUIServices(nameof(InternetConnection));
+            await UpdateTime();
+        }
+
+        private async Task UpdateTime()
+        {
+            CurrentTime = _actualTimeDate.GetCurrentTime();
+            CurrentDay = _actualTimeDate.GetCurrentDay();
+            await Thread;
+        }
+
+        private async Task MinuteTimer_Tick(object sender, EventArgs e)
+        {
+            await InitializeServiceByName(nameof(Web), GetServiceByName(nameof(InternetConnection)));
+            await InitializeServiceByName(nameof(Weather), GetServiceByName(nameof(Web)));
+            await UpdateUIServices(nameof(Web));
+            await UpdateUIServices(nameof(Weather));
+        }
+
+        private Visibility _webVisibility = Visibility.Hidden;
+        private Visibility _weatherVisibility = Visibility.Hidden;
+
+        public Visibility WebVisibility
+        {
+            get => _webVisibility;
+            set
+            {
+                _webVisibility = value;
+                OnPropertyChanged(nameof(WebVisibility));
+            }
+        }
+
+        public Visibility WeatherVisibility
+        {
+            get => _weatherVisibility;
+            set
+            {
+                _weatherVisibility = value;
+                OnPropertyChanged(nameof(WeatherVisibility));
+            }
+        }
+
+        public static DispatcherAwaiter Thread => new();
+
+        public struct DispatcherAwaiter : INotifyCompletion
+        {
+            public bool IsCompleted => Application.Current.Dispatcher.CheckAccess();
+
+            public void OnCompleted(Action continuation) => Application.Current.Dispatcher.Invoke(continuation);
+
+            public void GetResult() { }
+
+            public DispatcherAwaiter GetAwaiter()
+            {
+                return this;
+            }
         }
 
         public string ActualCity
@@ -177,107 +300,6 @@ namespace CrytonCore.ViewModel
             {
                 _internetColorDiode = value;
                 OnPropertyChanged(nameof(FillDiode));
-            }
-        }
-        public static Transform SubtitleTransform => new ScaleTransform(0.9, 1);
-
-        private async Task TimeTimer_Tick(object sender, EventArgs e) => await UpdateTime();
-
-        private async Task UpdateTime()
-        {
-            CurrentTime = _actualTimeDate.GetCurrentTime();
-            CurrentDay = _actualTimeDate.GetCurrentDay();
-            await Thread;
-        }
-
-        private async Task WebWeatherInfoTimer_Tick(object sender, EventArgs e) => await UpdateWebWeatherStatus();
-
-        private async Task UpdateWebStatus()
-        {
-            try
-            {
-                await _internetConnection.UpdateInternetStatus();
-            }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                await Thread;
-
-                ActualCity = _web.GetCurrentCity();
-                ActualCountry = _web.GetCurrentCountry();
-                ActualRegion = _web.GetCurrentRegion();
-                FillDiode = _internetConnection.GetInternetStatusColor();
-                ToolTip = _internetConnection.GetInternetStatusString();
-            }
-        }
-        private async Task UpdateWeatherStatus()
-        {
-            try
-            {
-                await _weather.UpdateWeather();
-            }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                await Thread;
-                ActualTemperature = _weather.GetActualTemperature();
-                ActualHumidity = _weather.GetActualHumidity();
-                ActualWind = _weather.GetActualWind();
-                ActualWeatherIcon = _weather.GetActualWeatherIcon();
-                Sunrise = _weather.GetCurrentSunrise();
-                Sunset = _weather.GetCurrentSunset();
-            }
-        }
-        private async Task UpdateWebWeatherStatus()
-        {
-            await UpdateWebStatus();
-            await UpdateWeatherStatus();
-            if(_web.Status)
-                WebVisibility = Visibility.Visible;
-            if (_weather.Status)
-                WeatherVisibility = Visibility.Visible;
-        }
-
-        private Visibility _webVisibility = Visibility.Hidden;
-        private Visibility _weatherVisibility = Visibility.Hidden;
-
-        public Visibility WebVisibility
-        {
-            get => _webVisibility;
-            set
-            {
-                _webVisibility = value;
-                OnPropertyChanged(nameof(WebVisibility));
-            }
-        }
-
-        public Visibility WeatherVisibility
-        {
-            get => _weatherVisibility;
-            set
-            {
-                _weatherVisibility = value;
-                OnPropertyChanged(nameof(WeatherVisibility));
-            }
-        }
-
-        public static DispatcherAwaiter Thread => new();
-
-        public struct DispatcherAwaiter : INotifyCompletion
-        {
-            public bool IsCompleted => Application.Current.Dispatcher.CheckAccess();
-
-            public void OnCompleted(Action continuation) => Application.Current.Dispatcher.Invoke(continuation);
-
-            public void GetResult() { }
-
-            public DispatcherAwaiter GetAwaiter()
-            {
-                return this;
             }
         }
     }

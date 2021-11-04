@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrytonCore.Interfaces;
+using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -6,19 +7,27 @@ using System.Windows.Media;
 
 namespace CrytonCore.Model
 {
-    public class InternetConnection
+    public class InternetConnection : IService
     {
         private static readonly string _pingString = "http://www.google.com";
         public string InternetStatusString { get; set; }
-        public bool InternetStatus { get; set; }
+        public bool Status { get; set; }
         public SolidColorBrush InternetSatusColor { get; set; }
-        public InternetConnection()
+        public string InternetString { get; set; }
+
+        public bool GetStatus()
         {
-            Task.Run(() => UpdateInternetStatus()).ConfigureAwait(true);
+            return Status;
         }
+
+        public async Task InitializeService(object obj)
+        {
+            await Task.Run(() => UpdateInternetStatus()).ConfigureAwait(true);
+        }
+
         internal string GetInternetStatusString()
         {
-            return InternetStatus ? "Connected to internet" : "Not connected to internet";
+            return Status ? "Connected to internet" : "Not connected to internet";
         }
         internal async Task<bool> GetInternetStatus()
         {
@@ -26,11 +35,13 @@ namespace CrytonCore.Model
         }
         internal async Task UpdateInternetStatus()
         {
-            InternetStatus = await GetInternetStatus();
+            Status = await GetInternetStatus();
+            InternetString = Status ? "Connected to internet" : "Not connected to internet";
+            InternetSatusColor = Status ? new SolidColorBrush(Colors.YellowGreen) : new SolidColorBrush(Colors.Red);
         }
         internal SolidColorBrush GetInternetStatusColor()
         {
-            return InternetStatus ? new SolidColorBrush(Colors.YellowGreen) : new SolidColorBrush(Colors.Red);
+            return Status ? new SolidColorBrush(Colors.YellowGreen) : new SolidColorBrush(Colors.Red);
         }
         private async Task<bool> CheckForInternetConnection()
         {

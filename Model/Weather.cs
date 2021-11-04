@@ -5,21 +5,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Threading.Tasks;
+using CrytonCore.Interfaces;
 
 namespace CrytonCore.Model
 {
-    public class Weather
+    public class Weather : IService
     {
         public WeatherInfo WholeForecast { get; set; }
         public SingleWeather ActualWeather { get; set; }
         public SunInfo TodaySunInfo { get; set; }
         private string ActualWeatherIcon;
         public bool Status { get; set; }
-        private readonly Web _web;
+        private Web _web;
 
-        public Weather(Web web)
+        public bool GetStatus()
         {
-            _web = web;
+            return Status;
+        }
+
+        public async Task InitializeService(object obj)
+        {
+            var type = obj.GetType();
+            if (type == typeof(Web))
+                _web = (Web)obj;
+            await UpdateWeather();
         }
 
         private class WeatherWebClient : WebClient
@@ -231,7 +240,6 @@ namespace CrytonCore.Model
         {
             ActualWeather = singleWeather;
         }
-
         public class SunInfo
         {
             [JsonProperty("results")]
