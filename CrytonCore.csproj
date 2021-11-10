@@ -48,6 +48,7 @@
     <Folder Include="Ciphers\" />
     <Folder Include="Dictionaries\" />
     <Folder Include="Files\" />
+    <Folder Include="Benchamark\" />
     <Folder Include="Style\" />
     <Folder Include="Service\" />
     <Folder Include="Resources\" />

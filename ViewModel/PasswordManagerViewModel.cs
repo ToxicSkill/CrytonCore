@@ -11,7 +11,9 @@ namespace CrytonCore.ViewModel
         public PasswordManagerViewModel()
         {
             AccountView = new ObservableCollection<Account>()
-            { new Account() { Name = "Adam", Data = DateTime.Now } };
+            { new Account() { Name = "Bob", Data = DateTime.Now },
+             new Account() { Name = "Alice", Data = DateTime.Now },
+             new Account() { Name = "Eva", Data = DateTime.Now }};
         }
 
     }

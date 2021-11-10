@@ -164,22 +164,6 @@ namespace CrytonCore.ViewModel
             }
         }
 
-        public static DispatcherAwaiter Thread => new();
-
-        public struct DispatcherAwaiter : INotifyCompletion
-        {
-            public bool IsCompleted => Application.Current.Dispatcher.CheckAccess();
-
-            public void OnCompleted(Action continuation) => Application.Current.Dispatcher.Invoke(continuation);
-
-            public void GetResult() { }
-
-            public DispatcherAwaiter GetAwaiter()
-            {
-                return this;
-            }
-        }
-
         public string ActualCity
         {
             get => _actualCity;
@@ -297,6 +281,22 @@ namespace CrytonCore.ViewModel
             {
                 _internetColorDiode = value;
                 OnPropertyChanged(nameof(FillDiode));
+            }
+        }
+
+        public static DispatcherAwaiter Thread => new();
+
+        public struct DispatcherAwaiter : INotifyCompletion
+        {
+            public bool IsCompleted => Application.Current.Dispatcher.CheckAccess();
+
+            public void OnCompleted(Action continuation) => Application.Current.Dispatcher.Invoke(continuation);
+
+            public void GetResult() { }
+
+            public DispatcherAwaiter GetAwaiter()
+            {
+                return this;
             }
         }
     }

@@ -12,5 +12,5 @@ namespace CrytonCore.Views
         {
             InitializeComponent();
         }
-        }
+    }
 }
