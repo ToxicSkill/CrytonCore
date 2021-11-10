@@ -14,21 +14,18 @@ namespace CrytonCore.ViewModel
 {
     public class WelcomePageViewModel : NotificationClass
     {
-        private readonly DispatcherTimer _secondTime = new()
+        private readonly DispatcherTimer _secondsTime = new()
         {
             Interval = TimeSpan.FromSeconds(SecondsDelay)
         };
-        private readonly DispatcherTimer _minuteTime = new()
+        private readonly DispatcherTimer _minutesTime = new()
         {
             Interval = TimeSpan.FromMinutes(MinutesDelay)
         };
 
         private readonly TimeDate _actualTimeDate = new();
-        private InternetConnection _internetConnection = new();
         private SolidColorBrush _internetColorDiode = new();
-        private Weather _weather;
-        private Web _web;
-        private List<Tuple<IService, string>> _services = new();
+        private readonly List<Tuple<IService, string>> _services = new();
 
         private string _currentTime;
         private string _currentDay;
@@ -49,7 +46,7 @@ namespace CrytonCore.ViewModel
 
         public WelcomePageViewModel()
         {
-            Task.Run(() => InitializeServices());
+            _ = Task.Run(() => InitializeServices());
             InitializeTimers();
         }
 
@@ -114,10 +111,10 @@ namespace CrytonCore.ViewModel
 
         private void InitializeTimers()
         {
-            _secondTime.Tick += (s, e) => Task.Run(() => SecondTimer_Tick(s, e));
-            _secondTime.Start();
-            _minuteTime.Tick += (s, e) => Task.Run(() => MinuteTimer_Tick(s, e));
-            _minuteTime.Start();
+            _secondsTime.Tick += (s, e) => Task.Run(() => SecondTimer_Tick(s, e));
+            _secondsTime.Start();
+            _minutesTime.Tick += (s, e) => Task.Run(() => MinuteTimer_Tick(s, e));
+            _minutesTime.Start();
         }
 
         public static Transform SubtitleTransform => new ScaleTransform(0.9, 1);
