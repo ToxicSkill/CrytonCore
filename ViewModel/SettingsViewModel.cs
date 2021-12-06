@@ -7,23 +7,23 @@ namespace CrytonCore.ViewModel
 {
     public class SettingsViewModel : NotificationClass
     {
-        private readonly App app = System.Windows.Application.Current as App;
-        private readonly Theme theme = new();
-        private readonly Language language = new();
+        private readonly App _app = System.Windows.Application.Current as App;
+        private readonly Theme _theme = new();
+        private readonly Language _language = new();
         private string _selectedTheme;
         private string _selectedLanguage;
-        private BlurEffect effect;
-        private BlurEffect effectCombo;
+        private BlurEffect _effect;
+        private BlurEffect _effectCombo;
 
         public SettingsViewModel()
         {
-            LanguagesCollection = new ObservableCollection<string>(language.Get());
-            ThemesCollection = new ObservableCollection<string>(theme.Get());
+            LanguagesCollection = new ObservableCollection<string>(_language.Get());
+            ThemesCollection = new ObservableCollection<string>(_theme.Get());
 
-            language.FirstRunLanguage();
+            _language.FirstRunLanguage();
 
-            _selectedTheme = theme.GetThemeName();
-            _selectedLanguage = language.GetLanguageName();
+            _selectedTheme = _theme.GetThemeName();
+            _selectedLanguage = _language.GetLanguageName();
 
             SetGlobalLanguageShortName();
             SetGlobalLanguageAndTheme();
@@ -40,7 +40,7 @@ namespace CrytonCore.ViewModel
                 if (value != _selectedTheme)
                 {
                     _selectedTheme = value;
-                    theme.SetTheme(_selectedTheme);
+                    _theme.SetTheme(_selectedTheme);
                     SetGlobalLanguageAndTheme();
                     OnPropertyChanged(nameof(SelectedTheme));
                 }
@@ -54,7 +54,7 @@ namespace CrytonCore.ViewModel
                 if (value != _selectedLanguage)
                 {
                     _selectedLanguage = value;
-                    language.SetLanguage(_selectedLanguage);
+                    _language.SetLanguage(_selectedLanguage);
                     SetGlobalLanguageAndTheme();
                     SetGlobalLanguageShortName();
                     OnPropertyChanged(nameof(SelectedLanguage));
@@ -64,27 +64,27 @@ namespace CrytonCore.ViewModel
 
         private void SetGlobalLanguageAndTheme()
         {
-            app.Resources.MergedDictionaries.Clear();
-            app.Resources.MergedDictionaries.Add(language.GetDictionary());
-            app.Resources.MergedDictionaries.Add(theme.GetDictionary());
+            _app.Resources.MergedDictionaries.Clear();
+            _app.Resources.MergedDictionaries.Add(_language.GetDictionary());
+            _app.Resources.MergedDictionaries.Add(_theme.GetDictionary());
         }
-        private void SetGlobalLanguageShortName() => app.ShortLanguageName = language.GetLanguageShortString();
+        private void SetGlobalLanguageShortName() => _app.ShortLanguageName = _language.GetLanguageShortString();
 
         public BlurEffect Effect
         {
-            get => effect;
+            get => _effect;
             set
             {
-                effect = value;
+                _effect = value;
                 OnPropertyChanged(nameof(Effect));
             }
         }
         public BlurEffect EffectCombo
         {
-            get => effectCombo;
+            get => _effectCombo;
             set
             {
-                effectCombo = value;
+                _effectCombo = value;
                 OnPropertyChanged(nameof(EffectCombo));
             }
         }

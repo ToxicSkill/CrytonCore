@@ -101,6 +101,7 @@ namespace CrytonCore.Model
             }
             return Task.FromResult(bitmap);
         }
+
         private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)
         {
             var max = BGRABytes.Length;
@@ -286,6 +287,14 @@ namespace CrytonCore.Model
         //    return iTextSharp.text.Image.GetInstance(bitmapImage as System.Drawing.Image, new BaseColor(0, 0, 0, 0));
         //}
 
+        private static async Task<IElement> GetImagePage(PdfImportedPage page)
+        {
+            return await Task.Run(() =>
+            {
+                return iTextSharp.text.Image.GetInstance(page);
+            });
+        }
+
         public static async Task<bool> MergePdf(List<string> InFiles, String OutFile)
         {
             Document document = new(PageSize.A4, 0, 0, 0, 0);
@@ -296,14 +305,23 @@ namespace CrytonCore.Model
                 PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(OutFile, FileMode.Create));
                 document.Open();
 
-                InFiles.ForEach(file =>
+                List<Task<IElement>> tasks = new();
+
+                foreach (var file in InFiles)
                 {
                     PdfReader pdfReader = new(file);
                     for (int i = 1; i <= pdfReader.NumberOfPages; i++)
                     {
                         PdfImportedPage page = writer.GetImportedPage(pdfReader, i);
-                        _ = document.Add(iTextSharp.text.Image.GetInstance(page));
+                        tasks.Add(GetImagePage(page));
                     }
+                }
+
+                var pages = await Task.WhenAll(tasks);
+                foreach (var page in pages)
+                {
+                    document.Add(page);
+                }
                 //else
                 //{
                 //    file.MaxQualityFlag = true;
@@ -314,7 +332,7 @@ namespace CrytonCore.Model
                 //    _ = document.Add(image);
                 //    //writer.DirectContent.AddImage(image);
                 //}
-            });
+
                 return true;
             }
             catch (Exception)

@@ -65,10 +65,10 @@ namespace CrytonCore.Model
                     _ = stringBuilder.Append("&product=civil&output=json");
                     var info = GetRequest(stringBuilder.ToString());//.DownloadString(stringBuilder.ToString());
                                                                     // var res = info.GetWebRequest(new Uri(stringBuilder.ToString()));
+                    SetSunraiseSunset(geoLocation);
                     SetWholeForecast(JsonConvert.DeserializeObject<WeatherInfo>(info));
                     SetCurrentWeather(FindCurrnetWeather());
                     SetCurrentWeatherIcon();
-                    SetSunraiseSunset(geoLocation);
                 }
                 catch (Exception)
                 {
@@ -116,6 +116,29 @@ namespace CrytonCore.Model
         {
             var cloundIndex = int.Parse(ActualWeather.Cloudcover);
             var liftedIndex = int.Parse(ActualWeather.LiftedIndex);
+            bool night = false;
+            var (currentTimeHour, currentTimeMinutes)  = (int.Parse(DateTime.Now.ToString("HH")), int.Parse(DateTime.Now.ToString("mm")));
+            string sunset = String.Empty
+                ,sunrise = String.Empty;
+            try
+            {
+                sunset = GetCurrentSunset().PadLeft(5, '0');
+                sunrise = GetCurrentSunrise().PadLeft(5, '0');
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Status = false;
+            }
+
+            var (currentSunsetHours, currentSunsetMinutes) = (int.Parse(sunset[..2]), int.Parse(sunset.Substring(3, 2)));
+            var (currentSunriseHours, currentSunriseMinutes) = (int.Parse(sunrise[..2]), int.Parse(sunrise.Substring(3, 2)));
+
+            if (currentTimeHour == currentSunsetHours)
+                if (currentTimeMinutes >= currentSunsetMinutes)
+                    night = true;
+            if (currentTimeHour > currentSunsetHours && currentTimeHour > currentSunriseHours)
+                night = true;
 
             switch (ActualWeather.PrecType.ToString())
             {
@@ -130,9 +153,9 @@ namespace CrytonCore.Model
                     return;
                 case "none":
                     if (cloundIndex < 3 && liftedIndex > -5)
-                        ActualWeatherIcon = "/CrytonCore;component/Assets/Sun.png";
+                        ActualWeatherIcon = night ? "/CrytonCore;component/Assets/Moon.png" : "/CrytonCore;component/Assets/Sun.png";
                     if (cloundIndex > 2 && cloundIndex < 9 && liftedIndex > -5)
-                        ActualWeatherIcon = "/CrytonCore;component/Assets/PartialSun.png";
+                        ActualWeatherIcon = night ? "/CrytonCore;component/Assets/MoonCloud.png" : "/CrytonCore;component/Assets/PartialSun.png";
                     if (cloundIndex == 9 && liftedIndex > -5)
                         ActualWeatherIcon = "/CrytonCore;component/Assets/Cloud.png";
                     if (liftedIndex < -5)
@@ -143,42 +166,23 @@ namespace CrytonCore.Model
             }
         }
 
-        public async Task UpdateWeather()
-        {
-            await DownloadWeatherForecast(await _web.GetGlobalCoordinates());
-        }
+        public async Task UpdateWeather() => await DownloadWeatherForecast(await _web.GetGlobalCoordinates());
 
-        public SingleWeather GetActualWeather()
-        {
-            return ActualWeather;
-        }
+        public SingleWeather GetActualWeather() => ActualWeather;
 
-        public WeatherInfo GetWholeForecast()
-        {
-            return WholeForecast;
-        }
+        public WeatherInfo GetWholeForecast() => WholeForecast;
 
-        public string GetActualWeatherIcon()
-        {
-            return ActualWeatherIcon;
-        }
+        public string GetActualWeatherIcon() => ActualWeatherIcon;
 
-        public string GetActualTemperature()
-        {
-            return ActualWeather?.Temp.ToString() + "ºC";
-        }
-        public string GetActualWind()
-        {
-            return ActualWeather?.Wind10m.Direction.ToString();
-        }
-        public string GetActualHumidity()
-        {
-            return ActualWeather?.Rh2m.ToString();
-        }
+        public string GetActualTemperature() => ActualWeather?.Temp.ToString() + "ºC";
+        
+        public string GetActualWind() => ActualWeather?.Wind10m.Direction.ToString();
+
+        public string GetActualHumidity() => ActualWeather?.Rh2m.ToString();
 
         public string GetCurrentSunrise()
         {
-            if (Status == false)
+            if (Status == false || TodaySunInfo == null)
                 return string.Empty;
             var sunrise = TodaySunInfo.Details.Sunrise;
             var date = sunrise.ToString().Substring(0, sunrise.Length - 3);
@@ -193,7 +197,7 @@ namespace CrytonCore.Model
 
         public string GetCurrentSunset()
         {
-            if (Status == false)
+            if (Status == false || TodaySunInfo == null)
                 return string.Empty;
             var sunset = TodaySunInfo.Details.Sunset;
             var date = sunset.ToString().Substring(0, sunset.Length - 3);
