@@ -1,4 +1,7 @@
-﻿using CrytonCore.Infra;
+﻿using CrytonCore.Helpers;
+using CrytonCore.Infra;
+using CrytonCore.ViewModel;
+using CrytonCore.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Model
 {
-    public abstract class PDFPageManager : PageManager
+    public abstract class PDFPageManager : PageManager, IFileDragDropTarget
     {
         private class Mode
         {
@@ -35,7 +38,7 @@ namespace CrytonCore.Model
 
         private PDF _PDF = new();
 
-        protected ObservableCollection<int> OrderVector { get; set; } = new ObservableCollection<int>();
+        protected ObservableCollection<int> OrderVector { get; set; } = new();
         protected ObservableCollection<PDF> PDFCollection { get; }
         protected ObservableCollection<BitmapImage> ImagesCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
@@ -44,6 +47,7 @@ namespace CrytonCore.Model
 
         public delegate void RatioComboBoxDelegate();
         public RatioComboBoxDelegate RatioDelegate;
+        public List<PdfPassword> IncorrectPdfList = new();
 
         protected PDFPageManager()
         {
@@ -73,50 +77,76 @@ namespace CrytonCore.Model
             PDFCollection[OrderVector[SelectedItemIndex]].CurrentWidth = (int)_imageBitmap.Width;
         }
 
-        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
+
+        async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
         {
-            List<FileInfo> infos = new();
-            foreach (var name in fileNames)
+            var fileInfos = filePaths.Select(f => new PdfPassword() { Name = new(f)});
+            while (true)
             {
-                infos.Add(name);
+                if (await LoadPdfFile(fileInfos.ToList()))
+                    break;
+                if (CreatePasswordProviderInstantion().ShowDialog() == false)
+                {
+                    IncorrectPdfList = IncorrectPdfList.Where(f => f.Password == String.Empty).ToList();
+                    break;
+                }
+                fileInfos = IncorrectPdfList.Where(x => x.Password.Length > 0).ToList();
+                IncorrectPdfList.Clear();
             }
-            return await LoadFile(infos);
         }
 
-        protected override async Task<bool> LoadFile(IEnumerable<FileInfo> filesInfo)
+        private PasswordProviderWindow CreatePasswordProviderInstantion()
         {
-            var tasks = filesInfo.Select(async url => await AddFileToList(url)).ToList();
+            var dataContextPasswordProvider = new PasswordProviderViewModel(IncorrectPdfList);
+            PasswordProviderWindow passwordProvider = new(dataContextPasswordProvider);
+            return passwordProvider;
+        }
+
+        protected override async Task<bool> LoadPdfFile(IEnumerable<PdfPassword> pdfFiles)
+        {
+            var tasks = pdfFiles.Select(async url => await AddFileToList(url)).ToList();
             var res = await Task.WhenAll(tasks);
-            foreach (var task in tasks)
+            var allPdfsCorrect = true;
+            foreach (var task in tasks.Select((value, i) => new { i, value }))
             {
-                if (task.Result)
+                if (task.value.Result)
                 {
                     if (OrderVector.Count == 0)
                         OrderVector.Add(0);
                     else
                         OrderVector.Add(OrderVector.Max() + 1);
                 }
+                else
+                {
+                    IncorrectPdfList.Add(pdfFiles.ToList()[task.i]);
+                    allPdfsCorrect = false;
+                }
             }
+            
             if (!res.Any(x => x)) return false;
             await UpdateListViewImages();
             UpdateSlider();
             ChangeVisibility(true);
             SetSelectedItemIndex(OrderVector.Max());
-            return true;
+            return allPdfsCorrect;
         }
 
-        private async Task<bool> AddFileToList(FileInfo fileInfo)
+        private async Task<bool> AddFileToList(PdfPassword pdfFile)
         {
             var countBeforeAdd = PDFCollection.Count;
             try
             {
                 if (CurrentMode.OnlyPdf)
                 {
-                    PDFCollection.Add(await PDFManager.LoadPdf(fileInfo));
+                    var newPdf = await PDFManager.LoadPdf(pdfFile);
+                    if (newPdf != null)
+                        PDFCollection.Add(newPdf);
+                    else
+                        return false;
                 }
                 else
                 {
-                    PDFCollection.Add(await PDFManager.LoadImage(fileInfo));
+                    PDFCollection.Add(await PDFManager.LoadImage(pdfFile.Name));
                 }
             }
             catch (Exception)

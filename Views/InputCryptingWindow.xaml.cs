@@ -20,6 +20,7 @@ namespace CrytonCore.Views
         private bool status = false;
         public string CurrentCipher { get; set; }
         public bool Status { get => status; set => Status = value; }
+
         public InputCryptingWindow()
         {
             InitializeComponent();

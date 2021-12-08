@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -15,21 +16,50 @@ namespace CrytonCore.Model
 {
     public class PDFManager
     {
-        public static async Task<PDF> LoadPdf(FileInfo info)
+        public static async Task<PDF> LoadPdf(PdfPassword pdf)
         {
             return await Task.Run(() =>
             {
-                PdfReader reader = new(info.FullName);
-                PDF pdf = new()
+                try
                 {
-                    Info = info,
-                    Name = info.Name,
-                    Bytes = System.IO.File.ReadAllBytes(info.FullName),
-                    TotalPages = reader.NumberOfPages,
-                    CurrentPage = 0
-                };
-                return pdf;
+                    PdfReader reader;
+
+                    if (!string.Equals(pdf.Password, default))
+                    {
+                        var bytePassword = Encoding.ASCII.GetBytes(pdf.Password);
+                        reader = new(pdf.Name.FullName, bytePassword);
+                    }
+                    else
+                    {
+                        reader = new(pdf.Name.FullName);
+                    }
+
+                    return InitializePdf(pdf, reader);
+                }
+                catch (BadPasswordException)
+                {
+                    Console.WriteLine("Bad password provided");
+                    return null;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             });
+        }
+
+        private static PDF InitializePdf(PdfPassword pdfInfo, PdfReader reader)
+        {
+            PDF pdf =  new()
+            {
+                Info = pdfInfo.Name,
+                Name = pdfInfo.Name.Name,
+                Bytes = System.IO.File.ReadAllBytes(pdfInfo.Name.FullName),
+                TotalPages = reader.NumberOfPages,
+                CurrentPage = 0,
+                Password = pdfInfo.Password
+            };
+            return pdf;
         }
 
         public static async Task<PDF> LoadImage(FileInfo info)
@@ -71,7 +101,10 @@ namespace CrytonCore.Model
             {
                 using (IDocLib pdfLibrary = DocLib.Instance)
                 {
-                    using var docReader = pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(pdf.Dimensions));
+                    var reader = string.Equals(pdf.Password, default) ? 
+                        pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(pdf.Dimensions)) : 
+                        pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password, new PageDimensions(pdf.Dimensions));
+                    using var docReader = reader;
                     using var pageReader = docReader.GetPageReader(pdfPageNum);
                     var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
                     rawBytes = RearrangeBytesToRGBA(rawBytes);

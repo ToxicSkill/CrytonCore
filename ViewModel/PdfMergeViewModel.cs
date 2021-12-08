@@ -29,7 +29,15 @@ namespace CrytonCore.ViewModel
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFiles"]
             });
             var dialogResult = openDialog.RunDialog();
-            return dialogResult is not null ? await LoadFile(dialogResult.Select(f => new FileInfo(f)).ToList()) : await Task.Run(() => { return false; });
+            if (dialogResult != null)
+            {
+                if(! await LoadFile(dialogResult.Select(f => new FileInfo(f)).ToList()))
+                {
+                    //PasswordProviderWindow dlg = new(); //chage to PDF password provider
+                    //_ = dlg.ShowDialog();
+                }
+            }
+            return await Task.Run(() => { return false; });
         }
 
         private void MoveIndexes(int selectedIndex, int newIndex)

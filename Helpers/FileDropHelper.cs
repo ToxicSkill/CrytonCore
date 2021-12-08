@@ -62,7 +62,7 @@ namespace CrytonCore.Helpers
             }
             else
             {
-                throw new Exception("FileDragDropTarget object must be of type IFileDragDropTarget");
+                return;
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Interfaces;
+using CrytonCore.Views;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,21 +10,24 @@ using System.Windows;
 
 namespace CrytonCore.Model
 {
-    public class PageManager : NotificationClass, IVisibility, IFileDragDropTarget
+    public class PageManager : NotificationClass, IVisibility
     {
-
-        async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
-        {
-            var fileInfos = filePaths.Select(f => new FileInfo(f));
-            _ = await LoadFileViaDragDrop(fileInfos.ToList());
-        }
-
         protected virtual async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
         {
             return await Task.Run(() => { return false; });
         }
 
         protected virtual async Task<bool> LoadFile(IEnumerable<FileInfo> fileNames)
+        {
+            return await Task.Run(() => { return false; });
+        }
+
+        protected virtual async Task<bool> LoadPdfFileViaDragDrop(IEnumerable<PdfPassword> pdfFiles)
+        {
+            return await Task.Run(() => { return false; });
+        }
+
+        protected virtual async Task<bool> LoadPdfFile(IEnumerable<PdfPassword> pdfFiles)
         {
             return await Task.Run(() => { return false; });
         }

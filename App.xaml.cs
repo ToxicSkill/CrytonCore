@@ -10,6 +10,7 @@ using System.Numerics;
 using CrytonCore.Interfaces;
 using CrytonCore.Helpers;
 using CrytonCore.Views;
+using CrytonCore.Model;
 
 namespace CrytonCore
 {
@@ -18,7 +19,7 @@ namespace CrytonCore
     /// </summary>
     public partial class App : Application
     {
-        //PAGES - NAVIAGTION
+        #region Pages navigation
 
         public delegate void WelcomePageDelegate();
         public static WelcomePageDelegate GoStartPage;
@@ -50,6 +51,7 @@ namespace CrytonCore
         public delegate void PasswordManagerPageDelegate();
         public static PasswordManagerPageDelegate GoPasswordManagerPage;
 
+        #endregion  
 
         //public SummaryPdfMergeUserControl summaryPdfMergeUserControl;
 
@@ -76,7 +78,8 @@ namespace CrytonCore
         public string ShortLanguageName { get; set; }
 
         public static bool AppIsLoaded { get; set; }
-        public Keys AppKeys { get; set; } = new Keys();
+        public Keys AppKeys { get; set; } = new();
+
 
         public string GetCurrentErrorMessage
         {
@@ -88,25 +91,12 @@ namespace CrytonCore
             }
         }
 
-        public class Keys
-        {
-            public List<BigInteger> numericKeys = new();
-            public List<string> stringKeys = new();
-        }
-
         protected override void OnStartup(StartupEventArgs e)
         {
-            InitializeCryptingSettings();
             base.OnStartup(e);
         }
 
-
-        private void InitializeCryptingSettings()
-        {
-            CrytpingSettings.Add(new RSAHelper());
-        }
-
-        public static string GetictionaryString(string name)
+        public static string GetDictionaryString(string name)
         {
             return App.Current.Resources.MergedDictionaries[0][name].ToString();
         }

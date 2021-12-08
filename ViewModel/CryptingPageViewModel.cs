@@ -214,7 +214,7 @@ namespace CrytonCore.ViewModel
             if (_crypting.GetCryptingMethodName().ToUpper() == EnumToString(TypesOfCrypting.RSA).ToUpper())
             {
                 BlurWindow();
-                InputCryptingWindow dlg = new();
+                InputCryptingWindow dlg = new(); 
                 _ = dlg.ShowDialog();
                 UnblurWindow();
             }
@@ -236,16 +236,19 @@ namespace CrytonCore.ViewModel
             _progressDivisor = 1;
             //OnPropertyChanged("CryptingButtonEnabled");
         }
+
         public RelayCommand CancelAction => new(CancelActionCommand, true);
 
         private void CancelActionCommand()
         {
             _cts.Cancel();
         }
+
         private void PercentageReportProgress(object sender, int value)
         {
             SetProgressText((value * 100 / _progressDivisor) + "%");
         }
+
         private void InfoTimer_Tick(object sender, EventArgs e) => ClearProcessInfo();
 
         private void ClearProcessInfo()
@@ -276,6 +279,7 @@ namespace CrytonCore.ViewModel
         {
             ProgressText = value;
         }
+
         private string _processText;
         public string ProcessText
         {
@@ -286,6 +290,7 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(ProcessText));
             }
         }
+
         public string SelectedCryptingMethod
         {
             get => _selectedCryptingMethod;
@@ -297,6 +302,7 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(SelectedCryptingMethod));
             }
         }
+
         public ObservableCollection<string> CryptingMethodsCollection { get; }
 
         private string _selectedRsaCollection;
@@ -325,6 +331,7 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(SelectedCesarCollection));
             }
         }
+
         public ObservableCollection<string> CesarCollection { get; set; }
 
         public bool MoveDetails
@@ -336,6 +343,7 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(MoveDetails));
             }
         }
+
         public RelayCommand AnimationRectangle => new(MoveDetailsWindow, true);
 
         private void MoveDetailsWindow()
@@ -357,6 +365,7 @@ namespace CrytonCore.ViewModel
         private void OpacityChangeFull() => Opacity = 1;
         public RelayCommand ChangeOpacityPartial => new(OpacityChangePartial, true);
         private void OpacityChangePartial() => Opacity = 0.6;
+
         public double OpacityHelp
         {
             get => _opacityHelp;
@@ -417,6 +426,7 @@ namespace CrytonCore.ViewModel
                 OnPropertyChanged(nameof(VisibilityProcess));
             }
         }
+
         public RelayCommand VisibilityHide => new(VisibilityHideCommand, true);
         private void VisibilityHideCommand()
         {

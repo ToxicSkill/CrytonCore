@@ -9,6 +9,8 @@ namespace CrytonCore.Model
 
         public MemoryStream BytesStream { get; set; }
 
+        public string Password { get; set; }
+
         public int CurrentPage { get; set; }
 
         public int TotalPages { get; set; }
