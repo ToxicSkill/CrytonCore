@@ -2,13 +2,13 @@
 using Docnet.Core.Models;
 using ImageMagick;
 using iTextSharp.text;
+using iTextSharp.text.exceptions;
 using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -16,25 +16,20 @@ namespace CrytonCore.Model
 {
     public class PDFManager
     {
-        public static async Task<PDF> LoadPdf(PdfPassword pdf)
+        public static async Task<PDF> LoadPdf(FileInfo info, PdfPassword pdf = default)
         {
             return await Task.Run(() =>
             {
                 try
                 {
                     PdfReader reader;
+                    reader = pdf != default ?
+                    !string.Equals(pdf.Password, string.Empty) ?
+                    reader = new(info.FullName, pdf.GetBytesPassword()) :
+                    reader = new(info.FullName) :
+                    reader = new(info.FullName);
 
-                    if (!string.Equals(pdf.Password, default))
-                    {
-                        var bytePassword = Encoding.ASCII.GetBytes(pdf.Password);
-                        reader = new(pdf.Name.FullName, bytePassword);
-                    }
-                    else
-                    {
-                        reader = new(pdf.Name.FullName);
-                    }
-
-                    return InitializePdf(pdf, reader);
+                    return InitializePdf(pdf, info, reader);
                 }
                 catch (BadPasswordException)
                 {
@@ -48,17 +43,19 @@ namespace CrytonCore.Model
             });
         }
 
-        private static PDF InitializePdf(PdfPassword pdfInfo, PdfReader reader)
+        private static PDF InitializePdf(PdfPassword pdfPassword, FileInfo pdfInfo, PdfReader reader)
         {
             PDF pdf =  new()
             {
-                Info = pdfInfo.Name,
-                Name = pdfInfo.Name.Name,
-                Bytes = System.IO.File.ReadAllBytes(pdfInfo.Name.FullName),
+                Info = pdfInfo,
+                Name = pdfInfo.Name,
+                Bytes = System.IO.File.ReadAllBytes(pdfInfo.FullName),
                 TotalPages = reader.NumberOfPages,
                 CurrentPage = 0,
-                Password = pdfInfo.Password
+                Password = new(),
+                Slider = new() { CurrentIndex = 0, LastIndex = 0, MaxIndex = reader.NumberOfPages - 1}
             };
+            _ = pdf.Password.SetPassword(pdfPassword?.Password);
             return pdf;
         }
 
@@ -66,26 +63,33 @@ namespace CrytonCore.Model
         {
             return await Task.Run(() =>
             {
-                FileStream fileStream = new(info.FullName, FileMode.Open, FileAccess.Read);
-                BitmapImage img = new();
-                img.BeginInit();
-                img.StreamSource = fileStream;
-                img.EndInit();
-                fileStream.Close();
-                (int Width, int Height) = ((int)img.Width, (int)img.Height);
-                return
-                new PDF()
+                try
                 {
-                    Info = info,
-                    HighQuality = true,
-                    Ratio = 0,
-                    Rotation = 0,
-                    Name = info.Name,
-                    SwitchPixels = false,
-                    Bytes = System.IO.File.ReadAllBytes(info.FullName),
-                    Width = Width,
-                    Height = Height
-                };
+                    FileStream fileStream = new(info.FullName, FileMode.Open, FileAccess.Read);
+                    BitmapImage img = new();
+                    img.BeginInit();
+                    img.StreamSource = fileStream;
+                    img.EndInit();
+                    fileStream.Close();
+                    (int Width, int Height) = ((int)img.Width, (int)img.Height);
+                    return
+                    new PDF()
+                    {
+                        Info = info,
+                        HighQuality = true,
+                        Ratio = 0,
+                        Rotation = 0,
+                        Name = info.Name,
+                        SwitchPixels = false,
+                        Bytes = System.IO.File.ReadAllBytes(info.FullName),
+                        Width = Width,
+                        Height = Height
+                    };
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             });
         }
 
@@ -94,7 +98,7 @@ namespace CrytonCore.Model
             MemoryStream memoryStream = new();
             MagickImage imgBackdrop;
             MagickColor backdropColor = MagickColors.White; // replace transparent pixels with this color 
-            int pdfPageNum = pdf.CurrentPage; // first page is 0
+            int pdfPageNum = pdf.Slider.CurrentIndex; // first page is 0
             var bitmap = new BitmapImage();
 
             try
@@ -103,7 +107,7 @@ namespace CrytonCore.Model
                 {
                     var reader = string.Equals(pdf.Password, default) ? 
                         pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(pdf.Dimensions)) : 
-                        pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password, new PageDimensions(pdf.Dimensions));
+                        pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password.Password, new PageDimensions(pdf.Dimensions));
                     using var docReader = reader;
                     using var pageReader = docReader.GetPageReader(pdfPageNum);
                     var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
@@ -328,7 +332,7 @@ namespace CrytonCore.Model
             });
         }
 
-        public static async Task<bool> MergePdf(List<string> InFiles, String OutFile)
+        public static async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, String OutFile)
         {
             Document document = new(PageSize.A4, 0, 0, 0, 0);
             try
@@ -340,9 +344,11 @@ namespace CrytonCore.Model
 
                 List<Task<IElement>> tasks = new();
 
-                foreach (var file in InFiles)
+                PdfReader.unethicalreading = true;
+
+                foreach (var file in files)
                 {
-                    PdfReader pdfReader = new(file);
+                    PdfReader pdfReader = new(file.infos.FullName, file.passwords.GetBytesPassword());
                     for (int i = 1; i <= pdfReader.NumberOfPages; i++)
                     {
                         PdfImportedPage page = writer.GetImportedPage(pdfReader, i);
@@ -355,6 +361,7 @@ namespace CrytonCore.Model
                 {
                     document.Add(page);
                 }
+
                 //else
                 //{
                 //    file.MaxQualityFlag = true;

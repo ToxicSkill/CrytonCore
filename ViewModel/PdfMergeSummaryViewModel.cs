@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
+using iTextSharp.text.pdf;
 
 namespace CrytonCore.ViewModel
 {
     public class PdfMergeSummaryViewModel : PDFPageManager
     {
+        public Dictionary<int, int> SingleSliderDictionary { get; set; }
+
         public PdfMergeSummaryViewModel()
         {
             SetCurrentMode(pdfOnly: true, singleSlider: true);
@@ -30,9 +34,7 @@ namespace CrytonCore.ViewModel
                 FilesView.Add(filesView[i]);
                 PDFCollection.Add(images[orderVector[i]]);
             }
-
             SingleSliderDictionary = new Dictionary<int, int>();
-
             var pastPages = 0;
             for (var j = 0; j < OrderVector.Count; j++)
             {
@@ -43,6 +45,21 @@ namespace CrytonCore.ViewModel
                 pastPages += PDFCollection[j].TotalPages;
             }
             SliderMaximum = SingleSliderDictionary.Count - 1;
+
+            List<(PdfPassword passwords, FileInfo infos)> toMergeList = new();
+            foreach (var pdf in PDFCollection)
+            {
+                toMergeList.Add(new() { passwords = pdf.Password, infos = pdf.Info});
+            }
+
+            _ = PDFManager.MergePdf(toMergeList, @"C:\Users\Adam\Desktop\PDFTEST\sraka.pdf");
+
+            Slider = new()
+            {
+                CurrentIndex = 0,
+                MaxIndex = SliderMaximum
+            };
+
             return SliderMaximum > 0;
             //await UpdateImageSourceAsync();
         }
@@ -52,11 +69,11 @@ namespace CrytonCore.ViewModel
 
         private void MouseEnterCommand()
         {
-            if (!FirstRun) return;
-            SliderValue = 1; // to be shure, that new is different than current (return otherwise)
-            SliderValue = 0;
-            SelectedItemIndex = 0;
-            FirstRun = false;
+            //if (!FirstRun) return;
+            //SliderValue = 1; // to be shure, that new is different than current (return otherwise)
+            //SliderValue = 0;
+            //SelectedItemIndex = 0;
+            //FirstRun = false;
         }
 
         public RelayCommand Cancel => new(CancelCommand, true);
@@ -78,12 +95,12 @@ namespace CrytonCore.ViewModel
             var dialogResult = saveDialog.RunDialog();
             if (dialogResult is not null)
             {
-                var toMergeList = new List<string>();
-                foreach (var pdf in PDFCollection)
-                {
-                    toMergeList.Add(pdf.Info.FullName);
-                }
-                return await MergePdf(toMergeList, dialogResult.First());
+                //var toMergeList = new List<string>();
+                //foreach (var pdf in PDFCollection)
+                //{
+                //    toMergeList.Add(pdf.Info.FullName);
+                //}
+                //return await MergePdf(toMergeList, dialogResult.First());
             }
             return false;
         }

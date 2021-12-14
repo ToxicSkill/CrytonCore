@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Model
 {
@@ -9,7 +8,7 @@ namespace CrytonCore.Model
 
         public MemoryStream BytesStream { get; set; }
 
-        public string Password { get; set; }
+        public PdfPassword Password { get; set; }
 
         public int CurrentPage { get; set; }
 
@@ -20,6 +19,8 @@ namespace CrytonCore.Model
         public double Dimensions { get; set; }
 
         public FileInfo Info { get; set; }
+
+        public ImageSlider Slider { get; set; }
 
         public string Name { get; set; }
 

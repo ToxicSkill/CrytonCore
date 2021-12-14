@@ -17,6 +17,7 @@ namespace CrytonCore.ViewModel
         private Collection<double> ValueRatios;
         private string _selectedRatio;
         private int _ratioIndex;
+
         public string SelectedRatio
         {
             get => _selectedRatio;
@@ -79,13 +80,13 @@ namespace CrytonCore.ViewModel
             if (dialogResult is not null)
             {
                 //return await LoadFile(new[] { dialogResult.First() });
-                await LoadFile(dialogResult.Select(f => new FileInfo(f)).ToList());
+                await LoadPdfFile(dialogResult.Select(f => new FileInfo(f)).ToList());
                 return true;
             }
             return await Task.Run(() => false);
         }
 
-        protected override async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
+        protected async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
         {
             List<FileInfo> filesInfo = new();
             foreach (var file in fileNames)
@@ -95,7 +96,7 @@ namespace CrytonCore.ViewModel
                     file.Extension == "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.png))
                     filesInfo.Add(file);
             }
-            return await LoadFile(filesInfo);
+            return await LoadPdfFile(filesInfo);
         }
 
         private static async Task<string> GetSavePath()
@@ -170,6 +171,7 @@ namespace CrytonCore.ViewModel
             ChangeRatioCurrentImage();
             BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
         }
+
         private BlurEffect _effect;
         private BlurEffect _effectCombo;
 

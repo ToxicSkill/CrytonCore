@@ -1,7 +1,6 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
-using CrytonCore.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,10 +30,10 @@ namespace CrytonCore.ViewModel
             };
         }
 
-        protected override async Task<bool> LoadPdfFileViaDragDrop(IEnumerable<PdfPassword> fileNames)
+        protected async Task<bool> LoadPdfFileViaDragDrop(IEnumerable<FileInfo> pdfsInfos)
         {
             Clear.Execute(null);
-            return await LoadPdfFile(fileNames);
+            return await LoadPdfFile(pdfsInfos.ToList());
         }
 
         public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
@@ -48,16 +47,12 @@ namespace CrytonCore.ViewModel
                 Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFile"]
             }); ;
             var dialogResult = openDialog.RunDialog();
-            if (dialogResult is not null)
+            if (dialogResult != null)
             {
                 Clear.Execute(null);
-                if (!await LoadFile(new[] { new FileInfo(dialogResult.First()) }))
-                {
-                    //PasswordProviderWindow dlg = new(); //chage to PDF password provider
-                    //_ = dlg.ShowDialog();
-                }
+                return await LoadPdfFile(new() { new FileInfo(dialogResult.First()) });
             }
-            return await Task.Run(() => false);
+            return false;
         }
 
         public RelayCommand MoveBack => new(MoveBackCommand, true);
