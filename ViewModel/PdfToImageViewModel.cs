@@ -30,10 +30,10 @@ namespace CrytonCore.ViewModel
             };
         }
 
-        protected async Task<bool> LoadPdfFileViaDragDrop(IEnumerable<FileInfo> pdfsInfos)
+        public override async void OnFileDropAsync(string[] filePaths)
         {
             Clear.Execute(null);
-            return await LoadPdfFile(pdfsInfos.ToList());
+            await LoadPdfFile(filePaths.Select(item => new FileInfo(item)).ToList());
         }
 
         public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);

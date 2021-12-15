@@ -170,7 +170,7 @@ namespace CrytonCore.Model
             }
         }
 
-        async void IFileDragDropTarget.OnFileDropAsync(string[] filePaths)
+        public virtual async void OnFileDropAsync(string[] filePaths)
         {
             await LoadPdfFile(filePaths.Select(item => new FileInfo(item)).ToList());
         }

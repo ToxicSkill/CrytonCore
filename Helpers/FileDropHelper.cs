@@ -1,13 +1,13 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CrytonCore.Helpers
-{/// <summary>
- /// IFileDragDropTarget Interface
- /// </summary>
+{
+    /// <summary>
+    /// IFileDragDropTarget Interface
+    /// </summary>
     public interface IFileDragDropTarget
     {
-        void OnFileDropAsync(string[] filePaths);
+        public void OnFileDropAsync(string[] filePaths);
     }
 
     /// <summary>
