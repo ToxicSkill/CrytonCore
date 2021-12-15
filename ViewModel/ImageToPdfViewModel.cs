@@ -1,5 +1,6 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
+using CrytonCore.Interfaces;
 using CrytonCore.Model;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace CrytonCore.ViewModel
         private Collection<double> ValueRatios;
         private string _selectedRatio;
         private int _ratioIndex;
-
+        private readonly IPdfManager _pdfManager;
         public string SelectedRatio
         {
             get => _selectedRatio;
@@ -33,6 +34,7 @@ namespace CrytonCore.ViewModel
 
         public ImageToPdfViewModel()
         {
+            _pdfManager = new PDFManager();
             InitializeRatios();
             RatioDelegate = new(ChangeRatioComboBoxItemCurrentImage);
             SetCurrentMode(pdfOnly: false, singleSlider: false);
@@ -115,7 +117,7 @@ namespace CrytonCore.ViewModel
         private async Task MoveNextCommand(object o)
         {
             var currnetPdf = GetCurrentPDF();
-            _ = await PDFManager.ImageToPdf(currnetPdf, await PDFManager.ManipulateImage(GetCurrentPDF()), await GetSavePath());
+            _ = await _pdfManager.ImageToPdf(currnetPdf, await _pdfManager.ManipulateImage(GetCurrentPDF()), await GetSavePath());
         }
 
         public RelayCommand MoveBack => new(MoveBackCommand, true);
@@ -142,7 +144,7 @@ namespace CrytonCore.ViewModel
         private async Task RotateImageCommand(object o)
         {
             RotateCurrentImage90Degrees();
-            BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
+            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
         }
 
         private void SwitchPixelsCurrentImage()
@@ -155,7 +157,7 @@ namespace CrytonCore.ViewModel
         private async Task SwitchImageCommand(object o)
         {
             SwitchPixelsCurrentImage();
-            BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
+            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
         }
 
         private void ChangeRatioCurrentImage()
@@ -169,7 +171,7 @@ namespace CrytonCore.ViewModel
         private async Task RatioImageCommand(object o)
         {
             ChangeRatioCurrentImage();
-            BitmapSource = await PDFManager.ManipulateImage(GetCurrentPDF());
+            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
         }
 
         private BlurEffect _effect;

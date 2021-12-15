@@ -1,4 +1,5 @@
-﻿using Docnet.Core;
+﻿using CrytonCore.Interfaces;
+using Docnet.Core;
 using Docnet.Core.Models;
 using ImageMagick;
 using iTextSharp.text;
@@ -14,9 +15,9 @@ using System.Windows.Media.Imaging;
 
 namespace CrytonCore.Model
 {
-    public class PDFManager
+    public class PDFManager : IPdfManager
     {
-        public static async Task<PDF> LoadPdf(FileInfo info, PdfPassword pdf = default)
+        public async Task<PDF> LoadPdf(FileInfo info, PdfPassword pdf = default)
         {
             return await Task.Run(() =>
             {
@@ -45,7 +46,7 @@ namespace CrytonCore.Model
 
         private static PDF InitializePdf(PdfPassword pdfPassword, FileInfo pdfInfo, PdfReader reader)
         {
-            PDF pdf =  new()
+            PDF pdf = new()
             {
                 Info = pdfInfo,
                 Name = pdfInfo.Name,
@@ -53,13 +54,13 @@ namespace CrytonCore.Model
                 TotalPages = reader.NumberOfPages,
                 CurrentPage = 0,
                 Password = new(),
-                Slider = new() { CurrentIndex = 0, LastIndex = 0, MaxIndex = reader.NumberOfPages - 1}
+                Slider = new() { CurrentIndex = 0, LastIndex = 0, MaxIndex = reader.NumberOfPages - 1 }
             };
             _ = pdf.Password.SetPassword(pdfPassword?.Password);
             return pdf;
         }
 
-        public static async Task<PDF> LoadImage(FileInfo info)
+        public async Task<PDF> LoadImage(FileInfo info)
         {
             return await Task.Run(() =>
             {
@@ -93,7 +94,7 @@ namespace CrytonCore.Model
             });
         }
 
-        public static Task<BitmapImage> GetImageFromPdf(PDF pdf)
+        public Task<BitmapImage> GetImageFromPdf(PDF pdf)
         {
             MemoryStream memoryStream = new();
             MagickImage imgBackdrop;
@@ -105,8 +106,8 @@ namespace CrytonCore.Model
             {
                 using (IDocLib pdfLibrary = DocLib.Instance)
                 {
-                    var reader = string.Equals(pdf.Password, default) ? 
-                        pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(pdf.Dimensions)) : 
+                    var reader = string.Equals(pdf.Password, default) ?
+                        pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(pdf.Dimensions)) :
                         pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password.Password, new PageDimensions(pdf.Dimensions));
                     using var docReader = reader;
                     using var pageReader = docReader.GetPageReader(pdfPageNum);
@@ -167,7 +168,7 @@ namespace CrytonCore.Model
             return RGBABytes;
         }
 
-        public static bool SavePdfImage(PDF pdf, string outputPath)
+        public bool SavePdfImage(PDF pdf, string outputPath)
         {
             try
             {
@@ -186,7 +187,7 @@ namespace CrytonCore.Model
             return true;
         }
 
-        public static async Task<bool> ImageToPdf(PDF pdf, BitmapImage bitmap, string outputPath)
+        public async Task<bool> ImageToPdf(PDF pdf, BitmapImage bitmap, string outputPath)
         {
             return await Task.Run(async () =>
             {
@@ -217,7 +218,7 @@ namespace CrytonCore.Model
             });
         }
 
-        public static bool SavePdfPageImage(string path, BitmapImage bitmapImage)
+        public bool SavePdfPageImage(string path, BitmapImage bitmapImage)
         {
             try
             {
@@ -232,7 +233,7 @@ namespace CrytonCore.Model
             return true;
         }
 
-        public static async Task<bool> SavePdfPagesImages(PDF pdf, string outputPath)
+        public async Task<bool> SavePdfPagesImages(PDF pdf, string outputPath)
         {
             try
             {
@@ -271,7 +272,7 @@ namespace CrytonCore.Model
             return new Bitmap(bitmap);
         }
 
-        public static Task<BitmapImage> ManipulateImage(PDF pdf)
+        public Task<BitmapImage> ManipulateImage(PDF pdf)
         {
             return Task.Run(() =>
             {
@@ -317,13 +318,6 @@ namespace CrytonCore.Model
             });
         }
 
-        //private iTextSharp.text.Image ImageToPage()
-        //{
-        //    var imageRes = ImageToBitmap();
-        //    var bitmapImage = BitmapImage2Bitmap(imageRes);
-        //    return iTextSharp.text.Image.GetInstance(bitmapImage as System.Drawing.Image, new BaseColor(0, 0, 0, 0));
-        //}
-
         private static async Task<IElement> GetImagePage(PdfImportedPage page)
         {
             return await Task.Run(() =>
@@ -332,14 +326,47 @@ namespace CrytonCore.Model
             });
         }
 
-        public static async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, String OutFile)
+        //public async Task<bool> Merge20(List<(PdfPassword passwords, FileInfo infos)> files, String OutFile)
+        //{
+        //    return await Task.Run(() =>
+        //    {
+        //        var firstFile = files[0];
+        //        using (PdfReader readerFirst = new(firstFile.infos.FullName, firstFile.passwords.GetBytesPassword()))
+        //        using (PdfStamper stamper = new(readerFirst, new FileStream(OutFile, FileMode.Create)))
+        //        {
+        //            foreach (var file in files.Skip(1))
+        //            {
+        //                using (PdfReader reader = new(file.infos.FullName, file.passwords.GetBytesPassword()))
+        //                {
+        //                    for (var readerPage = 1; readerPage < reader.NumberOfPages; ++readerPage)
+        //                    {
+        //                        PdfImportedPage singlePage = stamper.GetImportedPage(reader, readerPage);
+        //                        iTextSharp.text.Rectangle pageRect = reader.GetPageSizeWithRotation(readerPage);
+        //                        for (int page = readerFirst.NumberOfPages + 1; page > 1; page--)
+        //                        {
+        //                            stamper.InsertPage(page, pageRect);
+        //                            stamper.GetOverContent(page).AddTemplate(singlePage, pageRect.Left, pageRect.Bottom);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        return true;
+        //    }
+        //    );
+        //}
+
+        public async Task SavePdf(string outFile, byte[] bytes)
+        {
+            await System.IO.File.WriteAllBytesAsync(outFile, bytes); // Requires System.IO
+        }
+
+        public  async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile)
         {
             Document document = new(PageSize.A4, 0, 0, 0, 0);
             try
             {
-                //Define a new output document and its size, type
-                //Create blank output pdf file and get the stream to write on it.
-                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(OutFile, FileMode.Create));
+                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(outFile, FileMode.Create));
                 document.Open();
 
                 List<Task<IElement>> tasks = new();
@@ -361,18 +388,6 @@ namespace CrytonCore.Model
                 {
                     document.Add(page);
                 }
-
-                //else
-                //{
-                //    file.MaxQualityFlag = true;
-                //    ImagePDF = file;
-                //    iTextSharp.text.Image image = ImageToPage();
-                //    image.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
-                //    _ = document.Add(PageSize.A4);
-                //    _ = document.Add(image);
-                //    //writer.DirectContent.AddImage(image);
-                //}
-
                 return true;
             }
             catch (Exception)

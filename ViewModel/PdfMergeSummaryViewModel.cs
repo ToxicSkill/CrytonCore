@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -6,74 +7,47 @@ using System.Threading.Tasks;
 using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
-using iTextSharp.text.pdf;
 
 namespace CrytonCore.ViewModel
 {
     public class PdfMergeSummaryViewModel : PDFPageManager
     {
-        public Dictionary<int, int> SingleSliderDictionary { get; set; }
+        private readonly string _defaultTemporaryPath = @"temp.pdf";
 
         public PdfMergeSummaryViewModel()
         {
             SetCurrentMode(pdfOnly: true, singleSlider: true);
-            FirstRun = true;
         }
 
-        public bool Update(
-            ObservableCollection<FileListView> filesView,
+        public async Task<bool> Update(
             ObservableCollection<PDF> images,
             ObservableCollection<int> orderVector)
         {
-            FilesView.Clear();
-            PDFCollection.Clear();
-            OrderVector = orderVector;
+            ClearCollections();
 
-            for (var i = 0; i < OrderVector.Count; i++)
-            {
-                FilesView.Add(filesView[i]);
+            for (var i = 0; i < images.Count; i++)
                 PDFCollection.Add(images[orderVector[i]]);
-            }
-            SingleSliderDictionary = new Dictionary<int, int>();
-            var pastPages = 0;
-            for (var j = 0; j < OrderVector.Count; j++)
-            {
-                for (var i = pastPages; i < PDFCollection[j].TotalPages + pastPages; i++)
-                {
-                    SingleSliderDictionary.Add(i, j);
-                }
-                pastPages += PDFCollection[j].TotalPages;
-            }
-            SliderMaximum = SingleSliderDictionary.Count - 1;
 
-            List<(PdfPassword passwords, FileInfo infos)> toMergeList = new();
-            foreach (var pdf in PDFCollection)
+            var mergeList = (from pdf 
+                             in PDFCollection 
+                             select (new Tuple<PdfPassword, FileInfo>(pdf.Password, pdf.Info))
+                             .ToValueTuple())
+                             .ToList();
+            
+            if (await MergePdf(mergeList, _defaultTemporaryPath))
             {
-                toMergeList.Add(new() { passwords = pdf.Password, infos = pdf.Info});
+                ClearCollections();
+                return await LoadPdfFile(new() { new(_defaultTemporaryPath) });
             }
 
-            _ = PDFManager.MergePdf(toMergeList, @"C:\Users\Adam\Desktop\PDFTEST\sraka.pdf");
-
-            Slider = new()
-            {
-                CurrentIndex = 0,
-                MaxIndex = SliderMaximum
-            };
-
-            return SliderMaximum > 0;
-            //await UpdateImageSourceAsync();
+            return false;
         }
 
-        private bool FirstRun;
-        public RelayCommand MouseEnterEvent => new(MouseEnterCommand, true);
-
-        private void MouseEnterCommand()
+        private void ClearCollections()
         {
-            //if (!FirstRun) return;
-            //SliderValue = 1; // to be shure, that new is different than current (return otherwise)
-            //SliderValue = 0;
-            //SelectedItemIndex = 0;
-            //FirstRun = false;
+            PDFCollection.Clear();
+            OrderVector.Clear();
+            FilesView.Clear();
         }
 
         public RelayCommand Cancel => new(CancelCommand, true);
@@ -95,12 +69,7 @@ namespace CrytonCore.ViewModel
             var dialogResult = saveDialog.RunDialog();
             if (dialogResult is not null)
             {
-                //var toMergeList = new List<string>();
-                //foreach (var pdf in PDFCollection)
-                //{
-                //    toMergeList.Add(pdf.Info.FullName);
-                //}
-                //return await MergePdf(toMergeList, dialogResult.First());
+                await SavePdf(dialogResult.First(), PDFCollection[0].Bytes);
             }
             return false;
         }

@@ -98,23 +98,25 @@ namespace CrytonCore.ViewModel
                 Console.WriteLine(exception);
             }
         }
-        public RelayCommand MoveNext => new(MoveNextCommand, true);
+        public RelayCommand MoveNext => new(MoveNextCommandAsync, true);
 
-        private void MoveNextCommand()
+        private async void MoveNextCommandAsync()
         {
+            if (PDFCollection.Count == 1)
+                return;
             try
             {
-                App.GoSummaryPdfMergePage.Invoke(GetSummaryPage());
+                App.GoSummaryPdfMergePage.Invoke(await GetSummaryPage());
             }
             catch (Exception)
             {
             }
         }
 
-        private SummaryPdfMergePage GetSummaryPage()
+        private async Task<SummaryPdfMergePage>  GetSummaryPage()
         {
             if (_summaryPage == null) _summaryPage = new SummaryPdfMergePage();
-            var result = ((PdfMergeSummaryViewModel)_summaryPage.DataContext).Update(FilesView, PDFCollection,
+            var result = await ((PdfMergeSummaryViewModel)_summaryPage.DataContext).Update(PDFCollection,
                 OrderVector);
             return result ? _summaryPage : null;
         }

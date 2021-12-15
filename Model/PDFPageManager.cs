@@ -1,5 +1,6 @@
 ﻿using CrytonCore.Helpers;
 using CrytonCore.Infra;
+using CrytonCore.Interfaces;
 using CrytonCore.ViewModel;
 using CrytonCore.Views;
 using System;
@@ -28,6 +29,8 @@ namespace CrytonCore.Model
 
         private PDF _PDF = new();
 
+        private readonly IPdfManager _pdfManager;
+       
         protected ObservableCollection<int> OrderVector { get; set; } = new();
         protected ObservableCollection<PDF> PDFCollection { get; }
         protected ObservableCollection<BitmapImage> ImagesCollection { get; }
@@ -39,6 +42,7 @@ namespace CrytonCore.Model
 
         protected PDFPageManager()
         {
+            _pdfManager = new PDFManager();
             FilesView = new ObservableCollection<FileListView>();// { new FileListView() { FileName = ":dadaw", FilePath="dadw", Order = 1 } };
             PDFCollection = new ObservableCollection<PDF>();
             //Slider = new ImageSlider() { CurrentIndex = 0 };
@@ -65,33 +69,33 @@ namespace CrytonCore.Model
             PDFCollection[OrderVector[SelectedItemIndex]].CurrentWidth = (int)_imageBitmap.Width;
         }
 
-        private static async Task<PDF> LoadPDF(FileInfo pdfInfo, PdfPassword pdfPassword)
+        private async Task<PDF> LoadPDF(FileInfo pdfInfo, PdfPassword pdfPassword)
         {
-            return await PDFManager.LoadPdf(pdfInfo, pdfPassword);
+            return await _pdfManager.LoadPdf(pdfInfo, pdfPassword);
         }
 
-        private static async Task<PDF> LoadImagePDF(FileInfo pdfInfo)
+        private  async Task<PDF> LoadImagePDF(FileInfo pdfInfo)
         {
-            return await PDFManager.LoadImage(pdfInfo);
+            return await _pdfManager.LoadImage(pdfInfo);
         }
 
-        private async Task<bool> AccumulatePDF(string[] paths)
-        {
-            foreach (var path in paths)
-            {
-                var pdf = CurrentMode.OnlyPdf ?
-                    await LoadPDF(new(path), new()) :
-                    await LoadImagePDF(new(path));
-                if (pdf == null)
-                {
-                    IncorrectPdfList.Add(new(path));
-                    continue;
-                }
-                PDFCollection.Add(pdf);
-                FillOrderVector();
-            }
-            return paths.Length - IncorrectPdfList.Count != 0;
-        }
+        //private async Task<bool> AccumulatePDF(string[] paths)
+        //{
+        //    foreach (var path in paths)
+        //    {
+        //        var pdf = CurrentMode.OnlyPdf ?
+        //            await LoadPDF(new(path), new()) :
+        //            await LoadImagePDF(new(path));
+        //        if (pdf == null)
+        //        {
+        //            IncorrectPdfList.Add(new(path));
+        //            continue;
+        //        }
+        //        PDFCollection.Add(pdf);
+        //        FillOrderVector();
+        //    }
+        //    return paths.Length - IncorrectPdfList.Count != 0;
+        //}
 
         private async Task<bool> AccumulatePDF(List<(FileInfo info, PdfPassword password)> pdfs)
         {
@@ -287,12 +291,22 @@ namespace CrytonCore.Model
 
         protected bool SavePdfPageImage(string path)
         {
-            return PDFManager.SavePdfPageImage(path, BitmapSource);
+            return _pdfManager.SavePdfPageImage(path, BitmapSource);
         }
 
         protected async Task<bool> SavePdfPagesImages(string path)
         {
-            return await PDFManager.SavePdfPagesImages(_PDF, path);
+            return await _pdfManager.SavePdfPagesImages(_PDF, path);
+        }
+
+        protected async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile)
+        {
+            return await _pdfManager.MergePdf(files, outFile);
+        }
+
+        protected async Task SavePdf(string outFile, byte[] bytes)
+        {
+            await _pdfManager.SavePdf(outFile, bytes);
         }
 
         private BitmapImage _imageBitmap;
@@ -314,12 +328,12 @@ namespace CrytonCore.Model
             if (!CurrentMode.OnlyPdf)
             {
                 RatioDelegate.Invoke();
-                BitmapSource = await PDFManager.ManipulateImage(_PDF);
+                BitmapSource = await _pdfManager.ManipulateImage(_PDF);
                 return;
             }
             if (!CurrentMode.SingleSlide)
             {
-                BitmapSource = await PDFManager.GetImageFromPdf(_PDF);
+                BitmapSource = await _pdfManager.GetImageFromPdf(_PDF);
             }
             else
             {
@@ -331,7 +345,7 @@ namespace CrytonCore.Model
                     Slider.CurrentIndex > 0 ?
                     currentPage - Slider.MaxIndex - 1 :
                     currentPage;
-                    BitmapSource = await PDFManager.GetImageFromPdf(_PDF);
+                    BitmapSource = await _pdfManager.GetImageFromPdf(_PDF);
                 }
                 catch (Exception ex)
                 {
@@ -347,7 +361,9 @@ namespace CrytonCore.Model
             if (Slider is null)
                 return;
 
-            SliderVisibility = Slider.MaxIndex > 0 ? Visibility.Visible : Visibility.Hidden;
+            SliderVisibility = Slider.MaxIndex > 0 ? 
+                Visibility.Visible : 
+                Visibility.Hidden;
 
             OnPropertyChanged(nameof(SliderValue));
             OnPropertyChanged(nameof(SliderMaximum));
