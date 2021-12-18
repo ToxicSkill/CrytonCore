@@ -25,19 +25,29 @@ namespace CrytonCore.ViewModel
         {
             ClearCollections();
 
+            List<FileListView> views = new();
+
             for (var i = 0; i < images.Count; i++)
-                PDFCollection.Add(images[orderVector[i]]);
+            {
+                PdfCollection.Add(images[orderVector[i]]);
+                views.Add(new() { FileName = PdfCollection.Last().Info.Name, Order = i + 1});
+            }
 
             var mergeList = (from pdf 
-                             in PDFCollection 
+                             in PdfCollection 
                              select (new Tuple<PdfPassword, FileInfo>(pdf.Password, pdf.Info))
                              .ToValueTuple())
                              .ToList();
-            
+
             if (await MergePdf(mergeList, _defaultTemporaryPath))
             {
                 ClearCollections();
-                return await LoadPdfFile(new() { new(_defaultTemporaryPath) });
+                if (await LoadPdfFile(new() { new(_defaultTemporaryPath) }))
+                {
+                    FilesView = new(views);
+                    OnPropertyChanged(nameof(FilesView));
+                    return true;
+                }
             }
 
             return false;
@@ -45,7 +55,7 @@ namespace CrytonCore.ViewModel
 
         private void ClearCollections()
         {
-            PDFCollection.Clear();
+            PdfCollection.Clear();
             OrderVector.Clear();
             FilesView.Clear();
         }
@@ -69,7 +79,7 @@ namespace CrytonCore.ViewModel
             var dialogResult = saveDialog.RunDialog();
             if (dialogResult is not null)
             {
-                await SavePdf(dialogResult.First(), PDFCollection[0].Bytes);
+                await SavePdf(dialogResult.First(), PdfCollection.First().Bytes);
             }
             return false;
         }

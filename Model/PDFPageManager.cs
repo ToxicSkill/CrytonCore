@@ -16,23 +16,15 @@ namespace CrytonCore.Model
 {
     public abstract class PDFPageManager : PageManager, IFileDragDropTarget
     {
-        private class Mode
-        {
-            public bool SingleSlide { get; set; }
-
-            public bool OnlyPdf { get; set; } = true;
-        }
-
-        private Mode CurrentMode { get; set; }
 
         private bool FirstRun { get; set; }
 
-        private PDF _PDF = new();
-
+        private IMode CurrentMode;
         private readonly IPdfManager _pdfManager;
-       
+        private IPdf _currentPdf;
+
         protected ObservableCollection<int> OrderVector { get; set; } = new();
-        protected ObservableCollection<PDF> PDFCollection { get; }
+        protected ObservableCollection<PDF> PdfCollection { get; }
         protected ObservableCollection<BitmapImage> ImagesCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
         public ImageSlider Slider = new();
@@ -42,66 +34,49 @@ namespace CrytonCore.Model
 
         protected PDFPageManager()
         {
+            _currentPdf = new PDF();
             _pdfManager = new PDFManager();
             FilesView = new ObservableCollection<FileListView>();// { new FileListView() { FileName = ":dadaw", FilePath="dadw", Order = 1 } };
-            PDFCollection = new ObservableCollection<PDF>();
+            PdfCollection = new ObservableCollection<PDF>();
             //Slider = new ImageSlider() { CurrentIndex = 0 };
         }
 
         protected void SetCurrentMode(bool pdfOnly, bool singleSlider)
         {
-            CurrentMode = new Mode() { OnlyPdf = pdfOnly, SingleSlide = singleSlider };
+            CurrentMode = new Mode(pdfOnly, singleSlider);
         }
 
         protected void SetPdfHighQuality(bool highQuality)
         {
-            _PDF.SetHighQuality(highQuality);
+            _currentPdf.SetQuality(highQuality);
         }
 
         protected PDF GetCurrentPDF()
         {
-            return PDFCollection[OrderVector[SelectedItemIndex]];
+            return PdfCollection[OrderVector[SelectedItemIndex]];
         }
 
         protected void UpdatePdfImageDimensions()
         {
-            PDFCollection[OrderVector[SelectedItemIndex]].CurrentHeight = (int)_imageBitmap.Height;
-            PDFCollection[OrderVector[SelectedItemIndex]].CurrentWidth = (int)_imageBitmap.Width;
+            PdfCollection[OrderVector[SelectedItemIndex]].SetCurrentHeight((int)_imageBitmap.Height);
+            PdfCollection[OrderVector[SelectedItemIndex]].SetCurrentWidth((int)_imageBitmap.Width);
         }
 
-        private async Task<PDF> LoadPDF(FileInfo pdfInfo, PdfPassword pdfPassword)
+        private async Task<IPdf> LoadPDF(FileInfo pdfInfo, PdfPassword pdfPassword)
         {
             return await _pdfManager.LoadPdf(pdfInfo, pdfPassword);
         }
 
-        private  async Task<PDF> LoadImagePDF(FileInfo pdfInfo)
+        private  async Task<IPdf> LoadImagePDF(FileInfo pdfInfo)
         {
             return await _pdfManager.LoadImage(pdfInfo);
         }
-
-        //private async Task<bool> AccumulatePDF(string[] paths)
-        //{
-        //    foreach (var path in paths)
-        //    {
-        //        var pdf = CurrentMode.OnlyPdf ?
-        //            await LoadPDF(new(path), new()) :
-        //            await LoadImagePDF(new(path));
-        //        if (pdf == null)
-        //        {
-        //            IncorrectPdfList.Add(new(path));
-        //            continue;
-        //        }
-        //        PDFCollection.Add(pdf);
-        //        FillOrderVector();
-        //    }
-        //    return paths.Length - IncorrectPdfList.Count != 0;
-        //}
 
         private async Task<bool> AccumulatePDF(List<(FileInfo info, PdfPassword password)> pdfs)
         {
             foreach (var pdf in pdfs)
             {
-                var newPdf = CurrentMode.OnlyPdf ?
+                var newPdf = CurrentMode.GetCurrentPdfMode() ?
                     await LoadPDF(pdf.info, pdf.password) :
                     await LoadImagePDF(pdf.info);
                 if (newPdf == null)
@@ -109,7 +84,7 @@ namespace CrytonCore.Model
                     IncorrectPdfList.Add(new(pdf.info));
                     continue;
                 }
-                PDFCollection.Add(newPdf);
+                PdfCollection.Add((PDF)newPdf);
                 FillOrderVector();
             }
             return pdfs.Count - IncorrectPdfList.Count != 0;
@@ -119,7 +94,7 @@ namespace CrytonCore.Model
         {
             foreach (var pdf in pdfInfos)
             {
-                var newPdf = CurrentMode.OnlyPdf ?
+                var newPdf = CurrentMode.GetCurrentPdfMode() ?
                     await LoadPDF(pdf, default) :
                     await LoadImagePDF(pdf);
                 if (newPdf == null)
@@ -127,7 +102,7 @@ namespace CrytonCore.Model
                     IncorrectPdfList.Add(new(pdf));
                     continue;
                 }
-                PDFCollection.Add(newPdf);
+                PdfCollection.Add((PDF)newPdf);
                 FillOrderVector();
             }
             return pdfInfos.Count - IncorrectPdfList.Count != 0;
@@ -204,7 +179,7 @@ namespace CrytonCore.Model
         protected void RemoveIndexes(int selectedIndex)
         {
             FilesView.RemoveAt(selectedIndex);
-            PDFCollection.RemoveAt(OrderVector[selectedIndex]);
+            PdfCollection.RemoveAt(OrderVector[selectedIndex]);
             var orderValue = OrderVector[selectedIndex];
             OrderVector.RemoveAt(selectedIndex);
             for (var i = 0; i < OrderVector.Count; i++)
@@ -245,7 +220,7 @@ namespace CrytonCore.Model
             SetSliderIndex(0);
             FilesView.Clear();
             OrderVector.Clear();
-            PDFCollection.Clear();
+            PdfCollection.Clear();
         }
 
         private async Task UpdateListViewImages()
@@ -255,13 +230,13 @@ namespace CrytonCore.Model
             FilesView.Clear();
             var orderIndex = 0;
 
-            foreach (var pdf in PDFCollection)
+            foreach (var pdf in PdfCollection)
             {
                 orderIndex++;
                 var file = new FileListView()
                 {
                     Order = orderIndex,
-                    FileName = pdf.Name
+                    FileName = pdf.Info.Name
                 };
 
                 FilesView.Add(file);
@@ -296,7 +271,7 @@ namespace CrytonCore.Model
 
         protected async Task<bool> SavePdfPagesImages(string path)
         {
-            return await _pdfManager.SavePdfPagesImages(_PDF, path);
+            return await _pdfManager.SavePdfPagesImages(_currentPdf, path);
         }
 
         protected async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile)
@@ -325,27 +300,26 @@ namespace CrytonCore.Model
 
         protected async Task UpdateImageSourceAsync()
         {
-            if (!CurrentMode.OnlyPdf)
+            if (!CurrentMode.GetCurrentPdfMode())
             {
                 RatioDelegate.Invoke();
-                BitmapSource = await _pdfManager.ManipulateImage(_PDF);
+                BitmapSource = await _pdfManager.ManipulateImage(_currentPdf);
                 return;
             }
-            if (!CurrentMode.SingleSlide)
+            if (!CurrentMode.GetCurrentSlideMode())
             {
-                BitmapSource = await _pdfManager.GetImageFromPdf(_PDF);
+                BitmapSource = await _pdfManager.GetImageFromPdf(_currentPdf);
             }
             else
             {
                 try
                 {
-                    Slider = _PDF.Slider;
+                    Slider = _currentPdf.GetSlider();
                     var currentPage = Slider.CurrentIndex;
-                    _PDF.CurrentPage =
-                    Slider.CurrentIndex > 0 ?
-                    currentPage - Slider.MaxIndex - 1 :
-                    currentPage;
-                    BitmapSource = await _pdfManager.GetImageFromPdf(_PDF);
+                    _currentPdf.SetCurrentPage(Slider.CurrentIndex > 0 ?
+                        currentPage - Slider.MaxIndex - 1 :
+                        currentPage);
+                    BitmapSource = await _pdfManager.GetImageFromPdf(_currentPdf);
                 }
                 catch (Exception ex)
                 {
@@ -356,7 +330,7 @@ namespace CrytonCore.Model
 
         private void UpdateCurrentSlider()
         {
-            Slider = _PDF.Slider;
+            Slider = _currentPdf.GetSlider();
 
             if (Slider is null)
                 return;
@@ -372,7 +346,7 @@ namespace CrytonCore.Model
 
         private async Task UpdateCurrentPDF()
         {
-            _PDF = PDFCollection[OrderVector[SelectedItemIndex]];
+            _currentPdf = PdfCollection[OrderVector[SelectedItemIndex]];
             UpdateCurrentSlider();
             await UpdateImageSourceAsync();
         }

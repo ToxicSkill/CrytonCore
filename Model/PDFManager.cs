@@ -17,7 +17,7 @@ namespace CrytonCore.Model
 {
     public class PDFManager : IPdfManager
     {
-        public async Task<PDF> LoadPdf(FileInfo info, PdfPassword pdf = default)
+        public async Task<IPdf> LoadPdf(FileInfo info, PdfPassword pdf = default)
         {
             return await Task.Run(() =>
             {
@@ -44,23 +44,21 @@ namespace CrytonCore.Model
             });
         }
 
-        private static PDF InitializePdf(PdfPassword pdfPassword, FileInfo pdfInfo, PdfReader reader)
+        private static IPdf InitializePdf(PdfPassword pdfPassword, FileInfo pdfInfo, PdfReader reader)
         {
             PDF pdf = new()
             {
                 Info = pdfInfo,
-                Name = pdfInfo.Name,
                 Bytes = System.IO.File.ReadAllBytes(pdfInfo.FullName),
                 TotalPages = reader.NumberOfPages,
-                CurrentPage = 0,
-                Password = new(),
                 Slider = new() { CurrentIndex = 0, LastIndex = 0, MaxIndex = reader.NumberOfPages - 1 }
             };
+            pdf.SetCurrentPage(0);
             _ = pdf.Password.SetPassword(pdfPassword?.Password);
             return pdf;
         }
 
-        public async Task<PDF> LoadImage(FileInfo info)
+        public async Task<IPdf> LoadImage(FileInfo info)
         {
             return await Task.Run(() =>
             {
@@ -74,17 +72,10 @@ namespace CrytonCore.Model
                     fileStream.Close();
                     (int Width, int Height) = ((int)img.Width, (int)img.Height);
                     return
-                    new PDF()
+                    new PDF(Width, Height)
                     {
                         Info = info,
-                        HighQuality = true,
-                        Ratio = 0,
-                        Rotation = 0,
-                        Name = info.Name,
-                        SwitchPixels = false,
-                        Bytes = System.IO.File.ReadAllBytes(info.FullName),
-                        Width = Width,
-                        Height = Height
+                        Bytes = System.IO.File.ReadAllBytes(info.FullName)
                     };
                 }
                 catch (Exception)
@@ -94,21 +85,24 @@ namespace CrytonCore.Model
             });
         }
 
-        public Task<BitmapImage> GetImageFromPdf(PDF pdf)
+        public Task<BitmapImage> GetImageFromPdf(IPdf pdf)
         {
             MemoryStream memoryStream = new();
             MagickImage imgBackdrop;
             MagickColor backdropColor = MagickColors.White; // replace transparent pixels with this color 
-            int pdfPageNum = pdf.Slider.CurrentIndex; // first page is 0
+            int pdfPageNum = pdf.GetSlider().CurrentIndex; // first page is 0
             var bitmap = new BitmapImage();
 
             try
             {
                 using (IDocLib pdfLibrary = DocLib.Instance)
                 {
-                    var reader = string.Equals(pdf.Password, default) ?
-                        pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(pdf.Dimensions)) :
-                        pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password.Password, new PageDimensions(pdf.Dimensions));
+                    var password = pdf.GetPassword();
+                    var bytes = pdf.GetBytes();
+                    var dimensions = pdf.GetDimensions();
+                    var reader = string.Equals(password, default) ?
+                        pdfLibrary.GetDocReader(bytes, new PageDimensions(dimensions)) :
+                        pdfLibrary.GetDocReader(bytes, pdf.GetPassword().Password, new PageDimensions(dimensions));
                     using var docReader = reader;
                     using var pageReader = docReader.GetPageReader(pdfPageNum);
                     var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
@@ -168,31 +162,32 @@ namespace CrytonCore.Model
             return RGBABytes;
         }
 
-        public bool SavePdfImage(PDF pdf, string outputPath)
+        public bool SavePdfImage(IPdf pdf, string outputPath)
         {
+            var bytesStream = pdf.GetBytesStream();
             try
             {
-                var bytesLength = pdf.BytesStream.Length;
+                var bytesLength = bytesStream.Length;
                 if (outputPath is null && bytesLength <= 0)
                     return false;
                 using FileStream file = new(outputPath, FileMode.Create, FileAccess.Write);
                 byte[] bytes = new byte[bytesLength];
-                _ = pdf.BytesStream.Read(bytes, 0, (int)bytesLength);
+                _ = pdf.GetBytesStream().Read(bytes, 0, (int)bytesLength);
                 file.Write(bytes, 0, bytes.Length);
             }
             finally
             {
-                pdf.BytesStream.Close();
+                bytesStream.Close();
             }
             return true;
         }
 
-        public async Task<bool> ImageToPdf(PDF pdf, BitmapImage bitmap, string outputPath)
+        public async Task<bool> ImageToPdf(IPdf pdf, BitmapImage bitmap, string outputPath)
         {
             return await Task.Run(async () =>
             {
                 Document doc = new(PageSize.A4);
-                pdf.HighQuality = true;
+                pdf.SetQuality(true);
                 try
                 {
                     //var imageRes = await ManipulateImage(pdf);
@@ -233,16 +228,16 @@ namespace CrytonCore.Model
             return true;
         }
 
-        public async Task<bool> SavePdfPagesImages(PDF pdf, string outputPath)
+        public async Task<bool> SavePdfPagesImages(IPdf pdf, string outputPath)
         {
             try
             {
                 List<Task<BitmapImage>> tasks = new();
-                var oldPage = pdf.CurrentPage;
-                var newPath = outputPath + "//" + pdf.Name + "_";
-                for (int i = 0; i < pdf.TotalPages; i++)
+                var oldPage = pdf.GetCurrentPage();
+                var newPath = outputPath + "//" + pdf.GetInfo().Name + "_";
+                for (int i = 0; i < pdf.GetTotalPages(); i++)
                 {
-                    pdf.CurrentPage = i;
+                    pdf.SetCurrentPage(i);
                     tasks.Add(GetImageFromPdf(pdf));
                 }
                 var results = await Task.WhenAll(tasks);
@@ -251,7 +246,7 @@ namespace CrytonCore.Model
                     var bitmap = BitmapImage2Bitmap(result.value);
                     bitmap.Save(newPath + result.i + "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg), System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
-                pdf.CurrentPage = oldPage;
+                pdf.SetCurrentPage(oldPage);
             }
             catch (Exception)
             {
@@ -272,7 +267,7 @@ namespace CrytonCore.Model
             return new Bitmap(bitmap);
         }
 
-        public Task<BitmapImage> ManipulateImage(PDF pdf)
+        public Task<BitmapImage> ManipulateImage(IPdf pdf)
         {
             return Task.Run(() =>
             {
@@ -284,25 +279,25 @@ namespace CrytonCore.Model
                 //    img.StreamSource = fileStream;
                 //    fileStream.Close();
                 //}
-                MemoryStream byteStream = new(pdf.Bytes);
+                MemoryStream byteStream = new(pdf.GetBytes());
                 img.BeginInit();
                 img.StreamSource = byteStream;
 
-                if (pdf.SwitchPixels)
+                if (pdf.GetPixelsSwitch())
                 {
-                    img.DecodePixelHeight = pdf.Width;
-                    img.DecodePixelWidth = pdf.Height;
+                    img.DecodePixelHeight = pdf.GetWidth();
+                    img.DecodePixelWidth = pdf.GetHeight();
                 }
                 else
                 {
-                    img.DecodePixelHeight = pdf.Height;
-                    img.DecodePixelWidth = pdf.Width;
+                    img.DecodePixelHeight = pdf.GetHeight();
+                    img.DecodePixelWidth = pdf.GetWidth();
                 }
 
-                if (pdf.Ratio != 0)
-                    img.DecodePixelWidth = (int)(img.DecodePixelHeight * pdf.Ratio);
+                if (pdf.GetRatio() != 0)
+                    img.DecodePixelWidth = (int)(img.DecodePixelHeight * pdf.GetRatio());
 
-                img.Rotation = pdf.Rotation switch
+                img.Rotation = pdf.GetRotation() switch
                 {
                     0 => Rotation.Rotate0,
                     1 => Rotation.Rotate90,

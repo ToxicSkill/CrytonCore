@@ -102,7 +102,7 @@ namespace CrytonCore.ViewModel
 
         private async void MoveNextCommandAsync()
         {
-            if (PDFCollection.Count == 1)
+            if (PdfCollection.Count == 1)
                 return;
             try
             {
@@ -116,7 +116,7 @@ namespace CrytonCore.ViewModel
         private async Task<SummaryPdfMergePage>  GetSummaryPage()
         {
             if (_summaryPage == null) _summaryPage = new SummaryPdfMergePage();
-            var result = await ((PdfMergeSummaryViewModel)_summaryPage.DataContext).Update(PDFCollection,
+            var result = await ((PdfMergeSummaryViewModel)_summaryPage.DataContext).Update(PdfCollection,
                 OrderVector);
             return result ? _summaryPage : null;
         }

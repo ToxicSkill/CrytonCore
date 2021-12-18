@@ -9,12 +9,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="665" d:DesignWidth="1334">
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="MouseEnter">
-            <i:InvokeCommandAction Command="{Binding MouseEnterEvent}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
-
     <Page.DataContext>
         <ViewModel:PdfMergeSummaryViewModel />
     </Page.DataContext>
@@ -91,7 +85,7 @@
 
         <ListView x:Name="filesListView" HorizontalContentAlignment="Left" HorizontalAlignment="Left" 
                           VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
-                          Visibility="{Binding VisibilityDefaultAsShowed}" Margin="10,82,496,10" Width="400"
+                          Visibility="Visible" Margin="10,82,496,10" Width="400"
                           IsSynchronizedWithCurrentItem="True"  Foreground="White"
                           Background="Transparent" BorderBrush="Transparent"
                           FontSize="20" ItemsSource="{Binding FilesView, Mode=TwoWay}">

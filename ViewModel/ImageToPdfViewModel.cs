@@ -15,10 +15,13 @@ namespace CrytonCore.ViewModel
     public class ImageToPdfViewModel : PDFPageManager
     {
         public ObservableCollection<string> Ratios { get; set; }
-        private Collection<double> ValueRatios;
+
+        private readonly IRatios _valueRatios;
+        private readonly IPdfManager _pdfManager;
+
         private string _selectedRatio;
         private int _ratioIndex;
-        private readonly IPdfManager _pdfManager;
+
         public string SelectedRatio
         {
             get => _selectedRatio;
@@ -27,40 +30,19 @@ namespace CrytonCore.ViewModel
                 if (value == _selectedRatio)
                     return;
                 _selectedRatio = value;
-                _ratioIndex = Ratios.IndexOf(_selectedRatio);
+                _valueRatios.SetCurrentRatioByName(value);
                 OnPropertyChanged(nameof(SelectedRatio));
             }
         }
 
         public ImageToPdfViewModel()
         {
+            _valueRatios = new Ratios();
             _pdfManager = new PDFManager();
-            InitializeRatios();
+            Ratios = new ObservableCollection<string>(_valueRatios.GetRatiosNames());
             RatioDelegate = new(ChangeRatioComboBoxItemCurrentImage);
             SetCurrentMode(pdfOnly: false, singleSlider: false);
             SetPdfHighQuality(highQuality: false);
-        }
-
-        private void InitializeRatios()
-        {
-            Ratios = new()
-            {
-                "Original",
-                "1.4142 : 1 (A4)",
-                "4:3",
-                "16:9",
-                "1:1",
-                "18:9"
-            };
-            ValueRatios = new()
-            {
-                0,
-                1.414213562373095,
-                1.333333333333333,
-                1.777777777777777,
-                1,
-                2
-            };
         }
 
         private void ChangeRatioComboBoxItemCurrentImage()
@@ -135,8 +117,7 @@ namespace CrytonCore.ViewModel
 
         private void RotateCurrentImage90Degrees()
         {
-            if (++PDFCollection[OrderVector[SelectedItemIndex]].Rotation == 4)
-                PDFCollection[OrderVector[SelectedItemIndex]].Rotation = 0;
+            PdfCollection[OrderVector[SelectedItemIndex]].IncrementRotation();
         }
 
         public RelayAsyncCommand<object> RotateImage => new(RotateImageCommand);
@@ -149,7 +130,7 @@ namespace CrytonCore.ViewModel
 
         private void SwitchPixelsCurrentImage()
         {
-            PDFCollection[OrderVector[SelectedItemIndex]].SwitchPixels ^= true; 
+            PdfCollection[OrderVector[SelectedItemIndex]].SetPixelsSwitch(); 
         }
 
         public RelayAsyncCommand<object> SwitchImage => new(SwitchImageCommand);
@@ -162,8 +143,8 @@ namespace CrytonCore.ViewModel
 
         private void ChangeRatioCurrentImage()
         {
-            PDFCollection[OrderVector[SelectedItemIndex]].Ratio = ValueRatios[_ratioIndex];
-            PDFCollection[OrderVector[SelectedItemIndex]].RatioIndex = _ratioIndex;
+            PdfCollection[OrderVector[SelectedItemIndex]].SetRatio(_valueRatios.GetCurrentRatioIndex());
+            PdfCollection[OrderVector[SelectedItemIndex]].SetRatioIndex(_ratioIndex);
         }
 
         public RelayAsyncCommand<object> RatioImage => new(RatioImageCommand);
