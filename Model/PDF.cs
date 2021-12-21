@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace CrytonCore.Model
 {
     public class PDF : IPdf
     {
+        public PageSlider Slider { get; set; }
+
         public MemoryStream BytesStream { get; private set; }
 
         public PdfPassword Password { get; private set; }
 
-        public ImageSlider Slider { get; set; }
-
         public FileInfo Info { get; init; }
+
+        public Ratio Ratio { get; set; }
 
         public int TotalPages { get; init; }
 
@@ -23,8 +24,6 @@ namespace CrytonCore.Model
         public bool HighQuality { get; private set; }
 
         public double Dimensions { get; private set; }
-
-        public double Ratio { get; private set; }
 
         public int Rotation { get; private set; }
 
@@ -38,7 +37,6 @@ namespace CrytonCore.Model
 
         public int CurrentHeight { get; private set; }
 
-        public int RatioIndex { get; private set; }
                
         public PDF()
         {
@@ -56,7 +54,7 @@ namespace CrytonCore.Model
         {
             Password = new();
             HighQuality = true;
-            Ratio = 0;
+            Ratio = new();
             Rotation = 0;
             SwitchPixels = false;
             Width = width;
@@ -84,9 +82,9 @@ namespace CrytonCore.Model
             Dimensions = HighQuality ? 2.0d : 1.0d;
         }
 
-        public void SetRatio(double ratio)
+        public void SetRatio(Ratio ratio)
         {
-            throw new System.NotImplementedException();
+            Ratio = new(ratio);
         }
 
         public void SetRotation(int rotation)
@@ -128,7 +126,7 @@ namespace CrytonCore.Model
 
         public void SetRatioIndex(int ratioIndex)
         {
-            RatioIndex = Ratios.GetCount() < ratioIndex  || ratioIndex < 0 ? -1 : ratioIndex;
+            Ratio.CurrentIndex = Ratios.GetCount() < ratioIndex  || ratioIndex < 0 ? -1 : ratioIndex;
         }
 
         public int GetCurrentPage()
@@ -146,7 +144,7 @@ namespace CrytonCore.Model
             return Dimensions;
         }
 
-        public double GetRatio()
+        public Ratio GetRatio()
         {
             return Ratio;
         }
@@ -183,10 +181,10 @@ namespace CrytonCore.Model
 
         public int GetRatioIndex()
         {
-            return RatioIndex;
+            return Ratio.CurrentIndex;
         }
 
-        public ImageSlider GetSlider()
+        public PageSlider GetSlider()
         {
             return Slider;
         }

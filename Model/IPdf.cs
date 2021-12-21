@@ -8,7 +8,7 @@ namespace CrytonCore.Model
         public void SetQuality(bool highQuality);
         public void SetDimensions(double dimensions = 2.0);
         public void SetDimensions();
-        public void SetRatio(double ratio);
+        public void SetRatio(Ratio ratio);
         public void IncrementRotation();
         public void SetRotation(int rotation);
         public void SetPixelsSwitch();
@@ -22,7 +22,6 @@ namespace CrytonCore.Model
         public int GetCurrentPage();
         public bool GetQuality();
         public double GetDimensions();
-        public double GetRatio();
         public int GetRotation();
         public bool GetPixelsSwitch();
         public int GetWidth();
@@ -30,9 +29,10 @@ namespace CrytonCore.Model
         public int GetCurrentWidth();
         public int GetCurrentHeight();
         public int GetRatioIndex();
-        public ImageSlider GetSlider();
+        public PageSlider GetSlider();
         public PdfPassword GetPassword();
         public MemoryStream GetBytesStream();
+        public Ratio GetRatio();
         public FileInfo GetInfo();
         public byte[] GetBytes();
     }

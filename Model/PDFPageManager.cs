@@ -23,11 +23,12 @@ namespace CrytonCore.Model
         private readonly IPdfManager _pdfManager;
         private IPdf _currentPdf;
 
+
         protected ObservableCollection<int> OrderVector { get; set; } = new();
         protected ObservableCollection<PDF> PdfCollection { get; }
         protected ObservableCollection<BitmapImage> ImagesCollection { get; }
         public ObservableCollection<FileListView> FilesView { get; set; }
-        public ImageSlider Slider = new();
+        public PageSlider Slider = new();
         public delegate void RatioComboBoxDelegate();
         public RatioComboBoxDelegate RatioDelegate;
         public List<PdfPasswordBase> IncorrectPdfList = new();
@@ -156,8 +157,7 @@ namespace CrytonCore.Model
 
         private PasswordProviderWindow CreatePasswordProviderInstantion()
         {
-            var dataContextPasswordProvider = new PasswordProviderViewModel(IncorrectPdfList);
-            return new(dataContextPasswordProvider);
+            return new(new PasswordProviderViewModel(IncorrectPdfList));
         }
 
         protected async Task<bool> LoadPdfFile(List<FileInfo> pdfsFiles)
@@ -166,6 +166,11 @@ namespace CrytonCore.Model
                 await UpdateUI();
             await CheckForIncorrectPDF();
             return true;
+        }
+
+        public async Task UpdateImage()
+        {
+            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
         }
 
         private async Task UpdateUI()
@@ -302,7 +307,7 @@ namespace CrytonCore.Model
         {
             if (!CurrentMode.GetCurrentPdfMode())
             {
-                RatioDelegate.Invoke();
+                //RatioDelegate.Invoke();
                 BitmapSource = await _pdfManager.ManipulateImage(_currentPdf);
                 return;
             }
@@ -356,6 +361,8 @@ namespace CrytonCore.Model
             get => Slider.CurrentIndex;
             set
             {
+                if (Slider is null)
+                    return;
                 if (Slider.CurrentIndex == value)
                     return;
                 Slider.CurrentIndex = value;
@@ -397,7 +404,13 @@ namespace CrytonCore.Model
                 _selectedItemIndex = value;
                 _ = UpdateCurrentPDF();
                 OnPropertyChanged(nameof(SelectedItemIndex));
+                OnItemChanges();
             }
+        }
+
+        public virtual void OnItemChanges()
+        {
+            return;
         }
     }
 }

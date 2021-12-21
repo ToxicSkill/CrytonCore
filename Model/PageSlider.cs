@@ -1,7 +1,7 @@
 ﻿
 namespace CrytonCore.Model
 {
-    public class ImageSlider
+    public class PageSlider
     {
         public int CurrentIndex { get; set; }
 

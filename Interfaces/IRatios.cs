@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CrytonCore.Model;
+using System.Collections.Generic;
 
 namespace CrytonCore.Interfaces
 {
@@ -9,5 +10,9 @@ namespace CrytonCore.Interfaces
         public List<string> GetRatiosNames();
         public double GetCurrentRatioValue();
         public int GetCurrentRatioIndex();
+        public string GetCurrentRatioName();
+        public string GetRatioNameByIndex(int index);
+        public string GetRatioNameByValue(double value);
+        public Ratio GetCurrentRatio();
     }
 }

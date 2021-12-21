@@ -294,8 +294,8 @@ namespace CrytonCore.Model
                     img.DecodePixelWidth = pdf.GetWidth();
                 }
 
-                if (pdf.GetRatio() != 0)
-                    img.DecodePixelWidth = (int)(img.DecodePixelHeight * pdf.GetRatio());
+                //if (pdf.GetRatio() != 0)
+                //    img.DecodePixelWidth = (int)(img.DecodePixelHeight * pdf.GetRatio());
 
                 img.Rotation = pdf.GetRotation() switch
                 {
@@ -305,6 +305,15 @@ namespace CrytonCore.Model
                     3 => Rotation.Rotate270,
                     _ => Rotation.Rotate0,
                 };
+                var ratio = pdf.GetRatio().CurrentValue;
+                if (ratio != 0)
+                {
+                    if (Math.Max(img.DecodePixelWidth, img.DecodePixelHeight) == img.DecodePixelHeight)
+                        img.DecodePixelHeight = (int)(img.DecodePixelWidth * ratio);
+                    else
+                        img.DecodePixelWidth = (int)(img.DecodePixelHeight * ratio);
+                }
+
                 img.CacheOption = BitmapCacheOption.OnLoad;
                 img.EndInit();
                 img.Freeze();
@@ -356,7 +365,7 @@ namespace CrytonCore.Model
             await System.IO.File.WriteAllBytesAsync(outFile, bytes); // Requires System.IO
         }
 
-        public  async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile)
+        public async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile)
         {
             Document document = new(PageSize.A4, 0, 0, 0, 0);
             try

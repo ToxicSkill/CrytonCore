@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Media.Effects;
 
@@ -22,6 +23,22 @@ namespace CrytonCore.ViewModel
         private string _selectedRatio;
         private int _ratioIndex;
 
+        public ImageToPdfViewModel()
+        {
+            _valueRatios = new Ratios();
+            _pdfManager = new PDFManager();
+            Ratios = new ObservableCollection<string>(_valueRatios.GetRatiosNames());
+            //RatioDelegate = new(ChangeRatioComboBoxItemCurrentImage);
+            SetCurrentMode(pdfOnly: false, singleSlider: false);
+            SetPdfHighQuality(highQuality: false);
+        }
+
+        public override void OnItemChanges()
+        {
+            SelectedRatio = _valueRatios.GetRatioNameByValue(GetCurrentPDF().GetRatio().CurrentValue);
+        }
+
+
         public string SelectedRatio
         {
             get => _selectedRatio;
@@ -31,23 +48,15 @@ namespace CrytonCore.ViewModel
                     return;
                 _selectedRatio = value;
                 _valueRatios.SetCurrentRatioByName(value);
+                _ = ChangeRatioComboBoxItemCurrentImage();
                 OnPropertyChanged(nameof(SelectedRatio));
             }
         }
 
-        public ImageToPdfViewModel()
+        private async Task ChangeRatioComboBoxItemCurrentImage()
         {
-            _valueRatios = new Ratios();
-            _pdfManager = new PDFManager();
-            Ratios = new ObservableCollection<string>(_valueRatios.GetRatiosNames());
-            RatioDelegate = new(ChangeRatioComboBoxItemCurrentImage);
-            SetCurrentMode(pdfOnly: false, singleSlider: false);
-            SetPdfHighQuality(highQuality: false);
-        }
-
-        private void ChangeRatioComboBoxItemCurrentImage()
-        {
-            SelectedRatio = Ratios[GetCurrentPDF().RatioIndex];
+            PdfCollection[OrderVector[SelectedItemIndex]].SetRatio(_valueRatios.GetCurrentRatio());
+            await UpdateImage();
         }
 
         public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
@@ -125,7 +134,7 @@ namespace CrytonCore.ViewModel
         private async Task RotateImageCommand(object o)
         {
             RotateCurrentImage90Degrees();
-            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
+            await UpdateImage();
         }
 
         private void SwitchPixelsCurrentImage()
@@ -138,12 +147,12 @@ namespace CrytonCore.ViewModel
         private async Task SwitchImageCommand(object o)
         {
             SwitchPixelsCurrentImage();
-            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
+            await UpdateImage();
         }
 
         private void ChangeRatioCurrentImage()
         {
-            PdfCollection[OrderVector[SelectedItemIndex]].SetRatio(_valueRatios.GetCurrentRatioIndex());
+            PdfCollection[OrderVector[SelectedItemIndex]].SetRatio(_valueRatios.GetCurrentRatio());
             PdfCollection[OrderVector[SelectedItemIndex]].SetRatioIndex(_ratioIndex);
         }
 
@@ -152,7 +161,7 @@ namespace CrytonCore.ViewModel
         private async Task RatioImageCommand(object o)
         {
             ChangeRatioCurrentImage();
-            BitmapSource = await _pdfManager.ManipulateImage(GetCurrentPDF());
+            await UpdateImage();
         }
 
         private BlurEffect _effect;
