@@ -9,8 +9,11 @@
 
   <ItemGroup>
     <None Remove="Assets\Cloud.png" />
+    <None Remove="Assets\Error.png" />
+    <None Remove="Assets\FatalError.png" />
     <None Remove="Assets\HeavyStorm.png" />
     <None Remove="Assets\Humidity.png" />
+    <None Remove="Assets\Information.png" />
     <None Remove="Assets\Moon.png" />
     <None Remove="Assets\MoonCloud.png" />
     <None Remove="Assets\PartialSun.png" />
@@ -25,7 +28,20 @@
     <None Remove="Assets\Sunrise.png" />
     <None Remove="Assets\Sunset.png" />
     <None Remove="Assets\Temperature.png" />
+    <None Remove="Assets\Warning.png" />
     <None Remove="Assets\Wind.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Error.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\FatalError.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Information.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -200,6 +216,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\UpTop.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Warning.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Wind.png">

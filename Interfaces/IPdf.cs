@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using CrytonCore.Model;
+using System.IO;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Interfaces
 {
     public interface IPdf
     {

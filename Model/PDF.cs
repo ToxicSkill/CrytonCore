@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using CrytonCore.Interfaces;
+using System.IO;
 using System.Linq;
 
 namespace CrytonCore.Model
@@ -63,7 +64,8 @@ namespace CrytonCore.Model
 
         public void SetCurrentPage(int currentPage)
         {
-            CurrentHeight = currentPage < 0 ? 0 : currentPage;
+            CurrentPage = currentPage < 0 ? 0 : currentPage;
+            Slider.CurrentIndex = currentPage;
         }
 
         public void SetQuality(bool highQuality)

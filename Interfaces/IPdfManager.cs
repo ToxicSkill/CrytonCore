@@ -16,10 +16,10 @@ namespace CrytonCore.Interfaces
         public Task<bool> SavePdfPagesImages(IPdf pdf, string outputPath);
         public Task<bool> ImageToPdf(IPdf pdf, BitmapImage bitmap, string outputPath);
         public Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile);
+        public Task<bool> SavePdf(string outFile, byte[] bytes);
 
         public bool SavePdfImage(IPdf pdf, string outputPath);
         public bool SavePdfPageImage(string path, BitmapImage bitmapImage);
 
-        public Task SavePdf(string outFile, byte[] bytes);
     }
 }

@@ -115,5 +115,15 @@
     <!--PASSWORD MANAGER-->
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Gestionnaire de mots de passe</system:String>
     
+        
+    <!--REST-->
+    <system:String x:Key="Information">Information</system:String>
+    <system:String x:Key="Warning">Warnung</system:String>
+    <system:String x:Key="Error">Fehler</system:String>
+    <system:String x:Key="Fatal">Fataler Fehler</system:String>
+    
+    <system:String x:Key="saving_succes">Datei gespeichert am Speicherort:</system:String>
+    <system:String x:Key="saving_succes_many">Am Speicherort gespeicherte Dateien:</system:String>
+    <system:String x:Key="OK">OK</system:String>
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

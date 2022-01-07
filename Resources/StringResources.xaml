@@ -130,5 +130,16 @@
     <!--PASSWORD MANAGER-->
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Password manager</system:String>
 
+
+    <!--REST-->
+    <system:String x:Key="Information">Information</system:String>
+    <system:String x:Key="Warning">Warning</system:String>
+    <system:String x:Key="Error">Error</system:String>
+    <system:String x:Key="Fatal">Fatal error</system:String>
+
+    <system:String x:Key="saving_succes">File saved in location:</system:String>
+    <system:String x:Key="saving_succes_many">Files saved in location:</system:String>
+    <system:String x:Key="OK">OK</system:String>
+
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

@@ -132,5 +132,17 @@
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Manadżer haseł</system:String>
     
     
+    <!--REST-->
+    <system:String x:Key="Information">Informacja</system:String>
+    <system:String x:Key="Warning">Ostrzeżenie</system:String>
+    <system:String x:Key="Error">Błąd</system:String>
+    <system:String x:Key="Fatal">Błąd krytyczny</system:String>
+    
+    
+    <system:String x:Key="saving_succes">Zapisano plik w lokalizacji:</system:String>
+    <system:String x:Key="saving_succes_many">Zapisano pliki w lokalizacji:</system:String>
+    <system:String x:Key="OK">OK</system:String>
+    
+    
     <!-- All StringResources Goes Here -->
 </ResourceDictionary> 

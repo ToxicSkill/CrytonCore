@@ -79,7 +79,7 @@ namespace CrytonCore.ViewModel
             var dialogResult = saveDialog.RunDialog();
             if (dialogResult is not null)
             {
-                await SavePdf(dialogResult.First(), PdfCollection.First().Bytes);
+                return await SavePdf(dialogResult.First(), PdfCollection.First().Bytes);
             }
             return false;
         }

@@ -1,4 +1,5 @@
 ﻿using CrytonCore.Interfaces;
+using CrytonCore.Views;
 using Docnet.Core;
 using Docnet.Core.Models;
 using ImageMagick;
@@ -230,6 +231,7 @@ namespace CrytonCore.Model
 
         public async Task<bool> SavePdfPagesImages(IPdf pdf, string outputPath)
         {
+            Logger saveLogger = new();
             try
             {
                 List<Task<BitmapImage>> tasks = new();
@@ -247,11 +249,20 @@ namespace CrytonCore.Model
                     bitmap.Save(newPath + result.i + "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg), System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
                 pdf.SetCurrentPage(oldPage);
+
+                saveLogger.SetLevel(Enums.ELogger.Level.Information);
+                saveLogger.SetMessage(App.GetDictionaryString("saving_succes_many") + "\n" + outputPath);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                saveLogger.SetLevel(Enums.ELogger.Level.Error);
+                saveLogger.SetMessage(e.Message);
                 return false;
-                throw;
+            }
+            finally
+            {
+                PopupWindow popup = new(saveLogger);
+                popup.ShowDialog();
             }
             return true;
         }
@@ -360,9 +371,27 @@ namespace CrytonCore.Model
         //    );
         //}
 
-        public async Task SavePdf(string outFile, byte[] bytes)
+        public async Task<bool> SavePdf(string outputPath, byte[] bytes)
         {
-            await System.IO.File.WriteAllBytesAsync(outFile, bytes); // Requires System.IO
+            Logger saveLogger = new();
+            try
+            {
+                await System.IO.File.WriteAllBytesAsync(outputPath, bytes); // Requires System.IO
+                saveLogger.SetLevel(Enums.ELogger.Level.Information);
+                saveLogger.SetMessage(App.GetDictionaryString("saving_succes") + "\n" + outputPath);
+            }
+            catch (Exception e)
+            {
+                saveLogger.SetLevel(Enums.ELogger.Level.Error);
+                saveLogger.SetMessage(e.Message);
+                return false;
+            }
+            finally
+            {
+                PopupWindow popup = new(saveLogger);
+                popup.ShowDialog();
+            }
+            return true;
         }
 
         public async Task<bool> MergePdf(List<(PdfPassword passwords, FileInfo infos)> files, string outFile)

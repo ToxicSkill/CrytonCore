@@ -284,9 +284,9 @@ namespace CrytonCore.Model
             return await _pdfManager.MergePdf(files, outFile);
         }
 
-        protected async Task SavePdf(string outFile, byte[] bytes)
+        protected async Task<bool> SavePdf(string outFile, byte[] bytes)
         {
-            await _pdfManager.SavePdf(outFile, bytes);
+            return await _pdfManager.SavePdf(outFile, bytes);
         }
 
         private BitmapImage _imageBitmap;
