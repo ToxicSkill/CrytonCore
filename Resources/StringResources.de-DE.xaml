@@ -115,6 +115,12 @@
     <!--PASSWORD MANAGER-->
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Gestionnaire de mots de passe</system:String>
     
+    <!--PDF SECURE-->
+    <system:String x:Key="set_random_password_pdfSecure">Verwenden Sie ein zufälliges Passwort</system:String>
+    <system:String x:Key="highest_endryption_level_pdfSecure">Verwenden Sie die höchste Verschlüsselungsstufe</system:String>
+    <system:String x:Key="set_owner_user_password_pdfSecure">Benutzer- und Besitzerpasswort festlegen</system:String>
+    <system:String x:Key="set_owner_password_pdfSecure">Besitzer-Passwort</system:String>
+    <system:String x:Key="set_user_password_pdfSecure">Benutzer-Passwort</system:String>
         
     <!--REST-->
     <system:String x:Key="Information">Information</system:String>

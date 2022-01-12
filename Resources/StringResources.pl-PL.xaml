@@ -131,6 +131,12 @@
     <!--PASSWORD MANAGER-->
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Manadżer haseł</system:String>
     
+    <!--PDF SECURE-->
+    <system:String x:Key="set_random_password_pdfSecure">Użyj losowego hasła</system:String>
+    <system:String x:Key="highest_endryption_level_pdfSecure">Najwyższy stopień szyfrowania</system:String>
+    <system:String x:Key="set_owner_user_password_pdfSecure">Ustaw hasło właściciela i użytkownika</system:String>
+    <system:String x:Key="set_owner_password_pdfSecure">Hasło właściciela</system:String>
+    <system:String x:Key="set_user_password_pdfSecure">Hasło użytkownika</system:String>
     
     <!--REST-->
     <system:String x:Key="Information">Informacja</system:String>

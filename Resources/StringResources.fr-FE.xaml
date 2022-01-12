@@ -113,6 +113,12 @@
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Passwortmanager</system:String>
 
 
+    <!--PDF SECURE-->
+    <system:String x:Key="set_random_password_pdfSecure">Utiliser un mot de passe aléatoire</system:String>
+    <system:String x:Key="highest_endryption_level_pdfSecure">Utiliser le niveau de cryptage le plus élevé</system:String>
+    <system:String x:Key="set_owner_user_password_pdfSecure">Définir le mot de passe utilisateur et propriétaire</system:String>
+    <system:String x:Key="set_owner_password_pdfSecure">Mot de passe du propriétaire</system:String>
+    <system:String x:Key="set_user_password_pdfSecure">Mot de passe de l'utilisateur</system:String>
 
     <!--REST-->
     <system:String x:Key="Information">Information</system:String>

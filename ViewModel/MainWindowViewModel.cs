@@ -60,29 +60,28 @@ namespace CrytonCore.ViewModel
             }
         }
         public RelayCommand GoCrypting => new(GoCryptingCommand, App.AppIsLoaded);
-
         private void GoCryptingCommand() => ToCryptingPage();
+
         public RelayCommand GoPdfManager => new(GoPdfManagerCommand, App.AppIsLoaded);
-
         private void GoPdfManagerCommand() => ToPdfManagerPage();
+
         public RelayCommand GoSettings => new(GoSettingsCommand, App.AppIsLoaded);
-
         private void GoSettingsCommand() => ToSettingsPage();
+
         public RelayCommand GoPdfMerge => new(GoPdfMergeCommand, App.AppIsLoaded);
-
         private void GoPdfMergeCommand() => ToPdfMergePage();
+
         public RelayCommand GoPdfSecurity => new(GoPdfSecurityCommand, App.AppIsLoaded);
-
         private void GoPdfSecurityCommand() => ToPdfSecurityPage();
+
         public RelayCommand GoPdfToImage => new(GoPdfToImageCommand, App.AppIsLoaded);
-
         private void GoPdfToImageCommand() => ToPdfToImagePage();
+
         public RelayCommand GoImageToPdf => new(GoImageToPdfCommand, App.AppIsLoaded);
-
-        private void GoPasswordManagerCommand() => ToPasswordManagerPage();
-        public RelayCommand GoPasswordManager => new(GoPasswordManagerCommand, App.AppIsLoaded);
-
         private void GoImageToPdfCommand() => ToImageToPdfPage();
+
+        public RelayCommand GoPasswordManager => new(GoPasswordManagerCommand, App.AppIsLoaded);
+        private void GoPasswordManagerCommand() => ToPasswordManagerPage();
 
         private Page _displayPage;
 

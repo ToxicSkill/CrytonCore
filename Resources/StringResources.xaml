@@ -130,6 +130,12 @@
     <!--PASSWORD MANAGER-->
     <system:String x:Key="passwordManagerTitle_passwordManagerPage">Password manager</system:String>
 
+    <!--PDF SECURE-->
+    <system:String x:Key="set_random_password_pdfSecure">Use random password</system:String>
+    <system:String x:Key="highest_endryption_level_pdfSecure">Use highest encryption level</system:String>
+    <system:String x:Key="set_owner_user_password_pdfSecure">Set user and owner password</system:String>
+    <system:String x:Key="set_owner_password_pdfSecure">Owner password</system:String>
+    <system:String x:Key="set_user_password_pdfSecure">User password</system:String>
 
     <!--REST-->
     <system:String x:Key="Information">Information</system:String>

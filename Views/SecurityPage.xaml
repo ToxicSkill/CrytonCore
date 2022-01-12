@@ -1,28 +1,32 @@
 ﻿<Page x:Class="CrytonCore.Views.SecurityPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CrytonCore.Views"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             FontFamily="Microsoft YaHei UI Light">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ViewModel="clr-namespace:CrytonCore.ViewModel" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="665" d:DesignWidth="1334"
+             AllowDrop="True"
+             xmlns:helpers="clr-namespace:CrytonCore.Helpers"
+             helpers:FileDragDropHelper.IsFileDragDropEnabled="True" 
+             helpers:FileDragDropHelper.FileDragDropTarget="{Binding}">
+
+    <Page.DataContext>
+        <ViewModel:SecurityPageViewModel/>
+    </Page.DataContext>
 
     <Page.Resources>
         <ResourceDictionary>
-            <Storyboard x:Key="topLabelExtend" Storyboard.TargetProperty="Button.Clicked">
-
-                <DoubleAnimation   
-                Storyboard.TargetName="topLabel"
-                Storyboard.TargetProperty="Height"
-                From="77" To="200"
-                BeginTime="0:0:0"
-                Duration="0:0:1"/>
-            </Storyboard>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Green.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
         </ResourceDictionary>
     </Page.Resources>
+
     <Page.Background>
         <LinearGradientBrush EndPoint="0.5,1" 
                              MappingMode="RelativeToBoundingBox" 
@@ -31,100 +35,177 @@
             <GradientStop Offset="1"/>
         </LinearGradientBrush>
     </Page.Background>
-    <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
-        <Grid>
-            <Grid>
-                <!--<local:PageSecurity VerticalAlignment="Top" HorizontalAlignment="Stretch" />-->
-                <!--<materialDesign:ColorZone x:Name="topLabel" Grid.Row="0" Mode="Light" Background="#FF994F05" VerticalAlignment="Top" 
-                                  HorizontalAlignment="Stretch" Height="77" VerticalContentAlignment="Stretch" >-->
-                <Label Content="PDF SECURITY" HorizontalContentAlignment="Left" HorizontalAlignment="Left" 
-                           Margin="45,0,0,0" VerticalAlignment="Top" Height="77" Width="419" 
-                           FontSize="52" Background="#00000000" Foreground="{DynamicResource title}" FontFamily="Microsoft YaHei Light"/>
-                <!--</materialDesign:ColorZone>-->
 
-                <Button 
-                    x:Name="conitnueButton"
-                    Content="Continue"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top" Margin="23,179,0,0" Background="#FF125A93" Width="184"
-                    Visibility="Hidden" IsEnabled="False" Click="ConitnueButton_Click"/>
-                <Button 
-                    x:Name="loadFileButton"
-                    Content="Load file"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top" Margin="23,179,0,0" 
-                    Background="#FF125A93" Width="184" Click="LoadFileButton_Click" 
-                    Visibility="Visible" />
-                <Button 
-                    x:Name="clearButton"
-                    Content="Clear"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top" Margin="253,179,0,0" 
-                    Background="#FF125A93" Width="184" Click="ClearFileButton_Click" 
-                    Visibility="Hidden" />
 
-                <Label x:Name="fileNameLabel" HorizontalContentAlignment="Left" HorizontalAlignment="Left" 
-                       Margin="46,92,0,0" VerticalAlignment="Top" Height="72" Width="1197" 
-                       FontSize="42" Background="#00000000" Foreground="#FFC7C7C7" FontFamily="Microsoft YaHei Light"/>
+    <Grid>
+
+        <Grid x:Name="controlsGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Visibility="Visible">
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,68,25,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="470"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                
+                <Label Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" 
+                           FontSize="22" Foreground="{DynamicResource text}" VerticalContentAlignment="Center"
+                           Content="{DynamicResource set_random_password_pdfSecure}"/>
+
+                <Label Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" 
+                           FontSize="22" Foreground="{DynamicResource text}" VerticalContentAlignment="Center"
+                           Content="{DynamicResource highest_endryption_level_pdfSecure}"/>
+
+                <Label Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" 
+                           FontSize="22" Foreground="{DynamicResource text}" VerticalContentAlignment="Center"
+                           Content="{DynamicResource set_owner_user_password_pdfSecure}"/>
+
+                <Label Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light" 
+                           FontSize="22" Foreground="{DynamicResource text}" VerticalContentAlignment="Center"
+                           Content="{DynamicResource set_owner_password_pdfSecure}"/>
+
+
+                <Label Grid.Row="5"  Visibility="{Binding UserVisibility}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Lato Light"  
+                           FontSize="22" Foreground="{DynamicResource text}" VerticalContentAlignment="Center"
+                           Content="{DynamicResource set_user_password_pdfSecure}"/>
+
+
+                <PasswordBox Grid.Row="4" Visibility="{Binding PasswordsVisibility}" PasswordChanged="OwnerPasswordBox_PasswordChanged"  FontFamily="Lato Light"  
+                           FontSize="18"  Foreground="{DynamicResource text}"/>
+                <Label Grid.Row="4" Visibility="{Binding RandomPasswordsVisibility}" Content="{Binding RandomOwnerPassword}"  FontFamily="Lato Light"  
+                           FontSize="18"  Foreground="{DynamicResource text}"/>
+
+                <Grid Grid.Row="6" Visibility="{Binding UserVisibility}">    
+                    <PasswordBox  Visibility="{Binding PasswordsVisibility}" PasswordChanged="UserPasswordBox_PasswordChanged"  
+                                  FontFamily="Lato Light" FontSize="18"  Foreground="{DynamicResource text}"/>
+                    <Label  Visibility="{Binding RandomPasswordsVisibility}" Content="{Binding RandomUserPassword}"  
+                            FontFamily="Lato Light" FontSize="18"  Foreground="{DynamicResource text}"/>                   
+                </Grid>
+                    
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding UseRandomPassowrd}"/>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding UseHighestEncryption}"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding SetUserAndOwnerPassord}"/>
 
             </Grid>
 
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="230" Height="60" Margin="40,0,0,25"
+                  Visibility="{Binding VisibilityDefaultAsHidden}" >
 
-            <ListView Margin="0,220,0,0" HorizontalAlignment="Stretch">
-                <ListViewItem HorizontalContentAlignment="Stretch">
-                    <Grid HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="randomSP"  HorizontalAlignment="Left">
-                            <TextBlock Foreground="{DynamicResource font}" Margin="10,0,0,0" FontSize="30">Generate new random password</TextBlock>
-                            <TextBlock Foreground="{DynamicResource font}" Margin="10,0,0,0"  Opacity="0.8">Off (known password)</TextBlock>
-                        </StackPanel>
-                        <ToggleButton x:Name="randomTB" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Click="RandomPasswordToggleButton_Clicked"/>
-                    </Grid>
-                </ListViewItem>
-                <ListViewItem HorizontalContentAlignment="Stretch">
-                    <Grid HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="encryptionLevelSP" HorizontalAlignment="Left">
-                            <TextBlock Foreground="{DynamicResource font}" Margin="10,0,0,0"  FontSize="30">Highest level of encryption</TextBlock>
-                            <TextBlock Foreground="{DynamicResource font}" Margin="10,0,0,0" >128 bit</TextBlock>
-                        </StackPanel>
-                        <ToggleButton x:Name="encryptionLevelTB" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Click="EncryptionLevelToggleButton_Clicked"/>
-                    </Grid>
-                </ListViewItem>
-                <ListViewItem HorizontalContentAlignment="Stretch">
-                    <Grid HorizontalAlignment="Stretch">
-                        <StackPanel x:Name="userOwnerSP" HorizontalAlignment="Left">
-                            <TextBlock Foreground="{DynamicResource font}" Margin="10,0,0,0"  FontSize="30">Set owner and user password</TextBlock>
-                            <TextBlock Foreground="{DynamicResource font}" Margin="10,0,0,0" >Two different passwords required</TextBlock>
-                        </StackPanel>
-                        <ToggleButton x:Name="userOwnerTB"  IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Click="UserOwnerToggleButton_Clicked"/>
-                    </Grid>
-                </ListViewItem>
+                <Label Width="200" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Lato Light" Style="{StaticResource TransparentLabelOpacity}"
+                           FontSize="23" Foreground="{DynamicResource backText}" VerticalContentAlignment="Center"
+                           Content="{DynamicResource backText_pdfMerge}">
 
-            </ListView>
-            <Grid  x:Name="passwordsGrid" 
-               VerticalAlignment="Bottom" Height="133">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                            <i:InvokeCommandAction Command="{Binding MoveBack}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid x:Name="userPasswordGrid" >
-                    <TextBox x:Name="userPassword" Grid.Column="0" TextWrapping="Wrap" MaxLength="16" Foreground="{DynamicResource text}" FontSize="28" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="266" Margin="62,45,0,0" TextChanged="UserPassword_TextChanged"/>
-                    <TextBlock Grid.Column="0" Foreground="{DynamicResource text}" FontSize="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,0,0,0">Enter user password</TextBlock>
-                </Grid>
-                <Grid x:Name="ownerPasswordGrid" Grid.Column="1">
-                    <TextBox x:Name="ownerPassword" TextWrapping="Wrap" MaxLength="16" Foreground="{DynamicResource text}" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,45,250,0" Height="50" Width="293" TextChanged="OwnerPassword_TextChanged"/>
-                    <TextBlock Grid.Column="1" Foreground="{DynamicResource text}" FontSize="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,250,0">Enter owner password</TextBlock>
-                </Grid>
+                    <Label.Triggers>
+                        <EventTrigger RoutedEvent="Label.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard >
+                                    <DoubleAnimation Storyboard.TargetName="RotateImageBack" 
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
+                                                         From="0" To="90" AutoReverse="False"
+                                                         BeginTime="0:0:0" Duration="0:0:0.5" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Label.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="RotateImageBack" 
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
+                                                         From="90" To="0" AutoReverse="False"
+                                                         BeginTime="0:0:0" Duration="0:0:0.5"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Image x:Name="RotateImageBack" Source="/CrytonCore;component/Assets/Back.png" 
+                           HorizontalAlignment="Left" Width="30"
+                           RenderOptions.EdgeMode="Aliased"
+                           RenderOptions.BitmapScalingMode="HighQuality"  >
+                    <Image.RenderTransform>
+                        <RotateTransform CenterX="15" CenterY="15"/>
+                    </Image.RenderTransform>
+                </Image>
             </Grid>
         </Grid>
-        <materialDesign:TransitionerSlide>
-            <materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:CircleWipe/>
-            </materialDesign:TransitionerSlide.BackwardWipe>
-            <materialDesign:TransitionerSlide.ForwardWipe>
-                <materialDesign:SlideWipe Direction="Right"/>
-            </materialDesign:TransitionerSlide.ForwardWipe>
-            <local:SummarySecurityPage />
-        </materialDesign:TransitionerSlide>
-    </materialDesign:Transitioner>
+
+        <Label Content="PDF SECURE" HorizontalContentAlignment="Left" HorizontalAlignment="Left"  VerticalContentAlignment="Bottom"
+                           Margin="45,0,0,0" VerticalAlignment="Top" Height="77" Width="419" 
+                           FontSize="52" Background="#00000000" Foreground="{DynamicResource title}" FontFamily="Lato Light"/>
+
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                  Margin="10,82,0,40" Width="651" Background="Transparent"  >
+
+            <ListView x:Name="filesListView" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
+                          Visibility="Visible"
+                          IsSynchronizedWithCurrentItem="True"  Foreground="White"
+                          Background="Transparent" BorderBrush="Transparent"
+                          FontSize="20" ItemsSource="{Binding FilesView, Mode=OneWay}">
+
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid  Width="635">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="1,1"
+                                                         StartPoint="0,0">
+                                    <GradientStop Offset="1" Color="{DynamicResource gradientListViewItemRight}"/>
+                                    <GradientStop Color="{DynamicResource gradientListViewItemLeft}" Offset="0.1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <TextBlock Text="{Binding Order, Mode=OneWay}" Width="50" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding FileName, Mode=OneWay}" Width="400" Margin="50,0,0,0" HorizontalAlignment="Left" />
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </Grid>
+
+        <Grid x:Name="dragDropGrid" Margin="45,269,20,229" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  Visibility="{Binding VisibilityDefaultAsShowed}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="479*"/>
+                <ColumnDefinition Width="791*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="LabelDropInfo1"  HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           Width="1269" Height="54" FontSize="36" 
+                           FontFamily="Lato Light" FontWeight="Bold" 
+                           Background="#00000000" Foreground="{DynamicResource font}"
+                           Content = "{DynamicResource dragAndDropLabel1}"
+                           Opacity="0.7" Margin="0,38,0,75" Grid.ColumnSpan="2" />
+
+            <Label x:Name="LabelDropInfo2" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Top" Width="1269" Height="48" FontSize="22" 
+                           FontFamily="Lato Light" Background="#00000000" Foreground="{DynamicResource font}"
+                           Style="{StaticResource TransparentLabelOpacity}" Margin="0,78,0,41" 
+                           Content="{DynamicResource dragAndDropLabel2}" Grid.ColumnSpan="2">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp" >
+                        <i:InvokeCommandAction Command="{Binding LoadFileViaDialog}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Label>
+        </Grid>
+    </Grid>
 </Page>
+
