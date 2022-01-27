@@ -1,6 +1,9 @@
-﻿using CrytonCore.Helpers;
+﻿using CrytonCore.Design;
+using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Interfaces;
+using CrytonCore.Model;
+using CrytonCore.PdfService;
 using CrytonCore.ViewModel;
 using CrytonCore.Views;
 using System;
@@ -12,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Abstract
 {
     public abstract class PDFPageManager : PageManager, IFileDragDropTarget
     {
@@ -21,7 +24,7 @@ namespace CrytonCore.Model
 
         private IMode CurrentMode;
         private readonly IPdfManager _pdfManager;
-        private IPdf _currentPdf;
+        private PDF _currentPdf;
 
 
         protected ObservableCollection<int> OrderVector { get; set; } = new();

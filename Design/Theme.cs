@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using static CrytonCore.Enums.EThemes;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Design
 {
     public class Theme
     {

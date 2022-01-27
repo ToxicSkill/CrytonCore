@@ -1,4 +1,5 @@
-﻿using CrytonCore.Interfaces;
+﻿using CrytonCore.Abstract;
+using CrytonCore.Interfaces;
 using CrytonCore.Model;
 using System;
 using System.Collections.Generic;

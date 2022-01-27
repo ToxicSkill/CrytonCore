@@ -5,11 +5,11 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Services
 {
     public class InternetConnection : IService
     {
-        private static readonly string _pingString = "http://www.google.com";
+        private const string PingString = "http://www.google.com";
         public string InternetStatusString { get; set; }
         public bool Status { get; set; }
         public SolidColorBrush InternetSatusColor { get; set; }
@@ -50,7 +50,7 @@ namespace CrytonCore.Model
                 try
                 {
                     using WebClient client = new();
-                    using System.IO.Stream stream = client.OpenRead(_pingString);
+                    using System.IO.Stream stream = client.OpenRead(PingString);
                     return true;
                 }
                 catch (Exception)

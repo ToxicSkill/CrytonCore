@@ -1,4 +1,6 @@
-﻿using CrytonCore.Helpers;
+﻿using CrytonCore.Abstract;
+using CrytonCore.Design;
+using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
 using System;

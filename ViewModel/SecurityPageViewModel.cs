@@ -1,9 +1,13 @@
-﻿using CrytonCore.Interfaces;
+﻿using CrytonCore.Abstract;
+using CrytonCore.Infra;
+using CrytonCore.Interfaces;
 using CrytonCore.Model;
-using System;
-using System.Net;
+using CrytonCore.Tools;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Security;
-using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using static System.Windows.Visibility;
 
@@ -19,10 +23,7 @@ namespace CrytonCore.ViewModel
         public Visibility UserVisibility { get; set; } = Hidden;
 
         public string RandomOwnerPassword { get; set; }
-
-
         public string RandomUserPassword { get; set; }
-
 
         private bool _useRandomPassword;
         public bool UseRandomPassowrd 
@@ -43,9 +44,7 @@ namespace CrytonCore.ViewModel
             } 
         }
 
-        public bool UseHighestEncryption { private get; set; }
-
-
+        public bool UseHighestEncryption { private get; set; } = true;
 
         private bool _setUserAndOwnerPassord;
         public bool SetUserAndOwnerPassord 
@@ -59,6 +58,12 @@ namespace CrytonCore.ViewModel
                 SetUserVisibility(_setUserAndOwnerPassord);
             }
         }
+
+        public SecurityPageViewModel()
+        {
+            SetCurrentMode(pdfOnly: true, singleSlider: false);
+        }
+
 
         private void SetUserVisibility(bool setUserAndOwnerPassord)
         {
@@ -104,6 +109,33 @@ namespace CrytonCore.ViewModel
             OnPropertyChanged(nameof(RandomUserPassword));
             OnPropertyChanged(nameof(PasswordsVisibility));
             OnPropertyChanged(nameof(RandomPasswordsVisibility));
+        }
+
+        protected async Task<bool> LoadFileViaDragDrop(IEnumerable<FileInfo> fileNames)
+        {
+            List<FileInfo> filesInfo = new();
+            foreach (var file in fileNames)
+            {
+                if (file.Extension == "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpeg) ||
+                    file.Extension == "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.jpg) ||
+                    file.Extension == "." + Enums.EExtensions.EnumToString(Enums.EExtensions.Extensions.png))
+                    filesInfo.Add(file);
+            }
+            return await LoadPdfFile(filesInfo);
+        }
+
+        public RelayAsyncCommand<object> LoadFileViaDialog => new(LoadFileViaDialogCommand);
+
+        private async Task<bool> LoadFileViaDialogCommand(object o)
+        {
+            WindowDialogs.OpenDialog openDialog = new(new Helpers.DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Pdf),
+                Multiselect = true,
+                Title = (string)(App.Current as App).Resources.MergedDictionaries[0]["openFiles"]
+            });
+            var dialogResult = openDialog.RunDialog();
+            return dialogResult != null && await LoadPdfFile(dialogResult.Select(f => new FileInfo(f)).ToList());
         }
     }
 }

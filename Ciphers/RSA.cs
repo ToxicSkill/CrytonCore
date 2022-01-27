@@ -10,6 +10,7 @@ using System.IO;
 using CrytonCore.Model;
 using System.Threading;
 using static CrytonCore.Enums.ETypesOfCrypting;
+using CrytonCore.Abstract;
 
 namespace CrytonCore.Ciphers
 {

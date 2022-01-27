@@ -1,4 +1,5 @@
-﻿using CrytonCore.Infra;
+﻿using CrytonCore.Design;
+using CrytonCore.Infra;
 using CrytonCore.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Effects;

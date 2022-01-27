@@ -1,5 +1,6 @@
 ﻿using CrytonCore.Infra;
 using CrytonCore.Model;
+using CrytonCore.PdfService;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 

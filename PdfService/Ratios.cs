@@ -1,7 +1,7 @@
 ﻿using CrytonCore.Interfaces;
 using System.Collections.Generic;
 
-namespace CrytonCore.Model
+namespace CrytonCore.PdfService
 {
     internal class Ratios : IRatios
     {

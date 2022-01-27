@@ -1,4 +1,5 @@
 ﻿using CrytonCore.Interfaces;
+using CrytonCore.Model;
 using CrytonCore.Views;
 using Docnet.Core;
 using Docnet.Core.Models;
@@ -14,7 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCore.Model
+namespace CrytonCore.PdfService
 {
     public class PDFManager : IPdfManager
     {
@@ -52,7 +53,7 @@ namespace CrytonCore.Model
                 Info = pdfInfo,
                 Bytes = System.IO.File.ReadAllBytes(pdfInfo.FullName),
                 TotalPages = reader.NumberOfPages,
-                Slider = new() { CurrentIndex = 0, LastIndex = 0, MaxIndex = reader.NumberOfPages - 1 }
+                Slider = new() { CurrentIndex = 0, LastIndex = 0, MaxIndex = reader.NumberOfPages - 1 }               
             };
             pdf.SetCurrentPage(0);
             _ = pdf.Password.SetPassword(pdfPassword?.Password);

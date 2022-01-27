@@ -1,13 +1,14 @@
-﻿using CrytonCore.Helpers;
+﻿using CrytonCore.Abstract;
+using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Interfaces;
 using CrytonCore.Model;
+using CrytonCore.PdfService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Media.Effects;
 

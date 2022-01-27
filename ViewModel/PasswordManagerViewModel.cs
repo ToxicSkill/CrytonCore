@@ -12,9 +12,9 @@ namespace CrytonCore.ViewModel
         {
             AccountView = new ObservableCollection<Account>()
             {
-                new Account() { Name = "Bob", Data = DateTime.Now },
-                new Account() { Name = "Alice", Data = DateTime.Now },
-                new Account() { Name = "Eva", Data = DateTime.Now }
+                new Account() { Name = "Bob", Date = DateTime.Now },
+                new Account() { Name = "Alice", Date = DateTime.Now },
+                new Account() { Name = "Eva", Date = DateTime.Now }
             };
         }
 

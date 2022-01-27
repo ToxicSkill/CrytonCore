@@ -1,6 +1,6 @@
 ﻿using CrytonCore.Interfaces;
 
-namespace CrytonCore.Model
+namespace CrytonCore.PdfService
 {
     public record Mode(bool OnlyPdf, bool SingleSlide) : IMode
     {

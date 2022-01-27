@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CrytonCore.Mapper;
 using static CrytonCore.Enums.ETypesOfCrypting;
+using CrytonCore.Abstract;
 
 namespace CrytonCore.Model
 {

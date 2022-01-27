@@ -78,6 +78,7 @@ namespace CrytonCore
         public string ShortLanguageName { get; set; }
 
         public static bool AppIsLoaded { get; set; }
+
         public Keys AppKeys { get; set; } = new();
 
 

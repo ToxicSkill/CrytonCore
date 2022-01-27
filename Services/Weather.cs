@@ -7,7 +7,7 @@ using System;
 using System.Threading.Tasks;
 using CrytonCore.Interfaces;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Services
 {
     public class Weather : IService
     {

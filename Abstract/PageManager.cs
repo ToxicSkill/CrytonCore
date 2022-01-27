@@ -2,9 +2,9 @@
 using CrytonCore.Interfaces;
 using System.Windows;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Abstract
 {
-    public class PageManager : NotificationClass, IVisibility
+    public abstract class PageManager : NotificationClass, IVisibility
     {
         public void ChangeVisibility(bool visibile)
         {

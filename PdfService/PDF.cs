@@ -1,4 +1,6 @@
-﻿using CrytonCore.Interfaces;
+﻿using CrytonCore.Design;
+using CrytonCore.Interfaces;
+using CrytonCore.PdfService;
 using System.IO;
 using System.Linq;
 
@@ -131,89 +133,38 @@ namespace CrytonCore.Model
             Ratio.CurrentIndex = Ratios.GetCount() < ratioIndex  || ratioIndex < 0 ? -1 : ratioIndex;
         }
 
-        public int GetCurrentPage()
-        {
-            return CurrentPage;
-        }
+        public int GetCurrentPage() => CurrentPage;
 
-        public bool GetQuality()
-        {
-            return HighQuality;
-        }
+        public bool GetQuality() => HighQuality;
 
-        public double GetDimensions()
-        {
-            return Dimensions;
-        }
+        public double GetDimensions() => Dimensions;
 
-        public Ratio GetRatio()
-        {
-            return Ratio;
-        }
+        public Ratio GetRatio() => Ratio;
 
-        public int GetRotation()
-        {
-            return Rotation;
-        }
+        public int GetRotation() => Rotation;
 
-        public bool GetPixelsSwitch()
-        {
-            return SwitchPixels;
-        }
+        public bool GetPixelsSwitch() => SwitchPixels;
 
-        public int GetWidth()
-        {
-            return Width;
-        }
+        public int GetWidth() => Width;
 
-        public int GetHeight()
-        {
-             return Height; 
-        }
+        public int GetHeight() => Height;
 
-        public int GetCurrentWidth()
-        {
-            return CurrentWidth;
-        }
+        public int GetCurrentWidth() => CurrentWidth;
 
-        public int GetCurrentHeight()
-        {
-            return CurrentHeight;
-        }
+        public int GetCurrentHeight() => CurrentHeight;
 
-        public int GetRatioIndex()
-        {
-            return Ratio.CurrentIndex;
-        }
+        public int GetRatioIndex() => Ratio.CurrentIndex;
 
-        public PageSlider GetSlider()
-        {
-            return Slider;
-        }
+        public PageSlider GetSlider() => Slider;
 
-        public PdfPassword GetPassword()
-        {
-            return Password;
-        }
+        public PdfPassword GetPassword() => Password;
 
-        public MemoryStream GetBytesStream()
-        {
-            return BytesStream;
-        }
+        public MemoryStream GetBytesStream() => BytesStream;
 
-        public byte[] GetBytes()
-        {
-            return Bytes;
-        }
+        public byte[] GetBytes() => Bytes;
 
-        public FileInfo GetInfo()
-        {
-            return Info;
-        }
+        public FileInfo GetInfo() => Info;
 
-        public int GetTotalPages()
-        {
-            return TotalPages;
-        }
+        public int GetTotalPages() => TotalPages;
     }
 }

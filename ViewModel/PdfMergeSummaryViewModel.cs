@@ -4,9 +4,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CrytonCore.Abstract;
+using CrytonCore.Design;
 using CrytonCore.Helpers;
 using CrytonCore.Infra;
 using CrytonCore.Model;
+using CrytonCore.PdfService;
 
 namespace CrytonCore.ViewModel
 {

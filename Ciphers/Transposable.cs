@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using CrytonCore.Model;
 using static CrytonCore.Enums.ETypesOfCrypting;
+using CrytonCore.Abstract;
 
 namespace CrytonCore.Ciphers
 {

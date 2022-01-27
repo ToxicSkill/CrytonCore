@@ -1,4 +1,5 @@
-﻿using CrytonCore.Infra;
+﻿using CrytonCore.Abstract;
+using CrytonCore.Infra;
 using CrytonCore.Model;
 using CrytonCore.Views;
 using System.Windows;

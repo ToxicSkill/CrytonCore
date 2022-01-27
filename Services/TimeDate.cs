@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Services
 {
     public class TimeDate
     {

@@ -1,4 +1,4 @@
-﻿namespace CrytonCore.Model
+﻿namespace CrytonCore.PdfService
 {
     public class Ratio
     {

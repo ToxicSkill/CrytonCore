@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace CrytonCore.Model
+namespace CrytonCore.PdfService
 {
     public class PdfPassword
     {

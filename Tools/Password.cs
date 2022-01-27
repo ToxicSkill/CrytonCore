@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace CrytonCore.Model
+namespace CrytonCore.Tools
 {
     public static class Password
     {

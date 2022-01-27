@@ -1,4 +1,6 @@
-﻿using CrytonCore.Model;
+﻿using CrytonCore.Design;
+using CrytonCore.Model;
+using CrytonCore.PdfService;
 using System.IO;
 
 namespace CrytonCore.Interfaces
